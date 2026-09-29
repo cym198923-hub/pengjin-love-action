@@ -618,6 +618,9 @@
   .support-verdict p{max-width:26vw;margin:0;font-family:var(--serif-zh);font-size:1.35vw;line-height:1.55;color:rgba(var(--ink-rgb),.72)}
   .support-answers{display:grid;grid-template-rows:repeat(5,1fr);padding-left:3vw}
   .support-answer{display:grid;grid-template-columns:3.2vw 1fr auto;align-items:center;gap:1.2vw;border-bottom:1px solid rgba(var(--ink-rgb),.18)}.support-answer:last-child{border-bottom:0}.support-answer i{font-family:var(--serif-en);font-size:1.1vw;font-style:normal;color:rgba(var(--ink-rgb),.34)}.support-answer b{font-family:var(--serif-zh);font-size:1.58vw;line-height:1.2}.support-answer span{font-family:var(--sans-zh);font-size:1.02vw;color:rgba(var(--ink-rgb),.62);text-align:right}.support-answer span strong{display:block;margin-bottom:.25vh;font-family:var(--serif-zh);font-size:1.32vw;color:var(--ink);font-weight:650}
+  .cover-manifesto{position:relative;min-height:64vh;border-left:1px solid rgba(var(--paper-rgb),.24);display:flex;flex-direction:column;justify-content:space-between;padding:2vh 0 2vh 3.8vw}.cover-manifesto .cover-count{font-family:var(--serif-en);font-size:11vw;line-height:.72;color:rgba(var(--paper-rgb),.1)}.cover-manifesto strong{font-family:var(--serif-zh);font-size:4.7vw;line-height:1.08;font-weight:700}.cover-manifesto strong span{display:block;color:var(--paper)}.cover-manifesto p{max-width:26vw;font-family:var(--sans-zh);font-size:1.15vw;line-height:1.7;color:rgba(var(--paper-rgb),.64)}
+  .mirror-verdicts{display:grid;grid-template-columns:repeat(3,1fr);min-height:52vh;border-top:1px solid rgba(var(--ink-rgb),.68);border-bottom:1px solid rgba(var(--ink-rgb),.68)}.mirror-verdict{position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:2.6vh 2.2vw 3vh;border-right:1px solid rgba(var(--ink-rgb),.2);overflow:hidden}.mirror-verdict:last-child{border-right:0}.mirror-verdict i{font-family:var(--serif-en);font-size:8vw;line-height:.8;font-style:normal;color:rgba(var(--ink-rgb),.08)}.mirror-verdict h3{font-family:var(--serif-zh);font-size:4.5vw;line-height:.95;margin:0}.mirror-verdict p{font-family:var(--sans-zh);font-size:1.12vw;line-height:1.5;color:rgba(var(--ink-rgb),.65)}.mirror-verdict b{font-family:var(--serif-zh);font-size:1.45vw;line-height:1.35;font-weight:600;padding-top:1.5vh;border-top:1px solid rgba(var(--ink-rgb),.28)}.mirror-verdict:nth-child(2){background:var(--ink);color:var(--paper)}.mirror-verdict:nth-child(2) i{color:rgba(var(--paper-rgb),.1)}.mirror-verdict:nth-child(2) p{color:rgba(var(--paper-rgb),.68)}.mirror-verdict:nth-child(2) b{border-color:rgba(var(--paper-rgb),.28)}
+  .service-declaration{display:grid;grid-template-columns:.78fr 1.22fr;min-height:46vh;border-top:1px solid rgba(var(--ink-rgb),.65);border-bottom:1px solid rgba(var(--ink-rgb),.65)}.service-verdict{display:flex;flex-direction:column;justify-content:space-between;padding:3vh 3vw 3vh 0;border-right:1px solid rgba(var(--ink-rgb),.22)}.service-verdict small{font-family:var(--mono);font-size:max(10px,.68vw);letter-spacing:.18em;opacity:.5}.service-verdict strong{font-family:var(--serif-zh);font-size:4.7vw;line-height:1.02}.service-verdict p{font-family:var(--serif-zh);font-size:1.35vw;line-height:1.55;opacity:.68}.service-promises{display:grid;grid-template-rows:repeat(3,1fr);padding-left:3vw}.service-promise{display:grid;grid-template-columns:3.5vw 1fr auto;align-items:center;gap:1.2vw;border-bottom:1px solid rgba(var(--ink-rgb),.18)}.service-promise:last-child{border-bottom:0}.service-promise i{font-family:var(--serif-en);font-size:1.1vw;font-style:normal;opacity:.3}.service-promise h3{font-family:var(--serif-zh);font-size:2.15vw;margin:0}.service-promise p{font-family:var(--sans-zh);font-size:1.08vw;opacity:.65;margin:0;text-align:right}
   .script-copy{position:relative;isolation:isolate}.script-loop-art{position:absolute;z-index:-1;right:-1vw;bottom:-4vh;width:18vw;height:18vw;border:1px solid rgba(var(--ink-rgb),.14);border-radius:50%}.script-loop-art:before{content:"";position:absolute;inset:2.2vw;border:1px dashed rgba(var(--ink-rgb),.2);border-radius:50%}.script-loop-art:after{content:"REPEAT";position:absolute;right:-1.8vw;top:44%;font-family:var(--mono);font-size:max(10px,.64vw);letter-spacing:.18em;transform:rotate(90deg);opacity:.36}.script-loop-arrow{position:absolute;right:1.25vw;top:1.45vw;width:0;height:0;border-left:.65vw solid transparent;border-right:.65vw solid transparent;border-bottom:1.05vw solid rgba(var(--ink-rgb),.32);transform:rotate(43deg)}
   .mountain-lines{position:absolute;right:1vw;bottom:8vh;width:54vw;height:61vh;opacity:.38;z-index:1}.mountain-lines path{fill:none;stroke:currentColor;stroke-width:.6}.mountain-lines .ridge{stroke-width:1.15;opacity:.7}.mountain-lines circle{fill:currentColor;opacity:.7}.mountain-lines text{font-family:var(--mono);font-size:2.1px;letter-spacing:.16em;fill:currentColor}
   .goal-step{position:relative;overflow:hidden}.goal-step .goal-icon{width:2.3vw;height:2.3vw;stroke-width:1.2;position:absolute;right:1.3vw;top:1.6vh;opacity:.48}.goal-step:nth-child(3) .goal-icon{opacity:.76}
@@ -699,16 +702,10 @@
     <p class="lead" style="max-width:62vw;font-size:2.15vw" data-anim>爱要有专业承载<br>慈悲要用行动完成</p>
     <div class="meta-row" data-anim><span>从内在觉醒</span><span>·</span><span>到市场行动</span></div>
     </div>
-    <div class="cover-visual-stage" data-anim>
-      <div class="cover-collectible-wrap" aria-label="彭进篮球收藏人物视觉">
-        <img class="cover-collectible" src="images/01-pengjin-basketball-collectible-v1.png" alt="彭进篮球收藏人物，配有话筒、笔记本与篮球">
-        <div class="cover-collectible-caption"><strong>彭进 · 行动版</strong><span>FROM INNER AWAKENING TO ACTION</span></div>
-      </div>
-      <div class="cover-original-mark">
-        <div style="font-family:var(--serif-zh);font-size:8.8vw;line-height:.92">心</div>
-        <div style="height:12vh;border-left:1px solid rgba(var(--paper-rgb),.45);margin:2.5vh 0 2.5vh 4.4vw"></div>
-        <div style="font-family:var(--serif-zh);font-size:8.8vw;line-height:.92;text-align:right">行</div>
-      </div>
+    <div class="cover-manifesto" data-anim>
+      <div class="cover-count">01</div>
+      <strong><span>心里有爱，</span><span>手上要有行动。</span></strong>
+      <p>这不是一场关于感动的分享，而是一场关于如何把关心变成专业、服务和结果的讨论。</p>
     </div>
   </div>
   <div class="foot"><div class="title">让爱落地 · 经销商动员分享</div><div>OPENING</div></div>
@@ -848,9 +845,8 @@
         </div>
       </div>
       <figure class="encounter-visual" data-anim="right">
-        <img class="encounter-scene" src="images/09-encounter-editorial-v2.png" alt="真实人物佩戴红色手环并认真记录的纪实场景">
-        <img class="bracelet-cutout" src="images/09-bracelet-cutout-v2.png" alt="从真实照片整理出的红色手环佩戴细节">
-        <figcaption class="encounter-caption"><strong>真实接触，真实佩戴</strong>PHOTO EVIDENCE · NO EFFECT CLAIM</figcaption>
+        <img class="encounter-scene" src="images/09-real-encounter.webp" alt="彭进佩戴红色手环并记录真实学习内容">
+        <figcaption class="encounter-caption"><strong>真实接触，真实记录</strong>REAL MOMENT · NO EFFECT CLAIM</figcaption>
       </figure>
     </div>
   </div>
@@ -907,12 +903,10 @@
       <div data-anim="left"><div class="kicker">诊断不是归罪</div><h2 class="h-xl">三面市场之镜</h2></div>
       <p data-anim="right">市场没有惩罚我们。它只是把触达不足、信任断点和行动阻力照了出来。</p>
     </div>
-    <div class="mirror-event" data-anim>
-      <div class="mirror-readings">
-        <div class="mirror-reading" data-anim="left"><strong>触达</strong><span>客户还没有机会<br>真正认识我们</span></div>
-        <div class="mirror-reading" data-anim><strong>信任</strong><span>事实还没有被<br>专业地讲清楚</span></div>
-        <div class="mirror-reading" data-anim="right"><strong>行动</strong><span>伙伴还看不清<br>可以开始的第一步</span></div>
-      </div>
+    <div class="mirror-verdicts" data-anim>
+      <article class="mirror-verdict" data-anim="left"><i>01</i><h3>触达</h3><p>客户还没有机会真正认识我们</p><b>问题藏在入口里</b></article>
+      <article class="mirror-verdict" data-anim><i>02</i><h3>信任</h3><p>事实还没有被专业地讲清楚</p><b>问题藏在表达里</b></article>
+      <article class="mirror-verdict" data-anim="right"><i>03</i><h3>行动</h3><p>伙伴还看不清可以开始的第一步</p><b>问题藏在方法里</b></article>
     </div>
   </div>
   <div class="foot"><div class="title">看见问题，是改变的开始</div><div>DIAGNOSIS</div></div>
@@ -995,12 +989,12 @@
   <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:2.4vh">
     <div class="kicker" data-anim>陪伴，比一句承诺更有力量</div>
     <h2 class="h-xl" style="font-size:min(4.25vw,7.3vh)" data-anim>真正的服务，是成交以后还在</h2>
-    <div class="service-evidence">
-      <figure class="service-photo" data-anim="left"><img src="images/19-service-portrait-v3.webp" alt="佩戴手环并认真记录信息的真实工作现场"><figcaption><small>REAL ACTION · RECORD & VERIFY</small>记录、核验、回应。</figcaption></figure>
-      <div class="service-continuum">
-        <article data-anim><i data-lucide="book-open-check"></i><div><h3>使用前 · 讲清楚</h3><p>事实、用法与表达边界</p></div><b>01</b></article>
-        <article data-anim><i data-lucide="notebook-pen"></i><div><h3>使用中 · 有记录</h3><p>依据正式指引回访与陪伴</p></div><b>02</b></article>
-        <article data-anim><i data-lucide="message-circle-reply"></i><div><h3>遇问题 · 有回应</h3><p>不编答案，及时核实</p></div><b>03</b></article>
+    <div class="service-declaration">
+      <div class="service-verdict" data-anim="left"><small>THE SALE IS NOT THE END</small><strong>成交之后，<br>人才真正需要你。</strong><p>服务不是一句“有问题找我”，而是让客户知道每一步都有人负责。</p></div>
+      <div class="service-promises">
+        <article class="service-promise" data-anim="right"><i>01</i><h3>使用前 · 讲清楚</h3><p>事实、用法与表达边界</p></article>
+        <article class="service-promise" data-anim="right"><i>02</i><h3>使用中 · 有记录</h3><p>依据正式指引回访与陪伴</p></article>
+        <article class="service-promise" data-anim="right"><i>03</i><h3>遇问题 · 有回应</h3><p>不编答案，及时核实</p></article>
       </div>
     </div>
   </div>
