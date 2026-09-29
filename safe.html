@@ -2351,7 +2351,9 @@ if(motion){
   const tip = document.getElementById('ppt-tv-enter');
   const feedback = document.getElementById('ppt-tv-feedback');
   let attempting = false;
-  let ready = false;
+  // 浏览器的原生全屏（F11/菜单）由设备处理；网页不再主动申请全屏，避免触控屏 Edge 闪退。
+  let ready = true;
+  document.body.classList.add('ppt-tv-ready');
   let pointerStart = null;
   let wasFullscreen = false;
   const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
