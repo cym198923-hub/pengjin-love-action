@@ -628,7 +628,8 @@
     const KEY = 'guizang-ppt-low-power';
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const stored = localStorage.getItem(KEY);
-    window.__lowPowerMode = stored === '1' || (stored === null && (reduced || /MicroMessenger/i.test(navigator.userAgent)));
+    // 微信也默认启用完整动效；仅在系统明确要求“减少动态效果”时降级。
+    window.__lowPowerMode = stored === '1' || (stored === null && reduced);
     function updateHint(){
       const label = document.querySelector('.ppt-low-power-label');
       if(label) label.textContent = window.__lowPowerMode ? '动态' : '静态';
@@ -2315,8 +2316,10 @@ if(motion){
 (() => {
   const query = new URLSearchParams(location.search);
   const tvPath = /\/(?:tv|safe)\.html$/i.test(location.pathname);
+  const defaultPresentationPath = /\/(?:index\.html)?$/i.test(location.pathname);
   const safePath = /\/safe\.html$/i.test(location.pathname);
-  if (query.get('tv') !== '1' && !tvPath) return;
+  // 首页默认就是观众演示模式；?tv=0 可临时回到带控制栏的普通模式。
+  if (query.get('tv') === '0' || (query.get('tv') !== '1' && !tvPath && !defaultPresentationPath)) return;
   document.body.classList.add('ppt-tv');
   if (query.get('safe') === '1' || safePath) {
     document.body.classList.add('ppt-safe');

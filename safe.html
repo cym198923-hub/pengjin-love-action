@@ -628,7 +628,8 @@
     const KEY = 'guizang-ppt-low-power';
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const stored = localStorage.getItem(KEY);
-    window.__lowPowerMode = stored === '1' || (stored === null && (reduced || /MicroMessenger/i.test(navigator.userAgent)));
+    // 微信也默认启用完整动效；仅在系统明确要求“减少动态效果”时降级。
+    window.__lowPowerMode = stored === '1' || (stored === null && reduced);
     function updateHint(){
       const label = document.querySelector('.ppt-low-power-label');
       if(label) label.textContent = window.__lowPowerMode ? '动态' : '静态';
