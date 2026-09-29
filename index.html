@@ -1,0 +1,2421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>让爱落地 · 40分钟经销商动员分享</title>
+<meta name="description" content="让爱落地：一场关于信任、服务与伙伴行动的40分钟网页演示。">
+<meta name="theme-color" content="#0a0a0b">
+<meta property="og:title" content="让爱落地 · 40分钟经销商动员分享">
+<meta property="og:description" content="从向内修心到向外修事，把信任落实为可执行的伙伴行动。">
+<meta property="og:type" content="website">
+<style>
+  :root{
+    /* ============ 主题色(默认:🖋 墨水经典) ============
+       切换主题:从 references/themes.md 复制对应的 :root 块
+       整体替换这几行(--ink / --ink-rgb / --paper / --paper-rgb)
+       其他地方散落的 rgba() 都走 var(--ink-rgb) / var(--paper-rgb),无需逐处改 */
+    --ink:#0a0a0b;
+    --ink-rgb:10,10,11;
+    --paper:#f1efea;
+    --paper-rgb:241,239,234;
+    --paper-tint:#e8e5de;
+    --ink-tint:#18181a;
+
+    /* ============ 字体(跨主题固定) ============ */
+    --mono:ui-monospace,"SFMono-Regular",Consolas,monospace;
+    --serif-en:Georgia,"Times New Roman",serif;
+    --serif-body-en:Georgia,"Times New Roman",serif;
+    --serif-zh:"Songti SC","Noto Serif CJK SC","SimSun",serif;
+    --sans-zh:"PingFang SC","Microsoft YaHei", "Noto Sans CJK SC",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  /* ============ WebGL 双背景 ============ */
+  canvas.bg{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block;transition:opacity 1.2s ease}
+  canvas#bg-light{opacity:0}
+  canvas#bg-dark{opacity:1}
+  body.light-bg canvas#bg-light{opacity:1}
+  body.light-bg canvas#bg-dark{opacity:0}
+  body.low-power canvas.bg{display:none!important}
+
+  /* ============ Deck 容器 + 翻页 ============ */
+  /* width: NSLIDES * 100vw，会在 JS 里动态矫正 */
+  #deck{position:fixed;inset:0;width:10000vw;height:100vh;display:flex;flex-wrap:nowrap;transition:transform .9s cubic-bezier(.77,0,.175,1);z-index:10;will-change:transform}
+  .slide{width:100vw;height:100vh;flex:0 0 100vw;position:relative;padding:6vh 6vw 10vh 6vw;display:flex;flex-direction:column;overflow:hidden}
+  .slide.light{color:var(--ink);background:var(--paper)}
+  .slide.dark{color:var(--paper);background:var(--ink)}
+
+  /* 默认页：遮罩较厚，保证文字可读 */
+  .slide::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;transition:background .7s ease}
+  .slide.light::before{background:rgba(var(--paper-rgb),.78);backdrop-filter:blur(3px)}
+  .slide.dark::before{background:rgba(var(--ink-rgb),.78);backdrop-filter:blur(3px)}
+  /* Hero 页：遮罩大幅降低，让 WebGL 背景明显透出 */
+  .slide.hero.light::before{background:rgba(var(--paper-rgb),.16);backdrop-filter:none}
+  .slide.hero.dark::before{background:rgba(var(--ink-rgb),.12);backdrop-filter:none}
+  /* Hero 页顶底微弱渐隐，保证 chrome/foot 区域可读 */
+  .slide.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none}
+  .slide.hero.light::after{background:linear-gradient(180deg,rgba(var(--paper-rgb),.28) 0%,rgba(var(--paper-rgb),0) 14%,rgba(var(--paper-rgb),0) 86%,rgba(var(--paper-rgb),.28) 100%)}
+  .slide.hero.dark::after{background:linear-gradient(180deg,rgba(var(--ink-rgb),.32) 0%,rgba(var(--ink-rgb),0) 14%,rgba(var(--ink-rgb),0) 86%,rgba(var(--ink-rgb),.32) 100%)}
+
+  /* ============ Magazine chrome：顶部 meta + 底部 foot ============
+     （v1 布局 + v2 字号在此合并为唯一定义，不要在别处二次定义） */
+  .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:max(11px,.78vw);letter-spacing:.2em;text-transform:uppercase;opacity:.62}
+  .chrome .left,.chrome .right{display:flex;gap:2.4em;align-items:center}
+  .chrome .sep{width:40px;height:1px;background:currentColor;opacity:.4}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:max(11px,.78vw);letter-spacing:.18em;text-transform:uppercase;opacity:.5}
+  .foot .title{font-family:var(--serif-zh);font-weight:400;letter-spacing:.05em;text-transform:none;opacity:.75;font-size:13px}
+
+  .tag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;padding:6px 14px;border:1px solid currentColor;opacity:.85}
+  .rule{width:100%;height:1px;background:currentColor;opacity:.25;margin:3vh 0}
+  .rule.v{width:1px;height:100%;margin:0}
+
+  /* ============ 字体规则 ============
+     · 衬线（Noto Serif SC / Playfair）：大标题、重点金句、数字
+     · 非衬线（Noto Sans SC）：正文描述、body、补充说明
+     · 等宽（IBM Plex Mono）：kicker、meta 小标签、foot 右侧
+  */
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;opacity:.6;margin-bottom:2.6vh}
+  .display{font-family:var(--serif-en);font-weight:700;font-size:11vw;line-height:.92;letter-spacing:-.025em}
+  .display-zh{font-family:var(--serif-zh);font-weight:700;font-size:7.8vw;line-height:1.04;letter-spacing:-.005em}
+  .h1-zh{font-family:var(--serif-zh);font-weight:700;font-size:4.6vw;line-height:1.12;letter-spacing:-.005em}
+  .h2-zh{font-family:var(--serif-zh);font-weight:600;font-size:3.2vw;line-height:1.2;letter-spacing:0}
+  .h3-zh{font-family:var(--serif-zh);font-weight:500;font-size:1.9vw;line-height:1.35}
+  .body-zh{font-family:var(--sans-zh);font-weight:400;font-size:max(15px,1.22vw);line-height:1.75;opacity:.82;letter-spacing:.01em}
+  .body-serif{font-family:var(--serif-zh);font-weight:400;font-size:max(15px,1.3vw);line-height:1.65;opacity:.88}
+  .lead{font-family:var(--serif-zh);font-weight:400;font-size:1.75vw;line-height:1.5;opacity:.86}
+  .meta{font-family:var(--mono);font-size:max(11px,.88vw);letter-spacing:.16em;text-transform:uppercase;opacity:.6}
+  .big-num{font-family:var(--serif-en);font-weight:800;font-size:10vw;line-height:.85;letter-spacing:-.03em;font-feature-settings:"tnum"}
+  .mid-num{font-family:var(--serif-en);font-weight:700;font-size:5.5vw;line-height:.88;letter-spacing:-.02em;font-feature-settings:"tnum"}
+  .ghost{font-family:var(--serif-en);font-weight:900;font-size:34vw;line-height:.8;opacity:.06;letter-spacing:-.04em;position:absolute;font-feature-settings:"tnum"}
+  em{font-style:italic;font-family:var(--serif-en)}
+  .en{font-family:var(--serif-en);font-style:italic;font-weight:500}
+
+  /* ============ 布局工具 ============ */
+  .col{display:flex;flex-direction:column;gap:2.4vh}
+  .row{display:flex;align-items:center;gap:3vw}
+  .grid-6{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:4vw 6vw;flex:1;align-content:center;padding:2vh 0}
+  .grid-9{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:3vh 4vw;flex:1;align-content:center}
+  .grid-4{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);gap:4vh 6vw;flex:1;align-content:center}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:4vw;flex:1;align-content:center}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:4vw;flex:1;align-items:center}
+  .split-55{display:grid;grid-template-columns:55fr 45fr;gap:5vw;flex:1;align-items:stretch}
+  .fill{flex:1}
+  .center{align-items:center;justify-content:center;text-align:center}
+  .bottom-left{position:absolute;left:6vw;bottom:9vh;max-width:50vw}
+  .bottom-right{position:absolute;right:6vw;bottom:9vh;max-width:50vw;text-align:right}
+  .top-right{position:absolute;right:6vw;top:6vh;text-align:right}
+
+  /* ============ Stat（数字矩阵） ============ */
+  .stat{display:flex;flex-direction:column;gap:1vh;align-items:flex-start}
+  .stat .n{font-family:var(--serif-en);font-weight:800;font-size:8vw;line-height:.88;letter-spacing:-.03em;font-feature-settings:"tnum"}
+  .stat .l{font-family:var(--sans-zh);font-size:max(13px,1.05vw);opacity:.7;margin-top:1vh;font-weight:400;line-height:1.5}
+  .stat .m{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.5;margin-bottom:.2vh}
+
+  /* ============ Callout（引用框） ============ */
+  .callout{padding:3vh 2.4vw;border-left:3px solid currentColor;position:relative;font-family:var(--serif-zh);font-size:max(15px,1.2vw);line-height:1.55;opacity:.92}
+  .slide.light .callout{background:rgba(var(--ink-rgb),.05)}
+  .slide.dark .callout{background:rgba(var(--paper-rgb),.06)}
+  .callout .cite{display:block;margin-top:1.6vh;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.6}
+  .callout .q-big{font-family:var(--serif-zh);font-weight:600;font-size:max(17px,1.6vw);line-height:1.42}
+
+  /* ============ Platform（平台卡） ============ */
+  .plat{display:flex;flex-direction:column;justify-content:flex-end;padding:2vh 0;border-top:1px solid currentColor;border-color:rgba(127,127,127,.35)}
+  .plat .name{font-family:var(--serif-zh);font-weight:700;font-size:1.8vw;margin-bottom:.6vh}
+  .plat .nb{font-family:var(--serif-en);font-weight:700;font-size:3.2vw;letter-spacing:-.02em;line-height:1;font-feature-settings:"tnum"}
+  .plat .sub{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;opacity:.55;margin-top:.6vh}
+  .plat .fill{font-family:var(--sans-zh);font-weight:300;font-size:2.4vw;opacity:.28;letter-spacing:-.01em;line-height:1}
+
+  /* ============ Rowline（表格行） ============ */
+  .rowline{display:grid;grid-template-columns:1fr 2fr 1fr;gap:2vw;padding:2.2vh 0;border-top:1px solid currentColor;align-items:center;border-color:rgba(127,127,127,.25)}
+  .rowline:last-child{border-bottom:1px solid currentColor;border-color:rgba(127,127,127,.25)}
+  .rowline .k{font-family:var(--serif-zh);font-weight:700;font-size:1.7vw}
+  .rowline .v{font-family:var(--sans-zh);font-weight:400;font-size:max(14px,1.2vw);opacity:.85;line-height:1.55}
+  .rowline .m{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.6;justify-self:end}
+
+  /* ============ Pillar（支柱卡片） ============ */
+  .pillar{display:flex;flex-direction:column;gap:1.8vh}
+  .pillar .ic{font-family:var(--serif-en);font-style:italic;font-size:2.6vw;opacity:.45;font-weight:400}
+  .pillar .ic svg{width:2.8vw;height:2.8vw;stroke-width:1.2;opacity:.7}
+  .pillar .t{font-family:var(--serif-zh);font-weight:700;font-size:2.4vw;line-height:1.1}
+  .pillar .d{font-family:var(--sans-zh);font-weight:400;font-size:max(14px,1.1vw);opacity:.76;line-height:1.6}
+
+  /* ============ Signature / Highlight ============ */
+  .sign{font-family:var(--serif-en);font-style:italic;font-weight:500;font-size:2vw;opacity:.7}
+  .hi{position:relative;display:inline}
+  .slide.dark .hi::after{content:"";position:absolute;left:-.1em;right:-.1em;bottom:-.05em;height:.28em;background:rgba(var(--paper-rgb),.15);z-index:-1}
+  .slide.light .hi::after{content:"";position:absolute;left:-.1em;right:-.1em;bottom:-.05em;height:.28em;background:rgba(var(--ink-rgb),.08);z-index:-1}
+
+  /* ============ Icons（Lucide via CDN） ============ */
+  .ico{width:1em;height:1em;display:inline-block;vertical-align:-.12em;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+  .ico-lg,.ico-md,.ico-sm{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+  .ico-lg{width:2.6vw;height:2.6vw;stroke-width:1.2;display:inline-block}
+  .ico-md{width:1.8vw;height:1.8vw;stroke-width:1.3;display:inline-block;vertical-align:-.4em}
+  .ico-sm{width:1.1vw;height:1.1vw;stroke-width:1.4;display:inline-block;vertical-align:-.15em;opacity:.7}
+
+  /* ============ 图片占位（虚线框，提示设计师位置） ============ */
+  .img-slot{border:1.5px dashed rgba(127,127,127,.4);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1vh;padding:2vh 2vw;font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;opacity:.55;position:relative;aspect-ratio:16/9;width:100%;max-height:56vh;margin-inline:auto;box-sizing:border-box}
+  .img-slot::before{content:"";position:absolute;inset:8px;border:1px solid currentColor;opacity:.2}
+  .img-slot .plus{font-size:2vw;font-weight:300;opacity:.5;letter-spacing:0}
+  .img-slot .label{position:relative;z-index:2;text-align:center}
+  .img-slot.r-4x3{aspect-ratio:4/3}
+  .img-slot.r-3x2{aspect-ratio:3/2}
+  .img-slot.r-1x1{aspect-ratio:1/1}
+
+  /* ============ 图片实填框（关键：固定高度 + 只裁底部） ============
+     重要约束：高度用内联 height:Nvh 精确控制，不要用 aspect-ratio（会撑破布局）
+     object-position:top center 保证严禁裁剪顶部和左右，只裁剪底部
+  */
+  .frame-img{overflow:hidden;position:relative;background:rgba(0,0,0,.04);box-sizing:border-box;width:100%;border-radius:4px}
+  .slide.dark .frame-img{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12)}
+  .frame-img > img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+  .frame-img.fit-contain > img{object-fit:contain;object-position:center center}
+  .frame-img.r-16x9{aspect-ratio:16/9;max-height:64vh}
+  .frame-img.r-16x10{aspect-ratio:16/10;max-height:56vh}
+  .frame-img.r-4x3{aspect-ratio:4/3;max-height:56vh}
+  .frame-img.r-3x2{aspect-ratio:3/2;max-height:46vh}
+  .frame-img.r-3x4{aspect-ratio:3/4;max-height:60vh}
+  .frame-img.r-1x1{aspect-ratio:1/1;max-height:50vh}
+  .frame-img.h-16{height:16vh}
+  .frame-img.h-18{height:18vh}
+  .frame-img.h-22{height:22vh}
+  .frame-img.h-26{height:26vh}
+  .frame-img.h-28{height:28vh}
+  .frame-cap{display:flex;justify-content:space-between;align-items:baseline;gap:1vw;margin-top:.8vh;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.72}
+  .frame-cap .pf{font-family:var(--serif-zh);font-weight:600;font-size:max(13px,1vw);letter-spacing:.04em;text-transform:none;opacity:.94}
+  .frame-cap .nb{font-family:var(--serif-en);font-style:italic;font-size:max(15px,1.2vw);letter-spacing:.02em;text-transform:none;opacity:.88}
+  .frame-cap .idx{font-family:var(--mono);opacity:.5}
+  figure.tile{display:flex;flex-direction:column;margin:0;min-width:0}
+  figure.tile > .frame-img{flex:0 0 auto}
+
+  /* ============ 导航 ============ */
+  #nav{position:fixed;left:50%;bottom:2.6vh;transform:translateX(-50%);z-index:30;display:flex;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(0,0,0,.18);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  #nav .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s ease;border:0;padding:0}
+  #nav .dot:hover{background:rgba(255,255,255,.5);transform:scale(1.15)}
+  #nav .dot.active{background:rgba(255,255,255,.95);width:22px;border-radius:999px}
+  body.light-bg #nav{background:rgba(255,255,255,.25)}
+  body.light-bg #nav .dot{background:rgba(var(--ink-rgb),.25)}
+  body.light-bg #nav .dot.active{background:rgba(var(--ink-rgb),.9)}
+  #hint{position:fixed;bottom:3vh;right:3vw;z-index:30;display:flex;align-items:center;gap:.65em;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.4;mix-blend-mode:difference;color:#aaa}
+  #hint button{all:unset;display:inline-flex;align-items:center;gap:.45em;cursor:pointer;color:inherit;white-space:nowrap}
+  #hint button:hover,#hint button:focus-visible{opacity:1;text-decoration:underline;text-underline-offset:.35em}
+  #hint .ppt-key{padding:.16em .38em;border:1px solid currentColor;border-radius:3px;letter-spacing:.08em}
+  #hint .ppt-sep{opacity:.55}
+  body.low-power #hint{opacity:.72;color:var(--paper);mix-blend-mode:normal}
+  body.light-bg.low-power #hint{color:var(--ink)}
+  body.ppt-tv #hint,body.ppt-tv #nav{display:none!important}
+  body.ppt-tv{overscroll-behavior:none;background:#080b0a;touch-action:none;-webkit-user-select:none;user-select:none}
+  #ppt-tv-enter{position:fixed;left:50%;bottom:4.6vh;z-index:80;display:none;transform:translateX(-50%);padding:12px 20px;border:1px solid rgba(244,241,232,.34);background:rgba(7,10,9,.82);color:#f4f1e8;font-family:var(--sans-zh);font-size:15px;letter-spacing:.08em;backdrop-filter:blur(12px);box-shadow:0 8px 30px rgba(0,0,0,.26);white-space:nowrap}
+  body.ppt-tv:not(.ppt-tv-ready) #ppt-tv-enter,body.ppt-tv.ppt-tv-show-guide #ppt-tv-enter{display:block}
+  body.ppt-tv.ppt-tv-fullscreen{cursor:none}
+  #ppt-tv-feedback{position:fixed;top:50%;z-index:85;display:none;transform:translateY(-50%);color:rgba(244,241,232,.84);font:300 min(13vw,18vh)/1 var(--serif-en);text-shadow:0 4px 28px rgba(0,0,0,.5);pointer-events:none}
+  #ppt-tv-feedback.is-left{display:block;left:4vw}
+  #ppt-tv-feedback.is-right{display:block;right:4vw}
+  body.ppt-safe .bg{display:none!important}
+  body.ppt-safe [data-anim],body.ppt-safe [data-animate]{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
+  body.ppt-safe #ppt-tv-enter{backdrop-filter:none}
+
+  /* ============ 演讲者模式 ============ */
+  body.ppt-audience #hint,body.ppt-audience #nav,
+  body.ppt-preview #hint,body.ppt-preview #nav{display:none!important}
+  body.ppt-audience{cursor:none}
+  body.ppt-preview{pointer-events:none}body.ppt-preview #deck{transition:none!important}
+  body.ppt-presenter>#deck,body.ppt-presenter>#nav,body.ppt-presenter>#hint,
+  body.ppt-presenter>.bg{visibility:hidden}
+  #ppt-presenter{position:fixed;inset:0;z-index:90;display:none;min-width:0;min-height:0;overflow:hidden;background:#101216;color:#f5f6f7;font-family:Inter,"Noto Sans SC",sans-serif}
+  body.ppt-presenter #ppt-presenter{display:grid;grid-template-rows:auto 1fr auto}
+  .ppt-presenter-top{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px 24px;border-bottom:1px solid #2b2e35;background:#15181d}
+  .ppt-presenter-brand{font-weight:650;letter-spacing:.02em}.ppt-presenter-meta{display:flex;align-items:center;gap:12px;color:#aeb4be;font-size:14px}
+  .ppt-sync{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid #363a43;border-radius:999px;color:#d2d6dc;background:#1b1e24}
+  .ppt-sync::before{content:"";width:8px;height:8px;border-radius:50%;background:#818894}
+  .ppt-sync[data-state="synced"]::before{background:#72df99;box-shadow:0 0 0 4px rgba(114,223,153,.12)}
+  .ppt-sync[data-state="connecting"]::before,.ppt-sync[data-state="frozen"]::before{background:#f0c766}.ppt-sync[data-state="unsynced"]::before,.ppt-sync[data-state="blocked"]::before{background:#ff9e64}.ppt-sync[data-state="disconnected"]::before{background:#ff6b72}
+  .ppt-ui-btn{appearance:none;border:1px solid #3a3e48;background:#20242a;color:#f6f7f8;border-radius:8px;padding:9px 13px;font:600 14px/1 Inter,"Noto Sans SC",sans-serif;cursor:pointer}
+  .ppt-ui-btn:hover{background:#2a2f37;border-color:#525864}.ppt-ui-btn:focus-visible{outline:2px solid #84a8ff;outline-offset:2px}.ppt-ui-btn:disabled{opacity:.28;cursor:not-allowed}
+  .ppt-presenter-main{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(300px,.75fr);gap:18px;min-height:0;padding:18px 24px}
+  .ppt-preview-stack{position:relative;display:grid;grid-template-rows:minmax(0,1fr) clamp(132px,22vh,210px);gap:16px;min-width:0;min-height:0}
+  .ppt-stage-card,.ppt-notes-card,.ppt-presenter-overview{background:#171a20;border:1px solid #2b2f37;border-radius:12px;overflow:hidden}
+  .ppt-stage-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0}
+  .ppt-stage-label{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 14px;color:#aeb4be;font-size:13px;border-bottom:1px solid #292d34}
+  .ppt-annotation-tools{display:flex;align-items:center;gap:5px;margin-left:auto}.ppt-annotation-tools .ppt-ui-btn{padding:6px 9px;font-size:12px}.ppt-annotation-tools .ppt-ui-btn.is-active{color:#111318;background:#ff5b63;border-color:#ff5b63}.ppt-annotation-tools .ppt-grid-btn.is-active{color:#111318;background:#edf1f5;border-color:#edf1f5}.ppt-annotation-tools .ppt-clear-btn{min-width:0}.ppt-grid-btn{display:inline-flex;align-items:center;gap:6px}.ppt-grid-icon{display:grid;grid-template-columns:repeat(2,4px);gap:2px}.ppt-grid-icon i{width:4px;height:4px;background:currentColor}
+  .ppt-frame-viewport{position:relative;display:grid;place-items:center;min-width:0;min-height:0;overflow:hidden;background:#08090b}
+  .ppt-frame{display:block;width:0;height:0;max-width:100%;max-height:100%;aspect-ratio:16/9;border:0;background:#08090b}.ppt-next-frame{opacity:.86}#ppt-next-card.is-end .ppt-frame{visibility:hidden}#ppt-next-card.is-end .ppt-frame-viewport::after{content:"演示结束";position:absolute;color:#727a86;font:650 14px/1 Inter,"Noto Sans SC",sans-serif;letter-spacing:.08em}
+  .ppt-annotation-layer{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;width:0;height:0;pointer-events:none;touch-action:none}.ppt-annotation-layer.is-active{pointer-events:auto;cursor:crosshair}
+  #ppt-audience-ink{position:fixed;inset:0;z-index:70;width:100vw;height:100vh;pointer-events:none}#ppt-audience-cover{position:fixed;inset:0;z-index:80;display:none;pointer-events:none}#ppt-audience-cover.is-ended{display:grid!important;place-items:center;background:#101216!important;color:#f5f6f7;font:650 clamp(24px,3vw,46px)/1.2 Inter,"Noto Sans SC",sans-serif;letter-spacing:.08em}
+  .ppt-preview-stack.is-overview>.ppt-stage-card{display:none}.ppt-presenter-overview{grid-row:1/-1;display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0}.ppt-presenter-overview[hidden]{display:none}.ppt-overview-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid #292d34}.ppt-overview-head strong{font-size:15px}.ppt-overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;align-content:start;overflow:auto;padding:14px}.ppt-overview-page{appearance:none;min-height:112px;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:13px;border:1px solid #343943;border-radius:10px;background:#111318;color:#eef1f4;text-align:left;cursor:pointer}.ppt-overview-page:hover{background:#1d2128;border-color:#636b78}.ppt-overview-page.is-current{border-color:#84a8ff;box-shadow:inset 0 0 0 1px #84a8ff}.ppt-overview-page-no{color:#8f97a3;font:600 12px/1 var(--mono,monospace)}.ppt-overview-page-title{font-size:14px;font-weight:650;line-height:1.35}.ppt-overview-page-meta{display:flex;justify-content:space-between;gap:8px;color:#7f8793;font-size:11px}
+  .ppt-notes-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-height:0}.ppt-notes-head{padding:16px 18px;border-bottom:1px solid #292d34}.ppt-notes-label{margin-bottom:6px;color:#848c98;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.ppt-notes-title{font-size:21px;font-weight:680;line-height:1.32}.ppt-purpose-block{margin-top:14px;padding:11px 12px;border-left:3px solid #84a8ff;background:#111318}.ppt-purpose-copy{color:#c9ced6;font-size:14px;line-height:1.55}.ppt-notes-draft-head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:15px;padding-top:13px;border-top:1px solid #2d3139}.ppt-notes-draft-head .ppt-notes-label{margin:0 0 4px}.ppt-note-meta{color:#8f97a3;font-size:12px}
+  .ppt-notes-tools{display:flex;align-items:center;gap:6px}.ppt-notes-tools .ppt-ui-btn{padding:7px 9px}.ppt-note-editor{width:100%;height:100%;min-height:0;resize:none;border:0;outline:0;background:#171a20;color:#edf0f3;padding:18px;font:400 var(--ppt-note-size,17px)/1.72 Inter,"Noto Sans SC",sans-serif}.ppt-note-editor:focus{box-shadow:inset 0 0 0 1px #3d4654}
+  .ppt-saved{color:#72df99;white-space:nowrap}.ppt-presenter-bottom{display:grid;grid-template-columns:minmax(330px,1fr) auto minmax(110px,1fr);align-items:center;gap:20px;padding:12px 24px;border-top:1px solid #2b2e35;background:#15181d}
+  .ppt-time-dashboard{display:flex;align-items:stretch;min-width:0}.ppt-time-stat{min-width:90px;display:grid;align-content:center;gap:4px;padding:0 16px}.ppt-time-stat:first-child{padding-left:0}.ppt-time-stat+.ppt-time-stat{border-left:1px solid #343943}.ppt-time-label{color:#89919d;font-size:11px;font-weight:700;letter-spacing:.1em}.ppt-time-value{color:#f7f8fa;font:650 23px/1 var(--mono,monospace);font-variant-numeric:tabular-nums}.ppt-time-hint{color:#747c88;font-size:11px;white-space:nowrap}.ppt-time-stat.is-over .ppt-time-label,.ppt-time-stat.is-over .ppt-time-value{color:#ff8a90}.ppt-time-stat.is-remaining .ppt-time-value{color:#72df99}
+  .ppt-control-stack{display:grid;gap:7px;justify-items:center}.ppt-controls,.ppt-session-actions{display:flex;align-items:center;justify-content:center;gap:7px}.ppt-controls .ppt-ui-btn,.ppt-session-actions .ppt-ui-btn{min-width:68px}.ppt-session-actions{padding-top:7px;border-top:1px solid #343943}.ppt-rehearsal-on{color:#ff8a90}.ppt-page-state{text-align:right}.ppt-page-state strong{display:block;color:#fff;font-size:17px;margin-bottom:5px}.ppt-page-state span{color:#8f97a3;font:600 13px/1 var(--mono,monospace)}.ppt-auto-state{display:inline-flex;align-items:center;gap:6px;border-radius:999px}.ppt-auto-state.is-on{color:#72df99;border-color:rgba(114,223,153,.45);background:rgba(114,223,153,.08)}.ppt-auto-state.is-paused{color:#f0c766;border-color:rgba(240,199,102,.42);background:rgba(240,199,102,.08)}
+  #ppt-presenter[data-layout="slides"] .ppt-presenter-main{grid-template-columns:minmax(0,2.15fr) minmax(260px,.58fr)}#ppt-presenter[data-layout="notes"] .ppt-presenter-main{grid-template-columns:minmax(0,1.15fr) minmax(380px,1fr)}
+  .ppt-dialog{position:fixed;inset:0;z-index:130;display:grid;place-items:center;padding:24px;background:rgba(4,6,9,.72);backdrop-filter:blur(10px)}.ppt-dialog[hidden]{display:none}.ppt-dialog-panel{width:min(720px,calc(100vw - 48px));max-height:min(760px,calc(100vh - 48px));display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;border:1px solid #343943;border-radius:14px;background:#171a20;box-shadow:0 24px 80px rgba(0,0,0,.45)}.ppt-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid #2b2f37}.ppt-dialog-title{font-size:20px;font-weight:700}.ppt-dialog-body{overflow:auto;padding:18px;color:#d8dce2;font-size:14px;line-height:1.6}.ppt-dialog-section+.ppt-dialog-section{margin-top:22px}.ppt-dialog-section h3{margin:0 0 10px;color:#fff;font-size:15px}.ppt-dialog-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ppt-dialog-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid #282c33}.ppt-dialog-row:last-child{border-bottom:0}.ppt-field{display:grid;gap:6px}.ppt-field label{color:#aeb4be;font-size:12px}.ppt-field input{width:100%;border:1px solid #3a3e48;border-radius:8px;background:#101216;color:#fff;padding:9px 10px;font:600 14px Inter,sans-serif}.ppt-check{display:flex;align-items:flex-start;gap:10px}.ppt-check-dot{width:9px;height:9px;margin-top:7px;border-radius:50%;background:#ff6b72}.ppt-check.is-ok .ppt-check-dot{background:#72df99}.ppt-check.is-warn .ppt-check-dot{background:#f0c766}.ppt-summary{width:100%;border-collapse:collapse;font-size:13px}.ppt-summary th,.ppt-summary td{padding:9px 8px;border-bottom:1px solid #2b2f37;text-align:left}.ppt-summary th{color:#9fa6b1;font-weight:600}.ppt-summary td:last-child,.ppt-summary th:last-child{text-align:right}.ppt-muted{color:#8f96a1}.ppt-shortcuts{display:grid;grid-template-columns:auto 1fr;gap:8px 14px}.ppt-shortcuts kbd{min-width:44px;padding:4px 7px;border:1px solid #3a3e48;border-radius:6px;background:#101216;color:#fff;text-align:center;font:600 12px var(--mono,monospace)}
+  .ppt-settings-card{padding:15px;border:1px solid #30353e;border-radius:12px;background:#12151a}.ppt-settings-card+.ppt-settings-card{margin-top:12px}.ppt-settings-card h3{margin:0 0 3px}.ppt-settings-copy{margin:0 0 14px;color:#858d99;font-size:12px}.ppt-switch-row{display:flex;align-items:center;justify-content:space-between;gap:18px;cursor:pointer}.ppt-switch-row input{position:absolute;opacity:0;pointer-events:none}.ppt-switch{width:48px;height:28px;flex:0 0 auto;padding:3px;border:1px solid #434955;border-radius:999px;background:#252a31;transition:.2s}.ppt-switch::after{content:"";display:block;width:20px;height:20px;border-radius:50%;background:#a8afb9;transition:.2s}.ppt-switch-row input:checked+.ppt-switch{border-color:#72df99;background:rgba(114,223,153,.16)}.ppt-switch-row input:checked+.ppt-switch::after{transform:translateX(20px);background:#72df99}.ppt-stepper{display:grid;grid-template-columns:38px minmax(72px,1fr) auto 38px;align-items:center;margin-top:14px;border:1px solid #363c46;border-radius:10px;background:#0d0f13;overflow:hidden}.ppt-stepper button{height:42px;border:0;background:#20242a;color:#fff;font-size:19px;cursor:pointer}.ppt-stepper button:hover{background:#2c323b}.ppt-stepper input{width:100%;height:42px;border:0!important;border-radius:0!important;background:transparent!important;text-align:center;font:650 16px var(--mono,monospace)!important;-moz-appearance:textfield}.ppt-stepper input::-webkit-inner-spin-button,.ppt-stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.ppt-stepper-unit{color:#858d99;font-size:12px}.ppt-segmented{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.ppt-segmented.screen{grid-template-columns:repeat(4,1fr)}.ppt-segmented .ppt-ui-btn{min-width:0}.ppt-settings-save{width:100%;margin-top:14px;background:#edf1f5;color:#111318;border-color:#edf1f5}.ppt-settings-save:hover{background:#fff}.ppt-settings-save+.ppt-settings-copy{margin:10px 0 0}
+  #overview{z-index:110!important}
+  @media(max-width:1200px){.ppt-presenter-main{grid-template-columns:minmax(0,1.55fr) minmax(280px,.72fr)}}
+  @media(max-width:1100px){.ppt-presenter-bottom{grid-template-columns:minmax(292px,1fr) auto minmax(86px,.6fr);gap:12px}.ppt-time-stat{min-width:82px;padding:0 11px}.ppt-time-value{font-size:20px}.ppt-controls .ppt-ui-btn,.ppt-session-actions .ppt-ui-btn{min-width:60px;padding:8px 9px}}
+  @media(max-width:900px){.ppt-presenter-top{padding:12px 16px;flex-wrap:wrap}.ppt-presenter-top .ppt-presenter-meta{gap:6px}.ppt-presenter-top .ppt-ui-btn{padding:8px 9px}.ppt-presenter-main,#ppt-presenter[data-layout="slides"] .ppt-presenter-main,#ppt-presenter[data-layout="notes"] .ppt-presenter-main{grid-template-columns:minmax(0,1.45fr) minmax(250px,.72fr);gap:12px;padding:12px 16px}.ppt-preview-stack{gap:12px;grid-template-rows:minmax(0,1fr) clamp(104px,20vh,150px)}.ppt-saved{display:none}.ppt-presenter-bottom{grid-template-columns:minmax(270px,1fr) auto 74px;gap:8px;padding:9px 16px}.ppt-time-stat{min-width:0;padding:0 9px}.ppt-time-value{font-size:18px}.ppt-time-hint{max-width:78px;overflow:hidden;text-overflow:ellipsis}.ppt-controls,.ppt-session-actions{gap:5px}.ppt-controls .ppt-ui-btn,.ppt-session-actions .ppt-ui-btn{min-width:52px;padding:7px 8px;font-size:12px}.ppt-page-state strong{font-size:14px}.ppt-dialog-grid{grid-template-columns:1fr}.ppt-segmented.screen{grid-template-columns:repeat(2,1fr)}}
+  @media(max-height:700px){.ppt-presenter-top{padding-top:10px;padding-bottom:10px}.ppt-presenter-main{padding-top:10px;padding-bottom:10px}.ppt-preview-stack{grid-template-rows:minmax(0,1fr) clamp(88px,16vh,118px);gap:10px}.ppt-stage-label{padding:7px 10px}.ppt-notes-head{padding:12px 14px}.ppt-purpose-block{margin-top:10px;padding:8px 10px}.ppt-notes-draft-head{margin-top:10px;padding-top:9px}.ppt-presenter-bottom{padding-top:8px;padding-bottom:8px}.ppt-control-stack{gap:5px}.ppt-session-actions{padding-top:5px}}
+  /* ============ /演讲者模式 ============ */
+
+  /* ============================================================
+     ============ LAYOUTS API · 面向 agent 的类（v2）============
+     所有 layouts.md 中的骨架都基于下面这套命名。
+     如果你在 layouts.md 里看到某个类，它必须在下面有定义。
+     ============================================================ */
+
+  /* ---------- .frame：每页主内容容器 ---------- */
+  .frame{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+  /* 当 .frame 同时加了 grid 类时，grid 的 display:grid 覆盖 flex */
+  .frame.grid-2-7-5,
+  .frame.grid-2-6-6,
+  .frame.grid-2-8-4,
+  .frame.grid-3-3,
+  .frame.grid-6{display:grid}
+
+  /* ---------- 标题层级（API 名称，衬线为主） ---------- */
+  .h-hero{
+    font-family:var(--serif-zh);
+    font-weight:900;
+    font-size:10vw;
+    line-height:.96;
+    letter-spacing:-.02em;
+  }
+  .h-xl{
+    font-family:var(--serif-zh);
+    font-weight:700;
+    font-size:6.2vw;
+    line-height:1.08;
+    letter-spacing:-.01em;
+  }
+  .h-sub{
+    font-family:var(--serif-zh);
+    font-weight:500;
+    font-size:3.1vw;
+    line-height:1.25;
+    letter-spacing:0;
+    opacity:.7;
+  }
+  .h-md{
+    font-family:var(--serif-zh);
+    font-weight:600;
+    font-size:2.3vw;
+    line-height:1.3;
+  }
+  /* 英文标题专用（Playfair 衬线） */
+  .h-hero-en,.h-xl-en{font-family:var(--serif-en);letter-spacing:-.025em}
+
+  /* ---------- 首页可撤回人物视觉 ---------- */
+  .cover-visual-stage{align-self:stretch;position:relative;min-width:0;display:grid;place-items:center;border-left:1px solid rgba(var(--paper-rgb),.18);padding-left:1.1vw}
+  .cover-collectible-wrap{width:min(34vw,64vh);height:72vh;display:grid;place-items:center;position:relative;transform:translateX(.8vw)}
+  .cover-collectible-wrap::before{content:"";position:absolute;inset:9% 3% 5%;background:radial-gradient(circle at 52% 44%,rgba(180,154,103,.19),rgba(23,56,47,.10) 45%,transparent 72%);filter:blur(16px)}
+  .cover-collectible{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2.4vh 2.2vh rgba(0,0,0,.38))}
+  .cover-collectible-caption{position:absolute;z-index:2;left:1.4vw;bottom:3.2vh;display:grid;gap:.55vh;padding-left:1vw;border-left:2px solid var(--gold);color:var(--paper);text-shadow:0 2px 14px rgba(0,0,0,.65)}
+  .cover-collectible-caption strong{font-family:var(--serif-zh);font-size:1.42vw;letter-spacing:.08em}
+  .cover-collectible-caption span{font-family:var(--mono);font-size:max(10px,.68vw);letter-spacing:.22em;opacity:.68}
+  .cover-original-mark{align-self:stretch;display:grid;align-content:center;padding-left:3.5vw}
+  body:not(.cover-visual-off) .cover-original-mark{display:none!important}
+  body.cover-visual-off .cover-collectible-wrap{display:none!important}
+
+  /* ---------- lead 引语：定义见上方“字体规则”区块（已合并，勿重复定义） ---------- */
+
+  /* ---------- meta-row 底部元数据 ---------- */
+  .meta-row{
+    display:flex;
+    gap:1.2em;
+    align-items:baseline;
+    flex-wrap:wrap;
+    font-family:var(--mono);
+    font-size:max(12px,.92vw);
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    opacity:.6;
+  }
+
+  /* ---------- stat-card（数据大字报用） ---------- */
+  .stat-card{
+    display:flex;
+    flex-direction:column;
+    gap:.8vh;
+    align-items:flex-start;
+    padding-top:1.6vh;
+    border-top:1px solid currentColor;
+    border-color:rgba(127,127,127,.3);
+  }
+  .stat-card .stat-label{
+    font-family:var(--mono);
+    font-size:max(10px,.78vw);
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    opacity:.55;
+  }
+  .stat-card .stat-nb{
+    font-family:var(--serif-en);
+    font-weight:800;
+    font-size:5.8vw;
+    line-height:.9;
+    letter-spacing:-.03em;
+    font-feature-settings:"tnum";
+    margin-top:.4vh;
+  }
+  .stat-card .stat-nb .stat-unit{
+    font-family:var(--serif-zh);
+    font-weight:500;
+    font-size:.38em;
+    letter-spacing:0;
+    opacity:.72;
+    margin-left:.14em;
+  }
+  .stat-card .stat-note{
+    font-family:var(--sans-zh);
+    font-weight:400;
+    font-size:max(13px,1.05vw);
+    line-height:1.5;
+    opacity:.72;
+    margin-top:.6vh;
+  }
+  /* 当 stat-card 用于 grid-4（2x2），数字适度放大；若页面有标题+引文在上方，可内联 style 覆盖为更小值 */
+  .grid-4 .stat-card .stat-nb{font-size:5vw}
+  /* 当只有 3 个，字也可以稍大 */
+  .grid-3 .stat-card .stat-nb{font-size:6.8vw}
+
+  /* ---------- pipeline（流水线） ---------- */
+  .pipeline-section{
+    margin-top:4.4vh;
+    padding-top:2.8vh;
+    border-top:1px dashed rgba(127,127,127,.32);
+  }
+  .pipeline-section:first-of-type{
+    border-top:0;
+    padding-top:0;
+    margin-top:3vh;
+  }
+  .pipeline-label{
+    font-family:var(--mono);
+    font-size:max(11px,.85vw);
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    opacity:.62;
+    margin-bottom:2.2vh;
+  }
+  .pipeline{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:1.2vw;
+  }
+  .pipeline[data-cols="3"]{grid-template-columns:repeat(3,1fr)}
+  .pipeline[data-cols="4"]{grid-template-columns:repeat(4,1fr)}
+  .pipeline[data-cols="6"]{grid-template-columns:repeat(6,1fr)}
+  .step{
+    display:flex;
+    flex-direction:column;
+    gap:.8vh;
+    padding-top:1.4vh;
+    border-top:1px solid currentColor;
+    border-color:rgba(127,127,127,.35);
+  }
+  .step-nb{
+    font-family:var(--serif-en);
+    font-style:italic;
+    font-weight:500;
+    font-size:1.15vw;
+    opacity:.45;
+  }
+  .step-title{
+    font-family:var(--sans-zh);
+    font-weight:700;
+    font-size:1.55vw;
+    letter-spacing:.01em;
+    line-height:1.2;
+  }
+  .step-desc{
+    font-family:var(--sans-zh);
+    font-weight:400;
+    font-size:max(12px,.95vw);
+    line-height:1.45;
+    opacity:.72;
+  }
+
+  /* ---------- 网格（layouts.md 所用） ---------- */
+  /* 这些类独立挂到任何容器上都能生效，不依赖 .frame 复合选择器 */
+  .grid-2-7-5{display:grid;grid-template-columns:7fr 5fr;gap:3vw 4vh;align-items:start}
+  .grid-2-6-6{display:grid;grid-template-columns:1fr 1fr;gap:3vw 4vh;align-items:start}
+  .grid-2-8-4{display:grid;grid-template-columns:8fr 4fr;gap:3vw 4vh;align-items:start}
+  .grid-3-3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    grid-auto-rows:minmax(0,1fr);
+    gap:2.4vh 2vw;
+  }
+  /* grid-6 已在旧样式里定义为 3x2，这里仅补 align */
+
+  /* ---------- 图片 frame-img（layouts.md 主命名） ---------- */
+  /* 在旧样式里已定义，这里补 img-cap 命名别名与增强 */
+  figure.frame-img{margin:0;display:flex;flex-direction:column;min-width:0}
+  /* 有图注时:图片弹性收缩,图注收进固定高度/比例框内部,
+     否则 img 的 height:100% 会把 figcaption 挤出 overflow:hidden 裁掉 */
+  figure.frame-img:has(> .img-cap) > img{flex:1 1 auto;min-height:0;height:auto}
+  .img-cap{
+    display:block;
+    flex:0 0 auto;
+    padding:.7vh .9em .9vh;
+    font-family:var(--mono);
+    font-size:max(10px,.8vw);
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    opacity:.6;
+  }
+  /* callout src 命名别名 */
+  .callout-src{
+    display:block;
+    margin-top:1.6vh;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    opacity:.6;
+  }
+
+  /* ---------- chrome & foot：定义见上方“Magazine chrome”区块（已合并，勿重复定义） ---------- */
+
+  /* ============ 动效系统(Motion One 驱动) ============
+     所有 [data-anim] 元素默认隐藏,进入页面时由 JS 逐个揭示。
+     - cascade(默认):按 DOM 顺序 stagger 120ms 淡入 + y:16→0
+     - hero(hero 页自动):慢一点的 stagger 180ms
+     - quote(含 [data-anim="line"]):逐行 600ms 淡入
+     - directional(含 [data-anim="left|right"]):左→分隔线→右
+     - pipeline(data-animate="pipeline"):Space/→ 手动推进
+     Motion One 没加载成功时(CDN 断 + 本地丢),所有 [data-anim] 会兜底显示。
+  */
+  [data-anim]{opacity:1}
+  body.motion-ready [data-anim]{opacity:0}
+  body.motion-ready [data-anim="left"]{transform:translateX(-24px)}
+  body.motion-ready [data-anim="right"]{transform:translateX(24px)}
+  body.motion-ready [data-anim="line"]{opacity:0;transform:translateY(10px)}
+  body.motion-ready [data-animate="pipeline"] [data-anim]{opacity:.15}
+  body.low-power #deck{transition:none!important}
+  body.low-power *,
+  body.low-power *::before,
+  body.low-power *::after{animation:none!important;transition:none!important}
+  body.low-power.motion-ready [data-anim],
+  body.low-power [data-anim]{opacity:1!important;transform:none!important}
+  /* ESC 索引缩略图：克隆的 slide 不经过动效播放，强制显示所有待动画元素 */
+  #overview [data-anim]{opacity:1!important;transform:none!important}
+
+  /* ---------- 响应式降级 ---------- */
+  @media (max-width:900px){
+    .display{font-size:16vw}
+    .display-zh{font-size:12vw}
+    .h1-zh{font-size:7vw}
+    .h-hero{font-size:14vw}
+    .h-xl{font-size:9vw}
+    .pipeline{grid-template-columns:repeat(2,1fr)}
+    .grid-2-7-5,.grid-2-6-6,.grid-2-8-4{grid-template-columns:1fr}
+  }
+
+  /* Forest Ink editorial expansion: varied stage-scale compositions without decorative clutter. */
+  .stage-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1.5vw;align-items:stretch}
+  .edge-label{font-family:var(--mono);font-size:max(10px,.66vw);letter-spacing:.2em;text-transform:uppercase;opacity:.52;writing-mode:vertical-rl}
+  .ink-panel{border:1px solid rgba(127,127,127,.28);padding:2.4vh 2vw;min-height:14vh;display:flex;flex-direction:column;justify-content:space-between}
+  .ink-panel.emphasis{background:var(--ink);color:var(--paper)}
+  .dark .ink-panel.emphasis{background:var(--paper);color:var(--ink)}
+  .question-stack{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(127,127,127,.3);border:1px solid rgba(127,127,127,.3)}
+  .question-stack>div{background:var(--paper);padding:3vh 2.2vw;min-height:17vh;display:flex;flex-direction:column;justify-content:space-between}
+  .dark .question-stack>div{background:var(--ink)}
+  .q-nb{font-family:var(--serif-en);font-size:4.8vw;line-height:.8;opacity:.17}
+  .q-text{font-family:var(--serif-zh);font-size:2.35vw;font-weight:700;line-height:1.15}
+  .journey{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:4vw;padding:5vh 1vw 3vh}
+  .journey:before{content:"";position:absolute;left:8%;right:8%;top:10.7vh;height:1px;background:rgba(127,127,127,.45)}
+  .journey-node{position:relative;z-index:1;display:grid;justify-items:center;text-align:center;gap:1.5vh}
+  .journey-dot{width:5.8vw;height:5.8vw;border:1px solid currentColor;background:var(--ink);display:grid;place-items:center;font-family:var(--serif-en);font-size:2.5vw}
+  .light .journey-dot{background:var(--paper)}
+  .journey-title{font-family:var(--serif-zh);font-size:3vw;font-weight:700}
+  .journey-copy{font-family:var(--sans-zh);font-size:1.15vw;line-height:1.55;opacity:.72}
+  .stair-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4vw;align-items:end;min-height:45vh}
+  .stair-flow>div{border-top:1px solid rgba(127,127,127,.35);padding:2.5vh 1.5vw 2vh;display:flex;flex-direction:column;justify-content:flex-end}
+  .stair-flow>div:nth-child(1){min-height:19vh}.stair-flow>div:nth-child(2){min-height:27vh}.stair-flow>div:nth-child(3){min-height:35vh}.stair-flow>div:nth-child(4){min-height:43vh;background:rgba(127,127,127,.09)}
+  .stair-word{font-family:var(--serif-zh);font-size:4.2vw;font-weight:700;line-height:1}
+  .stair-meta{font-family:var(--mono);font-size:max(10px,.7vw);letter-spacing:.16em;opacity:.58;margin-bottom:auto}
+  .cross-map{display:grid;grid-template-columns:1fr .78fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:rgba(127,127,127,.28);border:1px solid rgba(127,127,127,.28);min-height:52vh}
+  .cross-map>div{background:var(--paper);padding:2.5vh 2vw;display:flex;flex-direction:column;justify-content:space-between}
+  .cross-map .center{grid-column:2;grid-row:1/3;background:var(--ink);color:var(--paper);align-items:center;justify-content:center;text-align:center}
+  .cross-map .center .trust{font-family:var(--serif-zh);font-size:6vw;line-height:1}
+  .icon-line{width:2.35vw;height:2.35vw;stroke-width:1.25;opacity:.75}
+  .goal-steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2vw;align-items:end;min-height:39vh}
+  .goal-step{border-left:1px solid rgba(127,127,127,.4);padding:2vh 2vw;display:flex;flex-direction:column;justify-content:flex-end}
+  .goal-step:nth-child(1){height:20vh}.goal-step:nth-child(2){height:28vh}.goal-step:nth-child(3){height:36vh;background:rgba(127,127,127,.1)}
+  .goal-step .n{font-family:var(--serif-en);font-size:7vw;line-height:.8;opacity:.22}
+  .goal-step .t{font-family:var(--serif-zh);font-size:2.35vw;font-weight:700;line-height:1.2;margin-top:2vh}
+  .boundary-split{display:grid;grid-template-columns:5fr 2fr 5fr;align-items:stretch;min-height:48vh;border-top:1px solid rgba(127,127,127,.3);border-bottom:1px solid rgba(127,127,127,.3)}
+  .boundary-side{padding:4vh 3vw;display:flex;flex-direction:column;justify-content:space-between}
+  .boundary-mark{display:grid;place-items:center;border-left:1px solid rgba(127,127,127,.25);border-right:1px solid rgba(127,127,127,.25);font-family:var(--serif-en);font-size:8vw;opacity:.28}
+  .service-arrow{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;min-height:42vh}
+  .service-arrow:before{content:"";position:absolute;left:2%;right:2%;top:9.2vh;height:1px;background:rgba(127,127,127,.36)}
+  .service-arrow article{position:relative;padding:0 3vw 0 0;display:grid;align-content:start;gap:2vh}
+  .service-arrow article:before{content:"";width:1.1vw;height:1.1vw;background:currentColor;display:block;margin-top:8.65vh;transform:translateY(-50%)}
+  .service-arrow h3{font-family:var(--serif-zh);font-size:3vw;margin:0}.service-arrow p{font-family:var(--sans-zh);font-size:1.25vw;line-height:1.55;opacity:.75;margin:0}
+  .orbit{position:relative;min-height:58vh;display:grid;place-items:center}
+  .orbit-ring{position:absolute;width:37vw;height:37vw;max-height:55vh;max-width:55vh;border:1px solid rgba(127,127,127,.35);border-radius:50%}
+  .orbit-core{width:14vw;height:14vw;max-width:23vh;max-height:23vh;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;text-align:center;font-family:var(--serif-zh);font-size:3vw;font-weight:700;line-height:1.05}
+  .orbit-node{position:absolute;width:18vw;display:flex;gap:1vw;align-items:center;font-family:var(--sans-zh);font-size:1.35vw;line-height:1.25}
+  .orbit-node b{font-family:var(--serif-en);font-size:3vw;font-weight:700;opacity:.25}.orbit-node.n1{top:2%;left:7%}.orbit-node.n2{top:2%;right:2%}.orbit-node.n3{top:45%;right:-1%}.orbit-node.n4{bottom:0;right:11%}.orbit-node.n5{bottom:0;left:7%}
+  .week-board{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(127,127,127,.3);border:1px solid rgba(127,127,127,.3);min-height:52vh}
+  .week-board article{background:var(--ink);padding:3vh 2.5vw;display:grid;grid-template-columns:auto 1fr;gap:2vw;align-items:center}.light .week-board article{background:var(--paper)}
+  .week-board .nb{font-family:var(--serif-en);font-size:6vw;line-height:.85;opacity:.2}.week-board h3{font-family:var(--serif-zh);font-size:2.8vw;margin:0}.week-board p{font-family:var(--sans-zh);font-size:1.1vw;opacity:.7;margin:.8vh 0 0}
+  .evidence-ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:1vw;align-items:end;min-height:49vh}
+  .evidence-ladder article{border-top:1px solid rgba(127,127,127,.36);padding:2vh 1.2vw;display:flex;flex-direction:column;justify-content:flex-end}.evidence-ladder article:nth-child(1){height:21vh}.evidence-ladder article:nth-child(2){height:27vh}.evidence-ladder article:nth-child(3){height:33vh}.evidence-ladder article:nth-child(4){height:39vh}.evidence-ladder article:nth-child(5){height:45vh;background:rgba(127,127,127,.08)}
+  .evidence-ladder b{font-family:var(--serif-en);font-size:4vw;opacity:.2}.evidence-ladder h3{font-family:var(--serif-zh);font-size:1.9vw;margin:1vh 0}.evidence-ladder small{font-family:var(--mono);font-size:.65vw;letter-spacing:.15em;opacity:.55}
+  .support-map{display:grid;grid-template-columns:1fr 1.1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:rgba(127,127,127,.28);border:1px solid rgba(127,127,127,.28);min-height:52vh}.support-map>div{background:var(--paper);padding:2.5vh 2vw;display:flex;flex-direction:column;justify-content:space-between}.support-map .hub{grid-column:2;grid-row:1/3;background:var(--ink);color:var(--paper);justify-content:center;text-align:center}.support-map .wide{grid-column:3;grid-row:1/3}
+  .support-map h3{font-family:var(--serif-zh);font-size:2.45vw;margin:0}.support-map .hub h3{font-size:5vw}.support-map p{font-family:var(--sans-zh);font-size:1.05vw;line-height:1.55;opacity:.7;margin:0}
+  /* Visual anchors v3: authentic product story, three mirrors, service continuum, support system. */
+  .encounter-stage{display:grid;grid-template-columns:.82fr 1.18fr;gap:3vw;min-height:72vh;align-items:stretch}
+  .encounter-copy{display:flex;flex-direction:column;justify-content:center;padding-right:1vw}
+  .encounter-lead{font-family:var(--serif-zh);font-size:1.65vw;line-height:1.55;color:rgba(244,241,232,.82);margin:2vh 0 3vh}
+  .encounter-proof{border-top:1px solid rgba(244,241,232,.24)}
+  .encounter-proof>div{display:grid;grid-template-columns:2.4vw 4.4vw 1fr;gap:1vw;align-items:center;padding:1.45vh 0;border-bottom:1px solid rgba(244,241,232,.18)}
+  .encounter-proof i{width:1.45vw;height:1.45vw;stroke-width:1.35;color:#b9c9b8}.encounter-proof b{font-family:var(--serif-en);font-size:1.7vw;font-weight:500;opacity:.45}.encounter-proof span{font-family:var(--sans-zh);font-size:1.12vw;letter-spacing:.04em}
+  .encounter-visual{position:relative;min-height:67vh;overflow:hidden;border:1px solid rgba(244,241,232,.18);background:#0b1813}
+  .encounter-scene{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+  .encounter-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,17,13,.5),transparent 42%),linear-gradient(0deg,rgba(7,17,13,.72),transparent 38%)}
+  .bracelet-cutout{position:absolute;z-index:2;right:-1.4vw;bottom:-2.5vh;width:23vw;max-height:41vh;object-fit:contain;filter:drop-shadow(0 2.2vh 2.2vh rgba(0,0,0,.32))}
+  .encounter-caption{position:absolute;z-index:3;left:2vw;bottom:2.2vh;width:19vw;font-family:var(--mono);font-size:max(10px,.7vw);line-height:1.65;letter-spacing:.15em;color:#f4f1e8;text-transform:uppercase}
+  .encounter-caption strong{display:block;font-family:var(--serif-zh);font-size:1.45vw;letter-spacing:.04em;text-transform:none;margin-bottom:.6vh}
+  .mirror-wall{display:grid;grid-template-columns:1fr 1.05fr 1fr;gap:1.5vw;perspective:1200px;min-height:49vh;align-items:center}
+  .mirror-pane{position:relative;min-height:43vh;padding:2.8vh 2.2vw;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;border:1px solid rgba(var(--ink-rgb),.26);background:linear-gradient(145deg,rgba(255,255,255,.72),rgba(174,190,179,.16) 46%,rgba(255,255,255,.54));box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+  .mirror-pane:before{content:"";position:absolute;inset:-25% auto -25% 42%;width:1px;background:rgba(var(--ink-rgb),.2);transform:rotate(19deg)}
+  .mirror-pane:nth-child(1){transform:rotateY(7deg);transform-origin:right center}.mirror-pane:nth-child(2){min-height:49vh;background:var(--ink);color:var(--paper);transform:translateY(-1vh)}.mirror-pane:nth-child(3){transform:rotateY(-7deg);transform-origin:left center}
+  .mirror-pane .mirror-index{font-family:var(--mono);font-size:max(10px,.7vw);letter-spacing:.2em;opacity:.58}.mirror-pane h3{font-family:var(--serif-zh);font-size:5vw;line-height:.9;margin:0}.mirror-pane p{font-family:var(--sans-zh);font-size:1.18vw;line-height:1.55;max-width:17vw;opacity:.76}.mirror-pane .mirror-question{font-family:var(--serif-zh);font-size:1.45vw;line-height:1.35;border-top:1px solid currentColor;padding-top:1.5vh}
+  .service-evidence{display:grid;grid-template-columns:.68fr 1.32fr;gap:3.8vw;min-height:44vh;align-items:center;padding:0 .7vw}
+  .service-photo{position:relative;width:19vw;height:43vh;min-height:0;justify-self:center;overflow:hidden;background:#17241d;transform:perspective(1200px) rotateY(2.2deg);transform-origin:right center;box-shadow:-.8vw 1vh 0 rgba(34,61,48,.12),0 2.2vh 3.6vh rgba(9,20,16,.13)}.service-photo:before{content:"";position:absolute;inset:.55vw -.55vw -.55vw .55vw;border:1px solid rgba(34,61,48,.22);z-index:-1}.service-photo img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.82) contrast(1.02)}.service-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,17,13,.72),transparent 42%)}
+  .service-photo figcaption{position:absolute;z-index:1;left:1.25vw;right:1.25vw;bottom:1.5vh;color:#f4f1e8;font-family:var(--serif-zh);font-size:1.25vw;line-height:1.35}.service-photo figcaption small{display:block;font-family:var(--mono);font-size:max(10px,.58vw);letter-spacing:.14em;margin-bottom:.55vh;opacity:.76}
+  .service-continuum{display:grid;grid-template-rows:repeat(3,1fr);border-top:1px solid rgba(var(--ink-rgb),.25)}.service-continuum article{display:grid;grid-template-columns:3.4vw 1fr auto;gap:1.3vw;align-items:center;border-bottom:1px solid rgba(var(--ink-rgb),.25);padding:1.5vh .4vw}.service-continuum i{width:2vw;height:2vw;stroke-width:1.2}.service-continuum h3{font-family:var(--serif-zh);font-size:2.2vw;margin:0}.service-continuum p{font-family:var(--sans-zh);font-size:1.05vw;line-height:1.5;opacity:.72;margin:.5vh 0 0}.service-continuum b{font-family:var(--serif-en);font-size:3.4vw;opacity:.18;font-weight:500}
+  .orbit-node i{width:1.45vw;height:1.45vw;stroke-width:1.25;flex:none}.orbit-node span{display:flex;align-items:center;gap:.7vw;flex-wrap:wrap}.orbit-node small{width:100%;padding-left:2.15vw}
+  .week-icon{width:2.3vw;height:2.3vw;stroke-width:1.2;margin-right:.1vw;opacity:.72}.week-board article{grid-template-columns:auto auto 1fr}
+  .stage-icon{width:2.2vw;height:2.2vw;stroke-width:1.2;margin:0 0 1.2vh auto;opacity:.78}
+  .support-system{position:relative;min-height:53vh;border-top:1px solid rgba(var(--ink-rgb),.22);border-bottom:1px solid rgba(var(--ink-rgb),.22);overflow:hidden}
+  .support-links{position:absolute;inset:0;width:100%;height:100%;color:var(--ink);opacity:.25}.support-links line{stroke:currentColor;stroke-width:.22;stroke-dasharray:1.2 1.2}
+  .support-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:17vw;height:17vw;max-width:28vh;max-height:28vh;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;text-align:center;padding:2vw;z-index:2}.support-core h3{font-family:var(--serif-zh);font-size:3.4vw;line-height:1;margin:0}.support-core p{font-family:var(--sans-zh);font-size:1vw;line-height:1.5;margin:1.2vh 0 0;opacity:.7}
+  .support-node{position:absolute;width:19vw;padding:1.6vh 1.3vw;border:1px solid rgba(var(--ink-rgb),.25);background:rgba(var(--paper-rgb),.94);display:grid;grid-template-columns:2.4vw 1fr;gap:1vw;align-items:center;z-index:2}.support-node i{width:1.8vw;height:1.8vw;stroke-width:1.25}.support-node b{display:block;font-family:var(--mono);font-size:max(10px,.64vw);letter-spacing:.14em;opacity:.52;margin-bottom:.4vh}.support-node span{font-family:var(--serif-zh);font-size:1.5vw;font-weight:600;line-height:1.18}.support-node.sn1{left:3%;top:6%}.support-node.sn2{left:3%;bottom:7%}.support-node.sn3{right:3%;top:4%}.support-node.sn4{right:0;top:42%}.support-node.sn5{right:12%;bottom:5%}
+  .script-copy{position:relative;isolation:isolate}.script-loop-art{position:absolute;z-index:-1;right:-1vw;bottom:-4vh;width:18vw;height:18vw;border:1px solid rgba(var(--ink-rgb),.14);border-radius:50%}.script-loop-art:before{content:"";position:absolute;inset:2.2vw;border:1px dashed rgba(var(--ink-rgb),.2);border-radius:50%}.script-loop-art:after{content:"REPEAT";position:absolute;right:-1.8vw;top:44%;font-family:var(--mono);font-size:max(10px,.64vw);letter-spacing:.18em;transform:rotate(90deg);opacity:.36}.script-loop-arrow{position:absolute;right:1.25vw;top:1.45vw;width:0;height:0;border-left:.65vw solid transparent;border-right:.65vw solid transparent;border-bottom:1.05vw solid rgba(var(--ink-rgb),.32);transform:rotate(43deg)}
+  .mountain-lines{position:absolute;right:1vw;bottom:8vh;width:54vw;height:61vh;opacity:.38;z-index:1}.mountain-lines path{fill:none;stroke:currentColor;stroke-width:.6}.mountain-lines .ridge{stroke-width:1.15;opacity:.7}.mountain-lines circle{fill:currentColor;opacity:.7}.mountain-lines text{font-family:var(--mono);font-size:2.1px;letter-spacing:.16em;fill:currentColor}
+  .goal-step{position:relative;overflow:hidden}.goal-step .goal-icon{width:2.3vw;height:2.3vw;stroke-width:1.2;position:absolute;right:1.3vw;top:1.6vh;opacity:.48}.goal-step:nth-child(3) .goal-icon{opacity:.76}
+  .first-step-mark{position:absolute;right:7vw;bottom:13vh;display:flex;align-items:center;gap:1.4vw;color:rgba(244,241,232,.18)}.first-step-mark span{font-family:var(--serif-en);font-size:15vw;line-height:.72;font-weight:700}.first-step-mark i{width:7vw;height:7vw;stroke-width:.7}.first-step-mark:before{content:"FIRST MOVE";position:absolute;right:0;top:-2.5vh;font-family:var(--mono);font-size:max(10px,.66vw);letter-spacing:.2em;color:rgba(244,241,232,.38)}
+  .evidence-ladder .evidence-icon{width:1.8vw;height:1.8vw;stroke-width:1.2;margin-bottom:auto;opacity:.62}.evidence-ladder article:nth-child(5) .evidence-icon{opacity:.88}
+  .quote-stage{position:relative;min-height:79vh;overflow:hidden;border-top:1px solid rgba(127,127,127,.28);border-bottom:1px solid rgba(127,127,127,.28);background:radial-gradient(circle at 18% 88%,rgba(var(--accent-rgb),.24),transparent 36%),linear-gradient(135deg,#07110e,#10231b 58%,#07110e)}
+  .quote-stage::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0 42%,rgba(4,10,8,.16) 58%,rgba(4,10,8,.5));pointer-events:none}
+  .single-portrait{position:absolute;left:3.2vw;bottom:4.5vh;width:38vw;height:65vh;object-fit:cover;object-position:72% 50%;filter:grayscale(1) contrast(1.06);mix-blend-mode:luminosity;mask-image:linear-gradient(to bottom,#000 0 82%,transparent 100%)}
+  .quote-copy{position:relative;z-index:1;min-height:79vh;padding:7vh 4.5vw 5vh 43vw;display:flex;flex-direction:column;justify-content:center;color:#f4f1e8}
+  .proof-word{font-family:var(--serif-zh);font-size:9.1vw;font-weight:700;line-height:.86;color:#f4f1e8}
+  .thinkers-stage{min-height:79vh;padding:4.4vh 2.8vw 0;background:linear-gradient(180deg,#07110e,#10231b 58%,#07110e);display:grid;grid-template-rows:auto 1fr;gap:1.5vh;overflow:hidden}
+  .thinkers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(244,241,232,.18);border:1px solid rgba(244,241,232,.18);min-height:58vh}
+  .thinker{position:relative;overflow:hidden;background:#0a1511;display:flex;flex-direction:column;justify-content:flex-end}
+  .thinker img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;filter:grayscale(1) contrast(1.06);opacity:.87}
+  .thinker::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,10,8,.08),rgba(4,10,8,.1) 42%,rgba(4,10,8,.92) 88%)}
+  .thinker-copy{position:relative;z-index:1;padding:2.3vh 1.25vw 2.6vh;color:#f4f1e8}
+  .thinker-word{font-family:var(--serif-zh);font-size:2.7vw;font-weight:700;line-height:1.05;color:#f4f1e8;text-shadow:0 2px 16px rgba(0,0,0,.5)}
+  .thinker-name{font-family:var(--sans-zh);font-size:.92vw;letter-spacing:.08em;color:rgba(244,241,232,.78);margin-top:1vh}
+  .stage-callout{font-family:var(--sans-zh);font-size:1.36vw;line-height:1.55;color:var(--paper);opacity:1;background:rgba(var(--paper-rgb),.09);border-left:3px solid var(--paper);padding:2.1vh 2.1vw}
+
+</style>
+</head>
+<body>
+<script>
+  (function(){
+    const KEY = 'guizang-ppt-low-power';
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const stored = localStorage.getItem(KEY);
+    window.__lowPowerMode = stored === '1' || (stored === null && (reduced || /MicroMessenger/i.test(navigator.userAgent)));
+    function updateHint(){
+      const label = document.querySelector('.ppt-low-power-label');
+      if(label) label.textContent = window.__lowPowerMode ? '动态' : '静态';
+    }
+    window.__setLowPowerMode = function(on, opts={}){
+      window.__lowPowerMode = !!on;
+      document.body.classList.toggle('low-power', window.__lowPowerMode);
+      if(opts.persist !== false) localStorage.setItem(KEY, window.__lowPowerMode ? '1' : '0');
+      if(window.__lowPowerMode && document.getAnimations){
+        document.getAnimations().forEach(a=>a.cancel());
+      }
+      updateHint();
+      dispatchEvent(new CustomEvent('ppt-low-power-change', {detail:{on:window.__lowPowerMode}}));
+      if(window.__playSlide) window.__playSlide(window.__currentSlideIndex || 0);
+    };
+    document.body.classList.toggle('low-power', window.__lowPowerMode);
+    addEventListener('DOMContentLoaded', updateHint, {once:true});
+  })();
+</script>
+<script>
+  (()=>{
+    /* 回滚开关：网址后加 ?cover=off 恢复原封面；无参数或 ?cover=on 使用人物版。 */
+    const value = new URLSearchParams(location.search).get('cover');
+    document.body.classList.toggle('cover-visual-off', value === 'off');
+  })();
+</script>
+
+<canvas id="bg-dark" class="bg"></canvas>
+<canvas id="bg-light" class="bg"></canvas>
+<div id="hint" role="toolbar" aria-label="快捷控制">
+  <span>← → 翻页</span><span class="ppt-sep">·</span>
+  <button id="ppt-low-power-btn" type="button"><span class="ppt-key">B</span><span class="ppt-low-power-label">静态</span></button><span class="ppt-sep">·</span>
+  <button id="ppt-overview-btn" type="button"><span class="ppt-key">ESC</span>总览</button><span class="ppt-sep">·</span>
+  <button id="ppt-presenter-btn" type="button"><span class="ppt-key">P</span>演讲模式</button>
+</div>
+<div id="ppt-tv-enter" role="status" aria-live="polite">按电视遥控器“确定”或点击屏幕，进入全屏演示</div>
+<div id="ppt-tv-feedback" aria-hidden="true">›</div>
+
+<div id="deck">
+
+<section class="slide hero dark" data-theme="dark" data-slide-id="love-lands" data-animate="hero">
+  <div class="ghost" style="right:-1vw;bottom:-12vh;font-family:var(--serif-zh);font-size:46vw;opacity:.055">爱</div>
+  <div class="chrome"><div>经销商动员分享 · 40 MIN</div><div>01 / 26</div></div>
+  <div class="frame" style="display:grid;grid-template-columns:7fr 5fr;align-items:center;min-height:79vh;gap:5vw;position:relative;z-index:2">
+    <div style="display:grid;gap:3.2vh">
+    <div class="kicker" data-anim>From Inner Awakening to Market Action</div>
+    <h1 class="display-zh" style="font-size:8.6vw" data-anim>让爱落地</h1>
+    <div class="rule" style="max-width:18vw" data-anim></div>
+    <p class="lead" style="max-width:62vw;font-size:2.15vw" data-anim>爱要有专业承载<br>慈悲要用行动完成</p>
+    <div class="meta-row" data-anim><span>从内在觉醒</span><span>·</span><span>到市场行动</span></div>
+    </div>
+    <div class="cover-visual-stage" data-anim>
+      <div class="cover-collectible-wrap" aria-label="彭进篮球收藏人物视觉">
+        <img class="cover-collectible" src="images/01-pengjin-basketball-collectible-v1.png" alt="彭进篮球收藏人物，配有话筒、笔记本与篮球">
+        <div class="cover-collectible-caption"><strong>彭进 · 行动版</strong><span>FROM INNER AWAKENING TO ACTION</span></div>
+      </div>
+      <div class="cover-original-mark">
+        <div style="font-family:var(--serif-zh);font-size:8.8vw;line-height:.92">心</div>
+        <div style="height:12vh;border-left:1px solid rgba(var(--paper-rgb),.45);margin:2.5vh 0 2.5vh 4.4vw"></div>
+        <div style="font-family:var(--serif-zh);font-size:8.8vw;line-height:.92;text-align:right">行</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">让爱落地 · 经销商动员分享</div><div>OPENING</div></div>
+</section>
+
+<section class="slide hero light" data-theme="light" data-slide-id="silent-question" data-animate="quote">
+  <div class="chrome"><div>第一幕 · 心被唤醒</div><div>02 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:4vh;text-align:center">
+    <div class="kicker" data-anim>一个让我沉默的问题</div>
+    <h1 class="display-zh" style="font-size:6.9vw;max-width:86vw;margin:auto" data-anim="line">业绩不好，<br>是因为业力大吗？</h1>
+    <p class="lead" style="max-width:65vw;margin:auto" data-anim="line">只讲命，会失去行动；只讲拼命，也可能在错误方向里持续消耗。</p>
+  </div>
+  <div class="foot"><div class="title">问题不是为了评判，而是为了醒来</div><div>ACT I</div></div>
+</section>
+
+<section class="slide light" data-theme="light" data-slide-id="performance-mirror" data-animate="directional">
+  <div class="chrome"><div>现实之镜 · Reality Check</div><div>03 / 26</div></div>
+  <div class="frame" style="display:grid;grid-template-columns:4.2fr 7.8fr;align-items:center;min-height:79vh;gap:5vw">
+    <div data-anim="left" style="display:grid;gap:3vh">
+      <div class="kicker">结果会照见过程</div>
+      <h2 class="h-xl" style="font-size:5.8vw">业绩是<br>一面镜子</h2>
+      <p class="lead" style="font-size:1.45vw">它不是审判，<br>而是六项可改进的功课。</p>
+    </div>
+    <div class="question-stack" data-anim="right">
+      <div><span class="q-nb">01</span><span class="q-text">心力稳定吗</span></div>
+      <div><span class="q-nb">02</span><span class="q-text">专业扎实吗</span></div>
+      <div><span class="q-nb">03</span><span class="q-text">服务持续吗</span></div>
+      <div><span class="q-nb">04</span><span class="q-text">方向走对吗</span></div>
+      <div><span class="q-nb">05</span><span class="q-text">系统可重复吗</span></div>
+      <div><span class="q-nb">06</span><span class="q-text">行动发生了吗</span></div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">不否定自己，也不把原因推给命运</div><div>THE MIRROR</div></div>
+</section>
+
+<section class="slide dark" data-theme="dark" data-slide-id="inner-outer">
+  <div class="chrome"><div>内外同修 · Inner / Outer</div><div>04 / 26</div></div>
+  <div class="frame" style="padding-top:5vh">
+    <div class="kicker" data-anim>人，永远在第一位</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:5vh;min-height:52vh">
+      <div style="display:flex;flex-direction:column;justify-content:space-between;padding:1vh 4vw 2vh 0;border-right:1px solid rgba(var(--paper-rgb),.3)" data-anim>
+        <div><div class="meta-row"><span>INWARD</span><span>01</span></div><h2 class="h-xl" style="font-size:5.5vw;margin-top:3vh">向内修心</h2></div>
+        <p class="lead">看见恐惧、执念<br>与急于求成</p>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:space-between;padding:1vh 0 2vh 4vw" data-anim>
+        <div><div class="meta-row"><span>OUTWARD</span><span>02</span></div><h2 class="h-xl" style="font-size:5.5vw;margin-top:3vh">向外修事</h2></div>
+        <p class="lead">练好专业、表达<br>与持续服务</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2vh" data-anim>内在越清醒，外在越应该有行动。</div>
+  </div>
+  <div class="foot"><div class="title">修行不是离开市场，而是更清醒地回到市场</div><div>ACT I</div></div>
+</section>
+
+<section class="slide dark" data-theme="dark" data-slide-id="people-first-proof" data-animate="directional">
+  <div class="chrome"><div>人物观点 · People First</div><div>05 / 26</div></div>
+  <div class="frame">
+    <div class="quote-stage">
+      <img class="single-portrait" src="./images/thinkers/rich-devos-portrait.jpg" alt="理查·狄维士清晰半身肖像">
+      <div class="quote-copy" data-anim="right">
+        <div class="kicker" style="color:rgba(244,241,232,.76)">RICH DEVOS · 理查·狄维士</div>
+        <div class="proof-word" style="margin-top:2vh">人</div>
+        <h2 class="h2-zh" style="font-size:3.7vw;margin-top:2vh;color:#f4f1e8">永远放在第一位</h2>
+        <p class="lead" style="font-size:1.42vw;color:rgba(244,241,232,.82);margin-top:2.2vh">相信人的力量 · 帮助他人获得成功</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">真实人物照片 · 根据原图主题重构；主句不作为逐字引语</div><div>ACT I · VALUE</div></div>
+</section>
+
+<section class="slide dark" data-theme="dark" data-slide-id="business-essence-proof" data-animate="directional">
+  <div class="chrome"><div>四种商业视角 · Business Essence</div><div>06 / 26</div></div>
+  <div class="frame">
+    <div class="thinkers-stage">
+      <div data-anim="left"><div class="kicker" style="color:rgba(244,241,232,.72)">人物在下 · 观点在上 · 一眼看懂</div><h2 class="h-xl" style="font-size:4.5vw;margin-top:.7vh;color:#f4f1e8">商业的本质</h2></div>
+      <div class="thinkers-grid" data-anim="right">
+        <div class="thinker"><img src="./images/thinkers/kazuo-inamori-full.jpg" alt="稻盛和夫清晰半身肖像"><div class="thinker-copy"><div class="thinker-word">利他</div><div class="thinker-name">稻盛和夫</div></div></div>
+        <div class="thinker"><img src="./images/thinkers/peter-drucker.jpg" alt="彼得·德鲁克真实肖像"><div class="thinker-copy"><div class="thinker-word">解决问题</div><div class="thinker-name">彼得·德鲁克</div></div></div>
+        <div class="thinker"><img src="./images/thinkers/jack-ma.jpg" alt="马云真实肖像"><div class="thinker-copy"><div class="thinker-word">价值交换</div><div class="thinker-name">马云</div></div></div>
+        <div class="thinker"><img src="./images/thinkers/bill-gates.jpg" alt="比尔·盖茨真实肖像"><div class="thinker-copy"><div class="thinker-word">人性</div><div class="thinker-name">比尔·盖茨</div></div></div>
+        </div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">真实人物照片 · 四个关键词是本演讲概括，不冒充逐字引语</div><div>ACT I · CLOSE</div></div>
+</section>
+
+<section class="slide hero light" data-theme="light" data-slide-id="effort-is-not-all" data-animate="directional">
+  <div class="chrome"><div>第二幕 · 躬身入局</div><div>07 / 26</div></div>
+  <div class="frame" style="display:grid;grid-template-columns:5fr 7fr;align-items:center;min-height:79vh;gap:5vw">
+    <div style="display:grid;align-content:center;gap:3vh;padding-right:2vw" data-anim="left">
+      <div class="kicker" data-anim>努力没有错，但努力不是全部</div>
+      <h1 class="display-zh" style="font-size:6vw" data-anim>我已经<br>很努力了</h1>
+      <p class="lead" style="font-size:1.8vw" data-anim>为什么结果还没有发生？</p>
+    </div>
+    <div class="stair-flow" data-anim="right">
+      <div><span class="stair-meta">01 · DIRECTION</span><span class="stair-word">方向</span><span class="body-zh">走对了吗</span></div>
+      <div><span class="stair-meta">02 · PROFESSIONAL</span><span class="stair-word">专业</span><span class="body-zh">练够了吗</span></div>
+      <div><span class="stair-meta">03 · CUSTOMER</span><span class="stair-word">理解</span><span class="body-zh">真正发生了吗</span></div>
+      <div><span class="stair-meta">04 · SYSTEM</span><span class="stair-word">系统</span><span class="body-zh">可以重复吗</span></div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">努力需要方向、专业、理解与系统</div><div>ACT II</div></div>
+</section>
+
+<section class="slide light hero" data-theme="light" data-slide-id="old-script" data-animate="directional">
+  <div class="chrome"><div>行为模式 · The Old Script</div><div>08 / 26</div></div>
+  <div class="frame" style="display:grid;grid-template-columns:5fr 7fr;align-items:center;min-height:79vh;gap:6vw">
+    <div class="script-copy" style="display:grid;gap:4vh">
+    <div class="script-loop-art" aria-hidden="true"><span class="script-loop-arrow"></span></div>
+    <div class="kicker" data-anim="left">旧剧本并不神秘</div>
+    <h2 class="h-xl" style="font-size:6.2vw" data-anim="left">所谓<br>旧剧本</h2>
+    <p class="lead" data-anim="left">用熟悉的方法，<br>重复熟悉的结果。</p>
+    <div class="callout" data-anim="left">改变剧本，不只是换一个念头，<br>而是找到出口，换一套行为。</div>
+    </div>
+    <div style="display:grid;gap:1.8vh" data-anim="right">
+      <div class="rowline"><div class="k">01</div><div class="v">害怕拒绝</div><div class="m">不行动</div></div>
+      <div class="rowline"><div class="k">02</div><div class="v">一开口就讲产品</div><div class="m">不倾听</div></div>
+      <div class="rowline"><div class="k">03</div><div class="v">不断换方向</div><div class="m">不练熟</div></div>
+      <div style="display:flex;align-items:center;gap:1vw;margin-top:3vh"><div style="flex:1;height:1px;background:rgba(var(--ink-rgb),.25)"></div><div class="tag">EXIT · 换行为</div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">看见循环，才找得到出口</div><div>CHANGE THE SCRIPT</div></div>
+</section>
+
+<section class="slide dark" data-theme="dark" data-slide-id="bracelet-encounter" data-animate="directional">
+  <div class="chrome"><div>一段结缘 · First Encounter</div><div>09 / 26</div></div>
+  <div class="frame" style="padding-top:2.8vh">
+    <div class="encounter-stage">
+      <div class="encounter-copy" data-anim="left">
+        <div class="kicker" style="color:rgba(244,241,232,.72);opacity:1">先有接触，再有判断</div>
+        <h2 class="h-xl" style="font-size:4.9vw;color:#f4f1e8;opacity:1">我与这条手环<br>的结缘</h2>
+        <p class="encounter-lead">不是因为一时感动留下，<br>而是因为愿意对每一句表达负责。</p>
+        <div class="encounter-proof">
+          <div><i data-lucide="eye"></i><b>01</b><span>先接触真实的人与物</span></div>
+          <div><i data-lucide="search-check"></i><b>02</b><span>再回到正式资料核验</span></div>
+          <div><i data-lucide="badge-check"></i><b>03</b><span>最后选择负责任地表达</span></div>
+        </div>
+      </div>
+      <figure class="encounter-visual" data-anim="right">
+        <img class="encounter-scene" src="images/09-encounter-editorial-v2.png" alt="真实人物佩戴红色手环并认真记录的纪实场景">
+        <img class="bracelet-cutout" src="images/09-bracelet-cutout-v2.png" alt="从真实照片整理出的红色手环佩戴细节">
+        <figcaption class="encounter-caption"><strong>真实接触，真实佩戴</strong>PHOTO EVIDENCE · NO EFFECT CLAIM</figcaption>
+      </figure>
+    </div>
+  </div>
+  <div class="foot"><div class="title">先核验，再表达；先理解，再分享</div><div>STORY · 01</div></div>
+</section>
+
+<section class="slide hero dark" data-theme="dark" data-slide-id="know-realize-do-gain" data-animate="quote">
+  <div class="chrome"><div>虚实合一 · Four Steps</div><div>10 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:5vh">
+    <div class="kicker" data-anim>内在领悟，必须走向外在行动</div>
+    <div class="stair-flow">
+      <div data-anim="line"><span class="stair-meta">01 · HEAR</span><span class="stair-word">知道</span><span class="body-zh">只是听过</span></div>
+      <div data-anim="line"><span class="stair-meta">02 · SEE</span><span class="stair-word">悟到</span><span class="body-zh">明白为什么</span></div>
+      <div data-anim="line"><span class="stair-meta">03 · DO</span><span class="stair-word">做到</span><span class="body-zh">开始每天实践</span></div>
+      <div data-anim="line"><span class="stair-meta">04 · BECOME</span><span class="stair-word">得到</span><span class="body-zh">长期行动的结果</span></div>
+    </div>
+    <div class="callout" data-anim>真正的分界线，不在“懂了”，而在“做了”。</div>
+  </div>
+  <div class="foot"><div class="title">知道不会自动变成结果</div><div>STORY · 02</div></div>
+</section>
+
+<section class="slide hero light" data-theme="light" data-slide-id="huashan-wish">
+  <div class="chrome"><div>心愿 · The Vow</div><div>11 / 26</div></div>
+  <div class="ghost" style="right:-2vw;bottom:-7vh;font-family:var(--serif-zh);font-size:40vw">山</div>
+  <svg class="mountain-lines" viewBox="0 0 100 70" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M2 63 C13 57 18 49 27 52 C39 55 43 36 53 39 C65 43 70 22 82 28 C90 32 94 18 99 12"/>
+    <path d="M1 57 C15 53 20 45 30 48 C40 51 46 30 56 35 C66 39 72 16 85 23 C92 27 96 13 99 8"/>
+    <path class="ridge" d="M0 67 L25 52 L33 55 L54 37 L63 42 L82 25 L89 29 L100 16"/>
+    <path d="M14 67 L34 55 M34 55 L43 67 M54 37 L64 67 M82 25 L94 67"/>
+    <circle cx="87" cy="12" r="1.2"/><text x="73" y="9">LOOK UP</text><text x="67" y="62">STAND FIRM · STEP IN</text>
+  </svg>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:4vh;position:relative;z-index:2">
+    <div class="kicker" data-anim>华山上的心愿</div>
+    <h1 class="display-zh" style="font-size:6.8vw" data-anim>仰望星空<br>脚踏实地<br>躬身入局</h1>
+    <p class="lead" style="max-width:55vw" data-anim>心愿要有现实的重量：学习、核验、分享、服务。</p>
+  </div>
+  <div class="foot"><div class="title">仰望星空 · 脚踏实地 · 躬身入局</div><div>STORY · 03</div></div>
+</section>
+
+<section class="slide dark hero" data-theme="dark" data-slide-id="market-shows-problems" data-animate="quote">
+  <div class="chrome"><div>第三幕 · 市场之镜</div><div>12 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:4vh;text-align:center">
+    <div class="kicker" data-anim>市场没有惩罚我们</div>
+    <h1 class="display-zh" style="font-size:7.4vw;max-width:88vw;margin:auto" data-anim="line">它只是把问题<br>照出来</h1>
+    <p class="lead" style="max-width:72vw;margin:auto" data-anim="line">触达在哪里不足，信任在哪里断掉，伙伴在哪里缺少方法。</p>
+  </div>
+  <div class="foot"><div class="title">不回避问题，也不把问题神秘化</div><div>ACT III</div></div>
+</section>
+
+<section class="slide light" data-theme="light" data-slide-id="three-market-mirrors">
+  <div class="chrome"><div>诊断 · Three Mirrors</div><div>13 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:2.8vh">
+    <div><div class="kicker" data-anim>不是市场惩罚我们，是市场把问题照出来</div><h2 class="h-xl" style="font-size:5vw" data-anim>三面市场之镜</h2></div>
+    <div class="mirror-wall">
+      <article class="mirror-pane" data-anim><div class="mirror-index">MIRROR 01 · REACH</div><h3>触达</h3><p>客户还没有机会真正认识我们。</p><div class="mirror-question">我们是否走进了<br>真实关系？</div></article>
+      <article class="mirror-pane" data-anim><div class="mirror-index">MIRROR 02 · TRUST</div><h3>信任</h3><p>体验之后，还缺少专业而持续的承接。</p><div class="mirror-question">我们是否把事实<br>讲清楚了？</div></article>
+      <article class="mirror-pane" data-anim><div class="mirror-index">MIRROR 03 · ACTION</div><h3>行动</h3><p>伙伴理解了方向，却还不知道第一步。</p><div class="mirror-question">我们是否把行动<br>拆小了？</div></article>
+    </div>
+  </div>
+  <div class="foot"><div class="title">看见问题，是改变的开始</div><div>DIAGNOSIS</div></div>
+</section>
+
+<section class="slide dark" data-theme="dark" data-slide-id="no-traffic-not-no-demand">
+  <div class="chrome"><div>第四幕 · 把慈悲变成方法</div><div>14 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:4vh;text-align:center">
+    <div class="kicker" data-anim>第一面镜子 · 客户为什么没有走近</div>
+    <h1 class="display-zh" style="font-size:7vw" data-anim>没有流量</h1>
+    <div class="big-num" style="font-size:7vw;opacity:.28" data-anim>≠</div>
+    <h1 class="display-zh" style="font-size:7vw" data-anim>没有需求</h1>
+    <p class="lead" style="max-width:65vw;margin:auto" data-anim>问题往往不是市场没人，而是我们的触达入口太少。</p>
+  </div>
+  <div class="foot"><div class="title">从“守店”转向“建立信任”</div><div>METHOD · 01</div></div>
+</section>
+
+<section class="slide light" data-theme="light" data-slide-id="four-entrances">
+  <div class="chrome"><div>触达 · Four Entrances</div><div>15 / 26</div></div>
+  <div class="frame" style="padding-top:4vh">
+    <div class="kicker" data-anim>从守店，到走进客户生活</div>
+    <h2 class="h-xl" data-anim>四个信任入口</h2>
+    <div class="cross-map" style="margin-top:4vh">
+      <div data-anim><i data-lucide="presentation" class="icon-line"></i><div><div class="h2-zh">小型分享</div><div class="body-zh">让门店成为建立信任的地方</div></div></div>
+      <div class="center" data-anim><div class="meta-row">THE CENTER</div><div class="trust">信任</div><div class="body-zh">不是流量，是关系</div></div>
+      <div data-anim><i data-lucide="users" class="icon-line"></i><div><div class="h2-zh">自然转介绍</div><div class="body-zh">让真实关系带来新关系</div></div></div>
+      <div data-anim><i data-lucide="message-circle" class="icon-line"></i><div><div class="h2-zh">内容触达</div><div class="body-zh">在见面前先建立了解</div></div></div>
+      <div data-anim><i data-lucide="heart-handshake" class="icon-line"></i><div><div class="h2-zh">社群陪伴</div><div class="body-zh">持续提供可核验的信息</div></div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">社群不是刷屏卖货，而是长期提供价值</div><div>METHOD · 02</div></div>
+</section>
+
+<section class="slide hero dark" data-theme="dark" data-slide-id="three-goals">
+  <div class="chrome"><div>小型分享 · Three Goals</div><div>16 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:6vh">
+    <div><div class="kicker" data-anim>一场分享，不必把所有人当场成交</div><h2 class="h-xl" data-anim>只完成三个目标</h2></div>
+    <div class="goal-steps">
+      <div class="goal-step" data-anim><i data-lucide="users" class="goal-icon"></i><div class="n">01</div><div class="t">认识真实可信的我们</div></div>
+      <div class="goal-step" data-anim><i data-lucide="search-check" class="goal-icon"></i><div class="n">02</div><div class="t">听懂可以核验的事实</div></div>
+      <div class="goal-step" data-anim><i data-lucide="message-circle-more" class="goal-icon"></i><div class="n">03</div><div class="t">愿意进入下一次沟通</div></div>
+    </div>
+    <p class="lead" data-anim>不把每一次见面都压成成交，信任反而更容易发生。</p>
+  </div>
+  <div class="foot"><div class="title">真实可信的人 · 能核验的事实 · 下一次沟通</div><div>METHOD · 03</div></div>
+</section>
+
+<section class="slide hero light" data-theme="light" data-slide-id="no-immediate-feeling">
+  <div class="chrome"><div>体验边界 · No Quick Conclusion</div><div>17 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:4vh;text-align:center">
+    <div class="kicker" data-anim>第二面镜子 · “没感觉”说明什么</div>
+    <h1 class="display-zh" style="font-size:5.8vw" data-anim>没有即时体感</h1>
+    <div class="boundary-split">
+      <div class="boundary-side" data-anim><div class="meta-row">DO NOT OVERSTATE</div><div><div class="h2-zh">不能解释为</div><div class="display-zh" style="font-size:4.5vw;margin-top:2vh">已经有效</div></div></div>
+      <div class="boundary-mark" data-anim>≠</div>
+      <div class="boundary-side" data-anim><div class="meta-row">DO NOT DISMISS</div><div><div class="h2-zh">也不能随意解释为</div><div class="display-zh" style="font-size:4.5vw;margin-top:2vh">已经无效</div></div></div>
+    </div>
+    <p class="lead" style="max-width:66vw;margin:auto" data-anim>回到正式说明、正确使用、真实记录和持续服务。</p>
+  </div>
+  <div class="foot"><div class="title">个体体验存在差异，不替客户下结论</div><div>TRUST BOUNDARY</div></div>
+</section>
+
+<section class="slide dark" data-theme="dark" data-slide-id="manage-expectations">
+  <div class="chrome"><div>合规 · Protect Trust</div><div>18 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:3.5vh">
+    <div><div class="kicker" data-anim>管理期待，就是保护信任</div><h2 class="h-xl" style="font-size:5.3vw" data-anim>五条表达边界</h2></div>
+    <div>
+      <div class="rowline" data-anim><div class="k">01</div><div class="v">不承诺即时体感</div><div class="m">NO PROMISE</div></div>
+      <div class="rowline" data-anim><div class="k">02</div><div class="v">不承诺特定健康结果</div><div class="m">NO MEDICAL CLAIM</div></div>
+      <div class="rowline" data-anim><div class="k">03</div><div class="v">使用方法以正式说明为准</div><div class="m">OFFICIAL GUIDE</div></div>
+      <div class="rowline" data-anim><div class="k">04</div><div class="v">个人体验不代表普遍效果</div><div class="m">NO GENERALIZATION</div></div>
+      <div class="rowline" data-anim><div class="k">05</div><div class="v">健康问题及时寻求专业医疗帮助</div><div class="m">SEEK CARE</div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">所有产品信息以最终正式说明和审核资料为准</div><div>COMPLIANCE</div></div>
+</section>
+
+<section class="slide light" data-theme="light" data-slide-id="service-presence">
+  <div class="chrome"><div>服务 · Stay Present</div><div>19 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:2.4vh">
+    <div class="kicker" data-anim>陪伴，比一句承诺更有力量</div>
+    <h2 class="h-xl" style="font-size:min(4.25vw,7.3vh)" data-anim>真正的服务，是成交以后还在</h2>
+    <div class="service-evidence">
+      <figure class="service-photo" data-anim="left"><img src="images/19-service-portrait-v3.webp" alt="佩戴手环并认真记录信息的真实工作现场"><figcaption><small>REAL ACTION · RECORD & VERIFY</small>记录、核验、回应。</figcaption></figure>
+      <div class="service-continuum">
+        <article data-anim><i data-lucide="book-open-check"></i><div><h3>使用前 · 讲清楚</h3><p>事实、用法与表达边界</p></div><b>01</b></article>
+        <article data-anim><i data-lucide="notebook-pen"></i><div><h3>使用中 · 有记录</h3><p>依据正式指引回访与陪伴</p></div><b>02</b></article>
+        <article data-anim><i data-lucide="message-circle-reply"></i><div><h3>遇问题 · 有回应</h3><p>不编答案，及时核实</p></div><b>03</b></article>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">使用前讲清楚 · 使用中有人陪 · 遇到问题有回应</div><div>SERVICE</div></div>
+</section>
+
+<section class="slide hero dark" data-theme="dark" data-slide-id="first-step-clear">
+  <div class="chrome"><div>第三面镜子 · Partner Action</div><div>20 / 26</div></div>
+  <div class="first-step-mark" aria-hidden="true"><span>01</span><i data-lucide="move-right"></i></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:4vh;text-align:center">
+    <div class="kicker" data-anim>伙伴为什么懂了却没做</div>
+    <h1 class="display-zh" style="font-size:7vw" data-anim>不是不想做</h1>
+    <div class="rule" style="max-width:16vw;margin:1vh auto" data-anim></div>
+    <h1 class="display-zh" style="font-size:6vw;opacity:.65" data-anim>是第一步还不够清楚</h1>
+    <p class="lead" style="max-width:62vw;margin:auto" data-anim>团队需要的不只是鼓励，而是一套陪着伙伴做会的系统。</p>
+  </div>
+  <div class="foot"><div class="title">目标太大、步骤太模糊，行动就很难发生</div><div>METHOD · 04</div></div>
+</section>
+
+<section class="slide light" data-theme="light" data-slide-id="confidence-from-practice">
+  <div class="chrome"><div>训练系统 · Practice Loop</div><div>21 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:4vh">
+    <div><div class="kicker" data-anim>信心来自做会，不来自听懂</div><h2 class="h-xl" data-anim>五步陪跑闭环</h2></div>
+    <div class="orbit" style="min-height:52vh">
+      <div class="orbit-ring"></div>
+      <div class="orbit-core" data-anim>反复<br>做会</div>
+      <div class="orbit-node n1" data-anim><b>01</b><span><i data-lucide="book-open"></i>产品与表达<small>每周学习</small></span></div>
+      <div class="orbit-node n2" data-anim><b>02</b><span><i data-lucide="messages-square"></i>真实场景<small>每周演练</small></span></div>
+      <div class="orbit-node n3" data-anim><b>03</b><span><i data-lucide="circle-help"></i>问题带回<small>及时沟通</small></span></div>
+      <div class="orbit-node n4" data-anim><b>04</b><span><i data-lucide="files"></i>统一素材<small>审核后使用</small></span></div>
+      <div class="orbit-node n5" data-anim><b>05</b><span><i data-lucide="chart-no-axes-combined"></i>行动复盘<small>找到具体卡点</small></span></div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">知识只有练成能力，才会变成信心</div><div>PRACTICE LOOP</div></div>
+</section>
+
+<section class="slide dark" data-theme="dark" data-slide-id="weekly-actions">
+  <div class="chrome"><div>过程指标 · Weekly Actions</div><div>22 / 26</div></div>
+  <div class="frame" style="padding-top:4vh">
+    <div class="kicker" data-anim>不要先定宏大目标</div>
+    <h2 class="h-xl" data-anim>把大目标拆成周动作</h2>
+    <div class="week-board" style="margin-top:3.5vh">
+      <article data-anim><div class="nb">01</div><i data-lucide="message-circle" class="week-icon"></i><div><h3>沟通</h3><p>完成多少次有效沟通</p></div></article>
+      <article data-anim><div class="nb">02</div><i data-lucide="user-plus" class="week-icon"></i><div><h3>邀请</h3><p>邀请多少人规范了解</p></div></article>
+      <article data-anim><div class="nb">03</div><i data-lucide="presentation" class="week-icon"></i><div><h3>分享</h3><p>举办或协助几场分享</p></div></article>
+      <article data-anim><div class="nb">04</div><i data-lucide="notebook-pen" class="week-icon"></i><div><h3>跟进</h3><p>完成多少次真实记录</p></div></article>
+    </div>
+  </div>
+  <div class="foot"><div class="title">每一次认真沟通，都是信心的积累</div><div>PROCESS METRICS</div></div>
+</section>
+
+<section class="slide light" data-theme="light" data-slide-id="case-story-standard">
+  <div class="chrome"><div>案例标准 · Evidence First</div><div>23 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:3vh">
+    <div><div class="kicker" data-anim>没有真实授权案例，就不编案例</div><h2 class="h-xl" style="font-size:5.4vw" data-anim>真实案例怎样讲</h2></div>
+    <div class="evidence-ladder">
+      <article data-anim><i data-lucide="circle-help" class="evidence-icon"></i><b>01</b><h3>真实困惑</h3><small>START</small></article>
+      <article data-anim><i data-lucide="ear" class="evidence-icon"></i><b>02</b><h3>倾听与服务</h3><small>PROCESS</small></article>
+      <article data-anim><i data-lucide="mouse-pointer-click" class="evidence-icon"></i><b>03</b><h3>自主选择</h3><small>CHOICE</small></article>
+      <article data-anim><i data-lucide="file-check-2" class="evidence-icon"></i><b>04</b><h3>可核验变化</h3><small>EVIDENCE</small></article>
+      <article data-anim><i data-lucide="users-round" class="evidence-icon"></i><b>05</b><h3>团队学习</h3><small>LEARNING</small></article>
+    </div>
+    <div style="display:flex;gap:2vw" data-anim><span class="tag">讲过程，不造神迹</span><span class="tag">讲体验，不代替证据</span><span class="tag">讲服务，不保证结果</span></div>
+  </div>
+  <div class="foot"><div class="title">公开使用前取得授权，并隐去不必要隐私</div><div>CASE STANDARD</div></div>
+</section>
+
+<section class="slide hero dark" data-theme="dark" data-slide-id="launch-three-stages" data-animate="pipeline">
+  <div class="chrome"><div>第五幕 · 2.0共同战役</div><div>24 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:4vh">
+    <div><div class="kicker">2.0不是一次上新，是一次协同</div><h2 class="h-xl">三个阶段</h2></div>
+    <div class="pipeline-section">
+      <div class="pipeline" data-cols="3">
+        <div class="step" data-anim="step"><i data-lucide="calendar-check" class="stage-icon"></i><div class="step-nb">01</div><div class="step-title" style="font-size:1.75vw">上线前</div><div class="step-desc" style="font-size:1.2vw;line-height:1.55;opacity:.84">积累信任<br>客户清单 · 内容预热 · 表达演练</div></div>
+        <div class="step" data-anim="step"><i data-lucide="rocket" class="stage-icon"></i><div class="step-nb">02</div><div class="step-title" style="font-size:1.75vw">上线时</div><div class="step-desc" style="font-size:1.2vw;line-height:1.55;opacity:.84">集中行动<br>依据正式资料 · 小场多次 · 快速答疑</div></div>
+        <div class="step" data-anim="step"><i data-lucide="refresh-cw" class="stage-icon"></i><div class="step-nb">03</div><div class="step-title" style="font-size:1.75vw">上线后</div><div class="step-desc" style="font-size:1.2vw;line-height:1.55;opacity:.84">持续服务<br>固定节奏 · 每周复盘 · 针对陪跑</div></div>
+      </div>
+    </div>
+    <div class="stage-callout" data-anim>具体升级点、日期与制度，只引用最终官方资料。</div>
+  </div>
+  <div class="foot"><div class="title">真正的战役，从今天的积累与训练开始</div><div>ACT V</div></div>
+</section>
+
+<section class="slide hero light" data-theme="light" data-slide-id="team-support">
+  <div class="chrome"><div>承接 · Team Support</div><div>25 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:2.2vh">
+    <div><div class="kicker" data-anim>要求伙伴行动，也要给伙伴一个接得住的系统</div><h2 class="h-xl" style="font-size:4.9vw" data-anim>团队给伙伴什么承接</h2></div>
+    <div class="support-system">
+      <svg class="support-links" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true"><line x1="50" y1="30" x2="17" y2="11"/><line x1="50" y1="30" x2="17" y2="50"/><line x1="50" y1="30" x2="82" y2="10"/><line x1="50" y1="30" x2="91" y2="31"/><line x1="50" y1="30" x2="77" y2="51"/></svg>
+      <div class="support-core" data-anim><div><div class="meta-row">THE SUPPORT SYSTEM</div><h3>接住<br>行动</h3><p>不是把压力层层下传</p></div></div>
+      <div class="support-node sn1" data-anim><i data-lucide="files"></i><div><b>01 · MATERIAL</b><span>审核通过的介绍材料</span></div></div>
+      <div class="support-node sn2" data-anim><i data-lucide="mic-vocal"></i><div><b>02 · SCRIPT</b><span>可以反复演练的话术</span></div></div>
+      <div class="support-node sn3" data-anim><i data-lucide="shield-check"></i><div><b>03 · BOUNDARY</b><span>清楚明确的表达红线</span></div></div>
+      <div class="support-node sn4" data-anim><i data-lucide="messages-square"></i><div><b>04 · FEEDBACK</b><span>及时回应的问题入口</span></div></div>
+      <div class="support-node sn5" data-anim><i data-lucide="rotate-ccw"></i><div><b>05 · REVIEW</b><span>固定、具体的周复盘</span></div></div>
+    </div>
+  </div>
+  <div class="foot"><div class="title">全力推进，不是把压力层层下传，而是各自把责任接住</div><div>ACT V · CLOSE</div></div>
+</section>
+
+<section class="slide hero dark" data-theme="dark" data-slide-id="four-decisions">
+  <div class="chrome"><div>第六幕 · 让行动发生</div><div>26 / 26</div></div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:5vh">
+    <div><div class="kicker" data-anim>今天离场前，完成四个决定</div><h2 class="h-xl" data-anim>从现在开始</h2></div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:1px;background:rgba(var(--paper-rgb),.22);border:1px solid rgba(var(--paper-rgb),.22)">
+      <div style="background:var(--paper);color:var(--ink);padding:3vh 2.4vw" data-anim><div class="big-num" style="font-size:10vw">3</div><div class="h2-zh"><i data-lucide="users" class="ico-md"></i> 个人</div><div class="body-zh">真正关心、愿意倾听<br>并长期服务</div></div>
+      <div style="padding:3vh 1.6vw" data-anim><div class="big-num" style="font-size:7vw">1</div><div class="h2-zh" style="font-size:2vw"><i data-lucide="calendar-days" class="ico-md"></i> 活动</div><div class="body-zh">写下日期</div></div>
+      <div style="padding:3vh 1.6vw" data-anim><div class="big-num" style="font-size:7vw">1</div><div class="h2-zh" style="font-size:2vw"><i data-lucide="send" class="ico-md"></i> 内容</div><div class="body-zh">24小时内发布</div></div>
+      <div style="padding:3vh 1.6vw" data-anim><div class="big-num" style="font-size:7vw">1</div><div class="h2-zh" style="font-size:2vw"><i data-lucide="rotate-ccw" class="ico-md"></i> 复盘</div><div class="body-zh">把问题带回来</div></div>
+    </div>
+    <div class="callout" style="font-size:2.1vw" data-anim>爱要落地，慈悲要行动。<br>从我开始，从现在开始。</div>
+  </div>
+  <div class="foot"><div class="title">停顿60—90秒，让全场真正完成记录</div><div>COMMITMENT</div></div>
+</section>
+
+<!-- SLIDES_HERE -->
+
+</div>
+
+<div id="nav"></div>
+
+<!-- 演讲备注：每页一条，id 必须与 section[data-slide-id] 一致。见 references/presenter-mode.md -->
+<script>
+const SPEAKER_NOTES = [
+  {
+    "id": "love-lands",
+    "title": "让爱落地",
+    "section": "第一幕 · 心被唤醒",
+    "minutes": 1.26,
+    "purpose": "建立整场唯一主轴：爱需要专业和行动承接。",
+    "talk": [
+      "不是教大家怎样说服别人，而是重新确认为什么出发。",
+      "如果爱只停留在心里，别人感受不到；慈悲没有专业承接，也难以成为帮助。",
+      "今天的终点不是被感动，而是带走一组能立刻开始的行动。"
+    ],
+    "transition": "带着这个主轴，先面对一个让我沉默的问题。",
+    "delivery": "慢、稳；“让爱落地”后停顿。"
+  },
+  {
+    "id": "silent-question",
+    "title": "一个让我沉默的问题",
+    "section": "第一幕 · 心被唤醒",
+    "minutes": 1.26,
+    "purpose": "拆掉“结果由命运单独决定”的单一解释。",
+    "talk": [
+      "回到第十五课听到这个问题时的真实触动。",
+      "不走两个极端：只讲命会失去行动；只讲拼命会在错误方向里消耗。",
+      "把问题从“我是不是不够好”改成“我还有哪一件事可以做好”。"
+    ],
+    "transition": "业绩不是审判，它更像一面镜子。",
+    "interaction": "问全场：如果只靠福报，专业与服务还重要吗？"
+  },
+  {
+    "id": "performance-mirror",
+    "title": "业绩是一面镜子",
+    "section": "第一幕 · 心被唤醒",
+    "minutes": 1.68,
+    "purpose": "建立多因素、可行动的结果观。",
+    "talk": [
+      "逐项扫过六个维度，不要解释过长。",
+      "结果没有发生时，先找哪一门功课没有做到位。",
+      "请听众在心里只选一项，不要同时给自己六项任务。"
+    ],
+    "transition": "镜子既照内在，也照外在。"
+  },
+  {
+    "id": "inner-outer",
+    "title": "向内修心，向外修事",
+    "section": "第一幕 · 心被唤醒",
+    "minutes": 1.68,
+    "purpose": "把内在修行与市场专业连接起来。",
+    "talk": [
+      "向内看见害怕被拒绝、急于成交、对结果的执念。",
+      "向外把产品学懂、事实讲清、服务做细，并对每一句话负责。",
+      "画面中的镜与路径分别代表自省与行动，不对应具体产品效果。"
+    ],
+    "transition": "无论向内还是向外，最终都要回到一个共同起点：人。"
+  },
+  {
+    "id": "people-first-proof",
+    "title": "永远把人放在第一位",
+    "section": "第一幕 · 心被唤醒",
+    "minutes": 1.01,
+    "purpose": "用理查·狄维士的真实人物照片承托“人是第一位”的主题。",
+    "talk": [
+      "页面使用理查·狄维士的真实公开照片，不是AI生成人物。",
+      "“永远把人放在第一位”根据用户提供的现场画面重构，不作为已经核验的逐字引语。",
+      "把人放在第一位，意味着先理解、尊重和服务，再谈交易。"
+    ],
+    "transition": "如果人是起点，商业就需要一套不偏离人的判断标准。"
+  },
+  {
+    "id": "business-essence-proof",
+    "title": "商业的本质",
+    "section": "第一幕 · 心被唤醒",
+    "minutes": 1.01,
+    "purpose": "用四位真实商业人物的肖像承托四个关键词，建立方法判断尺。",
+    "talk": [
+      "页面使用稻盛和夫、彼得·德鲁克、马云与比尔·盖茨的真实公开肖像。",
+      "利他、解决问题、价值交换与人性，是本演讲对四种商业视角的概括，不冒充他们的逐字引语。",
+      "接下来每一个动作都可以用四个问题检查：是否利他、是否解决问题、是否形成公平交换、是否尊重人性。"
+    ],
+    "transition": "有了这把判断尺，再回到我们真实经历中的努力与结果。"
+  },
+  {
+    "id": "effort-is-not-all",
+    "title": "我也曾把努力当成全部",
+    "section": "第二幕 · 躬身入局",
+    "minutes": 1.26,
+    "purpose": "建立讲者的脆弱与真实，而非英雄叙事。",
+    "talk": [
+      "在此补入一个真实事业或门店经历：投入了什么，结果为何没有发生。",
+      "不要编造时间、地点或成果；真实经历补齐前，只讲反思框架。",
+      "把失败讲成一次看见问题的过程，不把自己包装成突然开悟的英雄。"
+    ],
+    "transition": "后来我发现，我一直在重复一份旧剧本。",
+    "fallback": "若尚未补真实经历，直接讲“努力需要方向、专业、理解和系统”。"
+  },
+  {
+    "id": "old-script",
+    "title": "所谓旧剧本",
+    "section": "第二幕 · 躬身入局",
+    "minutes": 1.26,
+    "purpose": "让听众识别阻碍行动的行为模式。",
+    "talk": [
+      "旧剧本可能是怕拒绝、不行动；也可能是一开口就讲产品。",
+      "今天学一个方法、明天换一个方向，却从未真正练熟。",
+      "旧剧本不是性格标签，而是一组可以被替换的具体行为。"
+    ],
+    "transition": "我的改变，从一次新的接触开始。"
+  },
+  {
+    "id": "bracelet-encounter",
+    "title": "我与这条手环的结缘",
+    "section": "第二幕 · 躬身入局",
+    "minutes": 0.84,
+    "purpose": "讲清“接触—核验—负责任表达”的判断链。",
+    "talk": [
+      "时间、地点、介绍人和第一反应尚未提供，不做虚构。",
+      "重点不是一时感动，而是愿不愿意回到正式资料，对表达负责。",
+      "本页照片只证明真实接触、佩戴和记录发生过，不暗示任何产品功效。"
+    ],
+    "transition": "接触只是知道，真正的跨越还在后面。",
+    "advance": "此时如现场有实物，可第一次拿出；此前不要提前展示。"
+  },
+  {
+    "id": "know-realize-do-gain",
+    "title": "知道、悟到、做到、得到",
+    "section": "第二幕 · 躬身入局",
+    "minutes": 0.84,
+    "purpose": "推动听众从理解跨向实践。",
+    "talk": [
+      "知道产品和制度，不会自动变成结果。",
+      "每读一行停一下，把重音落在“做到”。",
+      "得到不是许愿的结果，而是长期做到之后自然出现的反馈。"
+    ],
+    "transition": "对我来说，这份实践也连接着一个心愿。"
+  },
+  {
+    "id": "huashan-wish",
+    "title": "华山上的心愿",
+    "section": "第二幕 · 躬身入局",
+    "minutes": 0.84,
+    "purpose": "用个人心愿连接使命与现实行动。",
+    "talk": [
+      "华山真实时间和背景待补，暂不虚构细节。",
+      "心愿的现实重量是学习、核验、分享和服务。",
+      "按当前决定保持纯文字意象，不加入华山照片。"
+    ],
+    "transition": "带着这份心愿，再回来看今天的市场。"
+  },
+  {
+    "id": "market-shows-problems",
+    "title": "市场没有惩罚我们",
+    "section": "第三幕 · 市场之镜",
+    "minutes": 1.26,
+    "purpose": "把挫折重新定义为可诊断问题。",
+    "talk": [
+      "市场在提示：客户在哪里没有被触达，信任在哪里断掉，伙伴在哪里缺方法。",
+      "这一页只做观点停顿，不急着给答案。",
+      "语气要从自责转向诊断，让听众知道问题可以被拆开。"
+    ],
+    "transition": "这些问题可以归纳成三面镜子。"
+  },
+  {
+    "id": "three-market-mirrors",
+    "title": "三面市场之镜",
+    "section": "第三幕 · 市场之镜",
+    "minutes": 1.26,
+    "purpose": "给出后半场的方法地图。",
+    "talk": [
+      "第一面是客户没有走近。",
+      "第二面是体验后信任没有被承接。",
+      "第三面是伙伴懂了却没有行动。"
+    ],
+    "transition": "先看第一面镜子：客户为什么没有走近。"
+  },
+  {
+    "id": "no-traffic-not-no-demand",
+    "title": "没有流量，不等于没有需求",
+    "section": "第四幕 · 把慈悲变成方法",
+    "minutes": 1.26,
+    "purpose": "纠正把低流量等同于无市场的误判。",
+    "talk": [
+      "老客在消耗，新客进不来，说明旧的守店方式不够了。",
+      "问题是触达入口太少，不是直接断言市场没有人。",
+      "先检查别人有没有机会认识我们，再讨论市场是否真的没有需求。"
+    ],
+    "transition": "因此，门店需要增加四个信任入口。"
+  },
+  {
+    "id": "four-entrances",
+    "title": "四个信任入口",
+    "section": "第四幕 · 把慈悲变成方法",
+    "minutes": 1.68,
+    "purpose": "提供可以执行的获客与陪伴路径。",
+    "talk": [
+      "分享会、自然转介绍、内容触达、社群陪伴是四个入口。",
+      "社群不是刷屏卖货；内容必须真实并经过审核。",
+      "可用阿里巴巴公开价值观“客户第一”作外部参照，但不要把页面做成名人语录墙。"
+    ],
+    "transition": "其中，一场小型分享不需要完成所有事情。"
+  },
+  {
+    "id": "three-goals",
+    "title": "一场分享的三个目标",
+    "section": "第四幕 · 把慈悲变成方法",
+    "minutes": 1.26,
+    "purpose": "降低活动目标，保护信任。",
+    "talk": [
+      "认识真实可信的人、听懂可确认事实、愿意进入下一次沟通。",
+      "不要把每次见面都压成成交。",
+      "目标越清楚，现场表达越自然，也越能保护长期关系。"
+    ],
+    "transition": "客户进入体验之后，第二面镜子就出现了。"
+  },
+  {
+    "id": "no-immediate-feeling",
+    "title": "“没感觉”到底说明什么",
+    "section": "第四幕 · 把慈悲变成方法",
+    "minutes": 1.26,
+    "purpose": "建立对主观体验的专业边界。",
+    "talk": [
+      "不能因为“没感觉”就放大承诺，也不能随意替客户下无效结论。",
+      "回到正式说明、正确使用、真实记录和持续服务。",
+      "面对不确定时，诚实比立刻给答案更有力量。"
+    ],
+    "transition": "边界不是冷冰冰的限制，它是在保护信任。"
+  },
+  {
+    "id": "manage-expectations",
+    "title": "管理期待，就是保护信任",
+    "section": "第四幕 · 把慈悲变成方法",
+    "minutes": 1.68,
+    "purpose": "给出统一、可复述的合规表达。",
+    "talk": [
+      "标准话术：每个人的主观感受可能不同，我们不承诺即时体感或特定健康结果。",
+      "产品是什么、如何使用、有哪些注意事项，以正式说明和审核资料为准。",
+      "如存在健康问题，不能延误正规医学检查和治疗。"
+    ],
+    "transition": "守住边界以后，真正有力量的是持续在场。"
+  },
+  {
+    "id": "service-presence",
+    "title": "陪伴，比一句承诺更有力量",
+    "section": "第四幕 · 把慈悲变成方法",
+    "minutes": 1.26,
+    "purpose": "把服务定义为成交前后的一致在场。",
+    "talk": [
+      "使用前，把事实与边界讲清楚。",
+      "使用中，依据正式指引记录并回访。",
+      "遇到问题不编答案，及时核实、持续回应。"
+    ],
+    "transition": "再看第三面镜子：为什么伙伴听懂了却没做。"
+  },
+  {
+    "id": "first-step-clear",
+    "title": "第一步还不够清楚",
+    "section": "第四幕 · 把慈悲变成方法",
+    "minutes": 1.26,
+    "purpose": "把不行动从态度问题转成系统问题。",
+    "talk": [
+      "有些伙伴目标太大、第一步太模糊；遇到一次拒绝就不知道下一步。",
+      "团队需要陪着伙伴做会，而不只是继续鼓励。",
+      "把行动缩小到今天就能完成的一步，信心才有起点。"
+    ],
+    "transition": "信心不会因为再听一遍课自动出现。"
+  },
+  {
+    "id": "confidence-from-practice",
+    "title": "信心来自做会",
+    "section": "第四幕 · 把慈悲变成方法",
+    "minutes": 1.68,
+    "purpose": "建立训练—演练—反馈—素材—复盘闭环。",
+    "talk": [
+      "逐步讲五个环节，强调每周固定节奏。",
+      "不点名个人承担尚未确认的职责；正式责任人以后补齐。",
+      "闭环的关键不是做过一次，而是问题能够带回来、下一次做得更好。"
+    ],
+    "transition": "练习要落在可以管理的周动作上。"
+  },
+  {
+    "id": "weekly-actions",
+    "title": "把大目标拆成周动作",
+    "section": "第四幕 · 把慈悲变成方法",
+    "minutes": 1.26,
+    "purpose": "用过程指标替代空泛目标。",
+    "talk": [
+      "沟通、邀请、分享、跟进四项都由伙伴自己记录。",
+      "过程指标不是收入保证，而是复盘输入。",
+      "外部表达方法可参考 Tesla 2006 Master Plan：长期愿景必须被拆成连续、可执行的路径；这里只借方法，不借品牌光环。"
+    ],
+    "transition": "当我们讲案例，也要保持同样的证据标准。"
+  },
+  {
+    "id": "case-story-standard",
+    "title": "真实案例怎样讲",
+    "section": "第四幕 · 把慈悲变成方法",
+    "minutes": 0.84,
+    "purpose": "在没有现成案例时先建立采集与表达标准。",
+    "talk": [
+      "当前没有可公开案例，因此这页只讲方法，不举虚构人物。",
+      "单一个案不能当作治疗疾病或普遍有效的证明。",
+      "案例的价值在过程、选择与学习，不在制造神迹。"
+    ],
+    "transition": "方法建立以后，2.0才有可能成为协同战役。"
+  },
+  {
+    "id": "launch-three-stages",
+    "title": "2.0全市场协同的三个阶段",
+    "section": "第五幕 · 共同战役",
+    "minutes": 1.26,
+    "purpose": "把上新拆成上线前、上线时、上线后的协同节奏。",
+    "talk": [
+      "上线前做客户清单、活动日期、审核内容预热和表达演练。",
+      "上线时只依据最终官方资料；上线后固定服务与复盘节奏。",
+      "具体升级点、日期和制度没有最终稿时，不在现场提前承诺。"
+    ],
+    "transition": "要求伙伴行动的同时，团队必须给出承接。"
+  },
+  {
+    "id": "team-support",
+    "title": "团队给伙伴什么承接",
+    "section": "第五幕 · 共同战役",
+    "minutes": 1.26,
+    "purpose": "明确组织需要提供的五类支持。",
+    "talk": [
+      "材料、话术、红线、问题入口、固定周复盘缺一不可。",
+      "全力推进不是把压力下传，而是各自把责任接住。",
+      "正式上台前，把负责人、领取入口与复盘时间补成真实信息。"
+    ],
+    "transition": "最后不再讲长道理，现场完成四个决定。"
+  },
+  {
+    "id": "four-decisions",
+    "title": "今天离场前，完成四个决定",
+    "section": "第六幕 · 让行动发生",
+    "minutes": 4.2,
+    "purpose": "让全场在离场前完成真实、可检查的承诺。",
+    "talk": [
+      "先写三个真正关心、愿意倾听和长期服务的人。",
+      "确定一场小型分享的大致日期。",
+      "选择一条审核通过的内容，24小时内完成真实发布。",
+      "确定下一次团队复盘时间。",
+      "收束：爱要落地，慈悲要行动。从我开始，从现在开始。"
+    ],
+    "interaction": "请全场拿出手机或纸笔，停顿60—90秒完成记录。",
+    "delivery": "减少解释，给足安静时间；最后一句放慢。",
+    "transition": "停在本页，让承诺成为会后行动的起点。",
+    "advance": "停在本页完成收束，不要急着退出。"
+  }
+];
+window.__SPEAKER_NOTES__ = SPEAKER_NOTES;
+</script>
+
+<script>
+/* =============== WebGL 双背景 ===============
+   深色页：Holographic Dispersion（全息色散 · 钛金暗流）—— 彩虹微扰、鼠标径向涟漪
+   浅色页：Spiral Vortex（旋转涡流 · 银色珍珠）—— domain-warp 流动、无中心
+   修改风格请参考 references/webgl-backgrounds.md
+*/
+const VS = `attribute vec2 position;void main(){gl_Position=vec4(position,0.0,1.0);}`;
+
+const FS_DARK = `precision highp float;
+uniform vec2 u_resolution;uniform float u_time;uniform vec2 u_mouse;
+vec3 palette(float t,vec3 a,vec3 b,vec3 c,vec3 d){return a+b*cos(6.28318*(c*t+d));}
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_resolution.xy;
+  vec2 p=uv*2.0-1.0;p.x*=u_resolution.x/u_resolution.y;
+  vec2 m=u_mouse*2.0-1.0;m.x*=u_resolution.x/u_resolution.y;
+  float md=length(p-m);
+  float mr=sin(md*15.0-u_time*4.0)*exp(-md*3.0);p+=mr*0.08;
+  vec2 p0=p;
+  for(float i=1.0;i<4.0;i++){
+    p.x+=0.1/i*sin(i*3.0*p.y+u_time*0.4)+0.05;
+    p.y+=0.1/i*cos(i*2.0*p.x+u_time*0.3)-0.05;
+  }
+  float r=length(p);float ang=atan(p.y,p.x);
+  vec3 a=vec3(0.12,0.12,0.13);
+  vec3 b=vec3(0.03,0.04,0.05);
+  vec3 c=vec3(1.0,1.0,1.0);
+  vec3 d=vec3(0.1,0.2,0.4);
+  vec3 col=palette(r*1.5+p0.x*0.5+u_time*0.1,a,b,c,d);
+  float disp=sin(r*25.0-u_time*1.5+ang*2.0)*0.5+0.5;
+  col+=vec3(disp*0.015,disp*0.01,disp*0.02);
+  float hi=pow(sin(p.x*4.0+p.y*3.0+u_time)*0.5+0.5,8.0);
+  col+=hi*0.08;
+  vec3 base=vec3(0.05,0.05,0.06);
+  col=mix(base,col,0.85);
+  gl_FragColor=vec4(col,1.0);
+}`;
+
+const FS_LIGHT = `precision highp float;
+uniform vec2 u_resolution;uniform float u_time;uniform vec2 u_mouse;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){
+  vec2 i=floor(p),f=fract(p);
+  float a=hash(i),b=hash(i+vec2(1,0));
+  float c=hash(i+vec2(0,1)),d=hash(i+vec2(1,1));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0,a=0.5;
+  mat2 m=mat2(0.80,0.60,-0.60,0.80);
+  for(int i=0;i<5;i++){v+=a*noise(p);p=m*p*2.02;a*=0.5;}
+  return v;
+}
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_resolution.xy;
+  vec2 p=uv;p.x*=u_resolution.x/u_resolution.y;
+  vec2 m=u_mouse;m.x*=u_resolution.x/u_resolution.y;
+  vec2 md=p-m;float dl=length(md);
+  p+=normalize(md+vec2(0.0001))*exp(-dl*5.0)*0.03;
+  vec2 q=vec2(fbm(p*1.8+u_time*0.07),fbm(p*1.8+vec2(5.2,1.3)+u_time*0.06));
+  vec2 r=vec2(fbm(p*2.0+q*1.3+vec2(1.7,9.2)+u_time*0.05),
+              fbm(p*2.0+q*1.3+vec2(8.3,2.8)+u_time*0.04));
+  float f=fbm(p*2.2+r*1.5);
+  vec3 silverDark=vec3(0.86,0.85,0.84);
+  vec3 paper=vec3(0.955,0.945,0.925);
+  vec3 col=mix(silverDark,paper,f);
+  float ph=r.x*2.2+u_time*0.35;
+  col+=vec3(0.78,0.62,0.92)*sin(ph)*0.055;
+  col+=vec3(0.55,0.72,0.95)*sin(ph*0.8+2.0)*0.05;
+  float hl=smoothstep(0.48,0.92,f);
+  col+=hl*0.06;
+  gl_FragColor=vec4(col,1.0);
+}`;
+
+const mouse={x:0.5,y:0.5};
+addEventListener('mousemove',e=>{mouse.x=e.clientX/innerWidth;mouse.y=e.clientY/innerHeight});
+
+function bootGL(canvasId, fsSrc){
+  const canvas=document.getElementById(canvasId);
+  const gl=canvas.getContext('webgl',{alpha:false,antialias:true});
+  if(!gl) return ()=>false;
+  const mk=(t,s)=>{const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh};
+  const prog=gl.createProgram();
+  gl.attachShader(prog,mk(gl.VERTEX_SHADER,VS));
+  gl.attachShader(prog,mk(gl.FRAGMENT_SHADER,fsSrc));
+  gl.linkProgram(prog);gl.useProgram(prog);
+  const buf=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
+  const pos=gl.getAttribLocation(prog,'position');
+  gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+  const lRes=gl.getUniformLocation(prog,'u_resolution');
+  const lT=gl.getUniformLocation(prog,'u_time');
+  const lM=gl.getUniformLocation(prog,'u_mouse');
+  const resize=()=>{
+    const d=Math.min(window.devicePixelRatio||1,2);
+    canvas.width=innerWidth*d;canvas.height=innerHeight*d;
+    gl.viewport(0,0,canvas.width,canvas.height);
+  };
+  addEventListener('resize',resize);resize();
+  return (tSec)=>{
+    gl.uniform2f(lRes,canvas.width,canvas.height);
+    gl.uniform1f(lT,tSec);
+    gl.uniform2f(lM,mouse.x,1-mouse.y);
+    gl.drawArrays(gl.TRIANGLES,0,6);
+    return true;
+  };
+}
+let drawDark=null, drawLight=null, glRAF=0, glT0=Date.now();
+function startGL(){
+  if(window.__lowPowerMode || glRAF) return;
+  if(!drawDark) drawDark=bootGL('bg-dark',FS_DARK);
+  if(!drawLight) drawLight=bootGL('bg-light',FS_LIGHT);
+  glT0=Date.now();
+  function loop(){
+    if(window.__lowPowerMode){glRAF=0;return;}
+    const t=(Date.now()-glT0)/1000;
+    drawDark(t);drawLight(t);
+    glRAF=requestAnimationFrame(loop);
+  }
+  glRAF=requestAnimationFrame(loop);
+}
+function stopGL(){
+  if(glRAF) cancelAnimationFrame(glRAF);
+  glRAF=0;
+}
+startGL();
+addEventListener('ppt-low-power-change', e=>{e.detail.on ? stopGL() : startGL();});
+
+// =============== 导航（翻页 / 圆点 / 键盘 / 滚轮 / 触屏） ===============
+const deck=document.getElementById('deck');
+const slides=deck.querySelectorAll('.slide');
+const nav=document.getElementById('nav');
+let idx=0,total=slides.length,lock=false;
+
+// 关键：矫正 deck 宽度为 total * 100vw，否则翻页会错位
+deck.style.width=(total*100)+'vw';
+
+slides.forEach((s,i)=>{
+  const b=document.createElement('button');
+  b.className='dot';b.dataset.i=i;b.setAttribute('aria-label','Page '+(i+1));
+  b.onclick=()=>go(i);
+  nav.appendChild(b);
+});
+
+function go(n,opts={}){
+  if(lock&&!opts.force)return;
+  idx=Math.max(0,Math.min(total-1,n));
+  window.__currentSlideIndex = idx;
+  deck.style.transform=`translateX(${-idx*100}vw)`;
+  nav.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  /* 主题切换：优先读 data-theme，其次从 class（light/dark）推断 */
+  const el=slides[idx];
+  const th=el.dataset.theme || (el.classList.contains('light')?'light':(el.classList.contains('dark')?'dark':'dark'));
+  document.body.classList.toggle('light-bg',th==='light');
+  /* 动效：翻页过渡中段触发当前页的入场动画（由 motion-boot 注册） */
+  if(window.__playSlide) setTimeout(()=>window.__playSlide(idx), 450);
+  window.__pptPresenter?.onSlideChange(idx);
+  if(!opts.force){lock=true;setTimeout(()=>lock=false,700);}
+}
+
+/* =============== ESC 索引视图 =============== */
+let overviewOn=false;
+const ov=document.createElement('div');
+ov.id='overview';
+ov.style.cssText='position:fixed;inset:0;z-index:100;background:rgba(var(--ink-rgb),.92);backdrop-filter:blur(12px);display:none;overflow-y:auto;padding:4vh 4vw';
+document.body.appendChild(ov);
+
+function buildOverview(){
+  ov.innerHTML='';
+  const grid=document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:2vh 1.6vw;max-width:90vw;margin:0 auto';
+  slides.forEach((s,i)=>{
+    const card=document.createElement('div');
+    card.style.cssText='cursor:pointer;border-radius:6px;overflow:hidden;border:2px solid '+(i===idx?'rgba(var(--paper-rgb),.8)':'rgba(var(--paper-rgb),.15)')+';transition:border-color .2s';
+    card.onmouseenter=()=>card.style.borderColor='rgba(var(--paper-rgb),.6)';
+    card.onmouseleave=()=>card.style.borderColor=i===idx?'rgba(var(--paper-rgb),.8)':'rgba(var(--paper-rgb),.15)';
+    const wrap=document.createElement('div');
+    wrap.style.cssText='width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;pointer-events:none;background:'+(s.classList.contains('light')?'var(--paper)':'var(--ink)');
+    const clone=s.cloneNode(true);
+    clone.style.cssText='width:100vw;height:100vh;transform:scale('+(1/4.5)+');transform-origin:top left;position:absolute;top:0;left:0;pointer-events:none';
+    wrap.appendChild(clone);
+    const label=document.createElement('div');
+    label.style.cssText='padding:6px 10px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper);opacity:.7';
+    label.textContent=window.__pptPresenter?.slideLabel(i) || ((i+1)+' / '+total);
+    card.appendChild(wrap);
+    card.appendChild(label);
+    card.onclick=()=>{toggleOverview();go(i)};
+    grid.appendChild(card);
+  });
+  ov.appendChild(grid);
+}
+
+function toggleOverview(){
+  overviewOn=!overviewOn;
+  if(overviewOn){buildOverview();ov.style.display='block';}
+  else{ov.style.display='none';}
+}
+
+/* =============== 演讲者模式 / 观众屏同步 =============== */
+window.__pptPresenter=(()=>{
+  const query=new URLSearchParams(location.search);
+  const requestedMode=query.get('mode')||'deck';
+  const originalTitle=document.title;
+  const notes=()=>Array.isArray(window.__SPEAKER_NOTES__)?window.__SPEAKER_NOTES__:[];
+  const slideId=i=>slides[i]?.dataset.slideId||`slide-${String(i+1).padStart(2,'0')}`;
+  const storageKey=name=>`guizang-ppt-${name}:${location.pathname}`;
+  let mode='deck',session=query.get('session')||Math.random().toString(36).slice(2),audienceWindow=null;
+  let channel=null,transportReady=false,popupBlocked=false,audienceOpenedAt=0,lastAckAt=0,lastAckIndex=-1,lastAckSeq=-1,seq=0,lastPingAt=0;
+  let renderedNoteId='',saveTimer=0,noteSize=Number(localStorage.getItem('guizang-ppt-note-size')||17),presenterFrameObserver=null;
+  let elapsed=0,timerRunning=false,timerStartedAt=0,timedSlideIndex=idx,slideTimerStartedAt=0,slideElapsed=Array(total).fill(0);
+  let rehearsalActive=false,presenterOverviewOn=false,lowPowerBeforePresenter=window.__lowPowerMode;
+  let layoutMode=localStorage.getItem(storageKey('layout'))||'balanced';
+  let autoEnabled=localStorage.getItem(storageKey('auto-enabled'))==='1';
+  let autoGlobalSeconds=Math.max(0,Number(localStorage.getItem(storageKey('auto-seconds'))||0));
+  let autoDeadline=0,autoRemainingMs=0;
+  let screenMode='normal',audienceFrozen=false;
+  let annotationTool='none',annotationPointerDown=false,annotationStart=null,draftCircle=null,circles=[],audienceCircles=[];
+  let laserPoint=null,audienceLaser=null,laserHideAt=0,audienceLaserHideAt=0,lastLaserSent=0;
+  const seenNonces=[],seenNonceSet=new Set();
+  const syncKey=()=>`guizang-ppt-sync:${location.pathname}:${session}`;
+  const channelName=()=>`guizang-ppt:${location.pathname}:${session}`;
+
+  function noteAt(i){
+    const id=slideId(i);
+    return notes().find(n=>n.id===id)||{id,title:slides[i]?.dataset.title||`第 ${i+1} 页`,purpose:'—',talk:[],transition:''};
+  }
+  function slideLabel(i){return `${i+1} / ${total} · ${noteAt(i).title||slideId(i)}`;}
+  function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+  function valueLines(value){
+    if(Array.isArray(value))return value.filter(Boolean).map(x=>`• ${x}`).join('\n');
+    return value?String(value):'';
+  }
+  function generatedNote(n){
+    const parts=[];
+    if(Array.isArray(n.talk)&&n.talk.length)parts.push(`【讲述要点】\n${valueLines(n.talk)}`);
+    if(n.transition)parts.push(`【转场】\n${n.transition}`);
+    const optional=[['舞台提示',n.cue],['互动',n.interaction],['表达提示',n.delivery],['翻页时机',n.advance],['备用方案',n.fallback],['读音提醒',n.pronunciation]];
+    optional.forEach(([label,value])=>{const text=valueLines(value);if(text)parts.push(`【${label}】\n${text}`);});
+    return parts.join('\n\n')||'—';
+  }
+  function noteStorageKey(id){return `guizang-ppt-note:${location.pathname}:${id}`;}
+  function loadNoteValue(id,i,n){
+    const saved=localStorage.getItem(noteStorageKey(id));
+    if(saved!==null)return saved;
+    const prefix=window.__PPT_LEGACY_NOTE_KEY__;
+    if(prefix){
+      const legacy=localStorage.getItem(`${prefix}:${i}`);
+      if(legacy!==null){localStorage.setItem(noteStorageKey(id),legacy);return legacy;}
+    }
+    return generatedNote(n);
+  }
+  function frameUrl(targetMode,i){
+    const url=new URL(location.href);url.hash='';
+    url.searchParams.set('mode',targetMode);url.searchParams.set('session',session);url.searchParams.set('slide',String(i+1));
+    return url.href;
+  }
+  function postPreviewGoto(frame,i){
+    try{frame.contentWindow?.postMessage({__guizangPptSync:1,session,role:'presenter',type:'preview-goto',index:i},'*');}catch(e){}
+  }
+  function updatePreviewFrame(frame,i){
+    frame.dataset.slide=String(i);
+    if(!frame.dataset.previewBound){frame.dataset.previewBound='1';frame.addEventListener('load',()=>postPreviewGoto(frame,Number(frame.dataset.slide)));}
+    if(!frame.getAttribute('src'))frame.src=frameUrl('preview',i);else postPreviewGoto(frame,i);
+  }
+  function plannedMsAt(i){
+    const minutes=Number(noteAt(i).minutes);
+    return Number.isFinite(minutes)&&minutes>0?minutes*60000:null;
+  }
+  function totalPlannedMs(){
+    const values=Array.from({length:total},(_,i)=>plannedMsAt(i));
+    return values.length&&values.every(Number.isFinite)?values.reduce((sum,x)=>sum+x,0):null;
+  }
+  function sectionInfo(i){
+    const name=String(noteAt(i).section||'').trim();
+    if(!name)return null;
+    let first=i,last=i;
+    while(first>0&&String(noteAt(first-1).section||'').trim()===name)first--;
+    while(last<total-1&&String(noteAt(last+1).section||'').trim()===name)last++;
+    const targets=[];for(let x=first;x<=last;x++)targets.push(plannedMsAt(x));
+    const planned=targets.every(Number.isFinite)?targets.reduce((sum,x)=>sum+x,0):null;
+    const used=slideElapsed.slice(first,last+1).reduce((sum,x)=>sum+x,0)+(timerRunning&&timedSlideIndex>=first&&timedSlideIndex<=last?Date.now()-slideTimerStartedAt:0);
+    return{name,position:i-first+1,count:last-first+1,planned,used};
+  }
+  function durationText(ms){
+    const value=Math.max(0,Math.round(Number(ms)||0)),seconds=Math.floor(value/1000);
+    const hours=Math.floor(seconds/3600),minutes=Math.floor((seconds%3600)/60),secs=seconds%60;
+    return hours?`${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(secs).padStart(2,'0')}`:`${String(minutes).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+  }
+  function signedDuration(ms){return `${ms>=0?'+':'−'}${durationText(Math.abs(ms))}`;}
+  function clockTime(timestamp){return new Date(timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+
+  function fitFrame(frame){
+    const viewport=frame?.closest('.ppt-frame-viewport');
+    if(!viewport)return;
+    const availableWidth=viewport.clientWidth,availableHeight=viewport.clientHeight;
+    if(!availableWidth||!availableHeight)return;
+    const width=Math.min(availableWidth,availableHeight*(16/9)),height=width*(9/16);
+    frame.style.width=`${width}px`;frame.style.height=`${height}px`;
+    if(frame.id==='ppt-current-frame')sizeInk(document.getElementById('ppt-presenter-ink'),width,height);
+  }
+  function fitPresenterFrames(){
+    fitFrame(document.getElementById('ppt-current-frame'));
+    fitFrame(document.getElementById('ppt-next-frame'));
+  }
+  function sizeInk(canvas,width,height){
+    if(!canvas||!width||!height)return;
+    canvas.style.width=`${width}px`;canvas.style.height=`${height}px`;
+    const dpr=Math.min(devicePixelRatio||1,2),pixelWidth=Math.round(width*dpr),pixelHeight=Math.round(height*dpr);
+    if(canvas.width!==pixelWidth||canvas.height!==pixelHeight){canvas.width=pixelWidth;canvas.height=pixelHeight;}
+  }
+  function drawEllipse(ctx,circle,width,height,alpha=1){
+    const x1=circle.x1*width,y1=circle.y1*height,x2=circle.x2*width,y2=circle.y2*height;
+    ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle='#ff4f59';ctx.lineWidth=Math.max(3,width*.004);ctx.lineCap='round';
+    ctx.beginPath();ctx.ellipse((x1+x2)/2,(y1+y2)/2,Math.abs(x2-x1)/2,Math.abs(y2-y1)/2,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+  }
+  function drawInk(canvas,list,laser,draft){
+    if(!canvas)return;const width=canvas.clientWidth,height=canvas.clientHeight;if(!width||!height)return;
+    sizeInk(canvas,width,height);const dpr=canvas.width/width,ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+    (list||[]).forEach(circle=>drawEllipse(ctx,circle,width,height));
+    if(draft)drawEllipse(ctx,draft,width,height,.72);
+    if(laser){
+      const x=laser.x*width,y=laser.y*height,r=Math.max(6,width*.007);
+      const glow=ctx.createRadialGradient(x,y,0,x,y,r*2.8);glow.addColorStop(0,'rgba(255,255,255,.98)');glow.addColorStop(.2,'rgba(255,64,72,.98)');glow.addColorStop(1,'rgba(255,64,72,0)');
+      ctx.fillStyle=glow;ctx.beginPath();ctx.arc(x,y,r*2.8,0,Math.PI*2);ctx.fill();
+    }
+  }
+  function renderInks(){
+    const now=Date.now();if(now>laserHideAt)laserPoint=null;if(now>audienceLaserHideAt)audienceLaser=null;
+    drawInk(document.getElementById('ppt-presenter-ink'),circles,laserPoint,draftCircle);
+    drawInk(document.getElementById('ppt-audience-ink'),audienceCircles,audienceLaser,null);
+  }
+  function setAnnotationTool(tool){
+    annotationTool=annotationTool===tool?'none':tool;annotationPointerDown=false;draftCircle=null;
+    const canvas=document.getElementById('ppt-presenter-ink');canvas?.classList.toggle('is-active',annotationTool!=='none');
+    document.querySelectorAll('[data-ppt-tool]').forEach(button=>button.classList.toggle('is-active',button.dataset.pptTool===annotationTool));
+    renderInks();
+  }
+  function annotationPoint(event){
+    const canvas=event.currentTarget,rect=canvas.getBoundingClientRect();
+    return{x:Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width)),y:Math.max(0,Math.min(1,(event.clientY-rect.top)/rect.height))};
+  }
+  function onAnnotationPointerDown(event){
+    if(annotationTool!=='circle')return;event.preventDefault();annotationPointerDown=true;annotationStart=annotationPoint(event);draftCircle={x1:annotationStart.x,y1:annotationStart.y,x2:annotationStart.x,y2:annotationStart.y};event.currentTarget.setPointerCapture?.(event.pointerId);renderInks();
+  }
+  function onAnnotationPointerMove(event){
+    if(annotationTool==='laser'){
+      const point=annotationPoint(event);laserPoint=point;laserHideAt=Date.now()+650;
+      if(Date.now()-lastLaserSent>32){lastLaserSent=Date.now();emit({type:'laser',index:idx,point},{persist:false});}renderInks();return;
+    }
+    if(annotationTool==='circle'&&annotationPointerDown&&draftCircle){const point=annotationPoint(event);draftCircle.x2=point.x;draftCircle.y2=point.y;renderInks();}
+  }
+  function onAnnotationPointerUp(event){
+    if(annotationTool!=='circle'||!annotationPointerDown||!draftCircle)return;event.preventDefault();annotationPointerDown=false;
+    const circle={...draftCircle};draftCircle=null;
+    if(Math.abs(circle.x2-circle.x1)>.012&&Math.abs(circle.y2-circle.y1)>.012){circles.push(circle);emit({type:'circle',index:idx,circle});}
+    renderInks();
+  }
+  function onAnnotationPointerLeave(){
+    if(annotationTool==='laser'){laserPoint=null;emit({type:'laser',index:idx,point:null},{persist:false});renderInks();}
+  }
+  function clearAnnotations(broadcast=true){circles=[];draftCircle=null;laserPoint=null;if(broadcast)emit({type:'clear',index:idx});renderInks();}
+
+  function buildPresenterOverview(){
+    const grid=document.getElementById('ppt-presenter-overview-grid');if(!grid)return;grid.innerHTML='';
+    slides.forEach((slide,i)=>{
+      const n=noteAt(i),button=document.createElement('button');button.type='button';button.className=`ppt-overview-page${i===idx?' is-current':''}`;
+      button.innerHTML=`<span class="ppt-overview-page-no">${String(i+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}</span><span class="ppt-overview-page-title">${escapeHTML(n.title||slideId(i))}</span><span class="ppt-overview-page-meta"><span>${escapeHTML(n.section||'未分组')}</span><span>${Math.round(((i+1)/total)*100)}%</span></span>`;
+      button.onclick=()=>{togglePresenterOverview(false);go(i,{force:true});};grid.appendChild(button);
+    });
+    requestAnimationFrame(()=>grid.querySelector('.is-current')?.scrollIntoView({block:'nearest',inline:'nearest'}));
+  }
+  function togglePresenterOverview(force){
+    presenterOverviewOn=typeof force==='boolean'?force:!presenterOverviewOn;
+    if(presenterOverviewOn&&annotationTool!=='none')setAnnotationTool('none');
+    const stack=document.querySelector('.ppt-preview-stack'),overview=document.getElementById('ppt-presenter-overview');
+    stack?.classList.toggle('is-overview',presenterOverviewOn);if(overview)overview.hidden=!presenterOverviewOn;
+    const button=document.getElementById('ppt-grid');if(button){button.classList.toggle('is-active',presenterOverviewOn);button.setAttribute('aria-pressed',String(presenterOverviewOn));}
+    if(presenterOverviewOn)buildPresenterOverview();else requestAnimationFrame(fitPresenterFrames);renderAutoState();
+  }
+
+  function mountShell(){
+    if(document.getElementById('ppt-presenter'))return;
+    document.body.insertAdjacentHTML('beforeend',`<div id="ppt-presenter" data-layout="${layoutMode}" aria-label="演讲者视图">
+      <div class="ppt-presenter-top"><div><div class="ppt-presenter-brand">演讲者视图</div><div class="ppt-presenter-meta"><span id="ppt-plan"></span><span id="ppt-section" hidden></span></div></div><div class="ppt-presenter-meta"><span id="ppt-sync" class="ppt-sync" data-state="disconnected" title="表示观众页面的软件同步状态，不代表 HDMI 等物理线缆状态">观众屏 · 未连接</span><button id="ppt-auto-toggle" class="ppt-ui-btn ppt-auto-state" type="button">自动翻页 · 关闭</button><button id="ppt-preflight" class="ppt-ui-btn" type="button">检查</button><button id="ppt-settings" class="ppt-ui-btn" type="button">设置</button><button id="ppt-reopen" class="ppt-ui-btn" type="button">重新打开观众屏</button><button id="ppt-exit" class="ppt-ui-btn" type="button">退出</button></div></div>
+      <div class="ppt-presenter-main"><div class="ppt-preview-stack"><div class="ppt-stage-card"><div class="ppt-stage-label"><span>当前页</span><span class="ppt-annotation-tools"><button id="ppt-grid" class="ppt-ui-btn ppt-grid-btn" type="button" aria-pressed="false" title="宫格选页（Esc）"><span class="ppt-grid-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>宫格</button><button class="ppt-ui-btn" data-ppt-tool="laser" type="button" title="激光笔（L）">激光</button><button class="ppt-ui-btn" data-ppt-tool="circle" type="button" title="圈选（C）">圈选</button><button id="ppt-ink-clear" class="ppt-ui-btn ppt-clear-btn" type="button" title="清除标记（X）">清除</button></span><span id="ppt-current-label"></span></div><div class="ppt-frame-viewport"><iframe id="ppt-current-frame" class="ppt-frame" title="当前页预览"></iframe><canvas id="ppt-presenter-ink" class="ppt-annotation-layer" aria-label="演讲标注层"></canvas></div></div><div class="ppt-stage-card" id="ppt-next-card"><div class="ppt-stage-label"><span>下一页</span><span id="ppt-next-label"></span></div><div class="ppt-frame-viewport"><iframe id="ppt-next-frame" class="ppt-frame ppt-next-frame" title="下一页预览"></iframe></div></div><div id="ppt-presenter-overview" class="ppt-presenter-overview" hidden><div class="ppt-overview-head"><strong>选择页面</strong><button id="ppt-overview-close" class="ppt-ui-btn" type="button">返回预览</button></div><div id="ppt-presenter-overview-grid" class="ppt-overview-grid"></div></div></div>
+      <div class="ppt-notes-card"><div class="ppt-notes-head"><div class="ppt-notes-label">标题</div><div id="ppt-notes-title" class="ppt-notes-title"></div><div class="ppt-purpose-block"><div class="ppt-notes-label">本页目的</div><div id="ppt-notes-purpose" class="ppt-purpose-copy"></div></div><div class="ppt-notes-draft-head"><div><div class="ppt-notes-label">草稿（备注）</div><div id="ppt-note-meta" class="ppt-note-meta"></div></div><span class="ppt-notes-tools"><span id="ppt-saved" class="ppt-saved">已保存</span><button id="ppt-note-smaller" class="ppt-ui-btn" type="button" title="缩小备注字号">A−</button><button id="ppt-note-larger" class="ppt-ui-btn" type="button" title="放大备注字号">A+</button></span></div></div><textarea id="ppt-note-editor" class="ppt-note-editor" spellcheck="false" aria-label="本页演讲备注"></textarea></div></div>
+      <div class="ppt-presenter-bottom"><div class="ppt-time-dashboard"><div class="ppt-time-stat"><span class="ppt-time-label">已进行</span><strong id="ppt-clock" class="ppt-time-value">00:00</strong><span class="ppt-time-hint">总时长</span></div><div class="ppt-time-stat"><span class="ppt-time-label">本页</span><strong id="ppt-slide-clock" class="ppt-time-value">00:00</strong><span id="ppt-slide-plan" class="ppt-time-hint">计划 —</span></div><div id="ppt-slide-status-box" class="ppt-time-stat"><span id="ppt-slide-status-label" class="ppt-time-label">计划</span><strong id="ppt-slide-status" class="ppt-time-value">—</strong><span id="ppt-slide-status-hint" class="ppt-time-hint">未设置</span></div></div><div class="ppt-control-stack"><div class="ppt-controls"><button id="ppt-first" class="ppt-ui-btn" type="button">首页</button><button id="ppt-prev" class="ppt-ui-btn" type="button">上一页</button><button id="ppt-next" class="ppt-ui-btn" type="button">下一页</button><button id="ppt-last" class="ppt-ui-btn" type="button">尾页</button></div><div class="ppt-session-actions"><button id="ppt-timer-toggle" class="ppt-ui-btn" type="button">开始计时</button><button id="ppt-timer-reset" class="ppt-ui-btn" type="button">重置计时</button><button id="ppt-rehearsal" class="ppt-ui-btn" type="button">排练</button></div></div><div class="ppt-page-state"><strong id="ppt-page-count"></strong><span id="ppt-page-percent"></span></div></div>
+      <div id="ppt-dialog" class="ppt-dialog" hidden><div class="ppt-dialog-panel" role="dialog" aria-modal="true"><div class="ppt-dialog-head"><div id="ppt-dialog-title" class="ppt-dialog-title"></div><button id="ppt-dialog-close" class="ppt-ui-btn" type="button">关闭</button></div><div id="ppt-dialog-body" class="ppt-dialog-body"></div></div></div>
+    </div>`);
+    document.getElementById('ppt-reopen').onclick=reopenAudience;
+    document.getElementById('ppt-exit').onclick=exitPresenter;
+    document.getElementById('ppt-preflight').onclick=openPreflight;
+    document.getElementById('ppt-settings').onclick=openSettings;
+    document.getElementById('ppt-first').onclick=()=>go(0,{force:true});
+    document.getElementById('ppt-prev').onclick=()=>go(idx-1,{force:true});
+    document.getElementById('ppt-grid').onclick=()=>togglePresenterOverview();
+    document.getElementById('ppt-overview-close').onclick=()=>togglePresenterOverview(false);
+    document.getElementById('ppt-next').onclick=()=>go(idx+1,{force:true});
+    document.getElementById('ppt-last').onclick=()=>go(idx===total-1?0:total-1,{force:true});
+    document.getElementById('ppt-timer-toggle').onclick=toggleTimer;
+    document.getElementById('ppt-timer-reset').onclick=resetTimer;
+    document.getElementById('ppt-rehearsal').onclick=toggleRehearsal;
+    document.getElementById('ppt-auto-toggle').onclick=toggleAutoAdvance;
+    document.getElementById('ppt-note-smaller').onclick=()=>setNoteSize(noteSize-1);
+    document.getElementById('ppt-note-larger').onclick=()=>setNoteSize(noteSize+1);
+    document.getElementById('ppt-note-editor').addEventListener('input',saveNote);
+    document.querySelectorAll('[data-ppt-tool]').forEach(button=>button.onclick=()=>setAnnotationTool(button.dataset.pptTool));
+    document.getElementById('ppt-ink-clear').onclick=()=>clearAnnotations(true);
+    const ink=document.getElementById('ppt-presenter-ink');
+    ink.addEventListener('pointerdown',onAnnotationPointerDown);ink.addEventListener('pointermove',onAnnotationPointerMove);ink.addEventListener('pointerup',onAnnotationPointerUp);ink.addEventListener('pointercancel',onAnnotationPointerUp);ink.addEventListener('pointerleave',onAnnotationPointerLeave);
+    document.getElementById('ppt-dialog-close').onclick=closeDialog;
+    document.getElementById('ppt-dialog').onclick=event=>{if(event.target.id==='ppt-dialog')closeDialog();};
+    if('ResizeObserver'in window){presenterFrameObserver=new ResizeObserver(()=>requestAnimationFrame(fitPresenterFrames));presenterFrameObserver.observe(document.querySelector('.ppt-preview-stack'));}
+    else addEventListener('resize',fitPresenterFrames);
+    setNoteSize(noteSize,false);applyLayout(layoutMode,false);requestAnimationFrame(fitPresenterFrames);
+  }
+  function updateShell(){
+    if(mode!=='presenter')return;mountShell();
+    const n=noteAt(idx),next=Math.min(idx+1,total-1),id=slideId(idx),editor=document.getElementById('ppt-note-editor');
+    const currentFrame=document.getElementById('ppt-current-frame'),nextFrame=document.getElementById('ppt-next-frame');
+    if(currentFrame.dataset.slide!==String(idx))updatePreviewFrame(currentFrame,idx);
+    if(nextFrame.dataset.slide!==String(next))updatePreviewFrame(nextFrame,next);
+    document.getElementById('ppt-next-card').classList.toggle('is-end',idx===total-1);
+    document.getElementById('ppt-current-label').textContent=`${idx+1} / ${total}`;
+    document.getElementById('ppt-next-label').textContent=idx===total-1?'已到尾页':`${next+1} / ${total}`;
+    document.getElementById('ppt-notes-title').textContent=n.title||`第 ${idx+1} 页`;
+    document.getElementById('ppt-notes-purpose').textContent=n.purpose||'—';
+    const target=plannedMsAt(idx);document.getElementById('ppt-note-meta').textContent=`建议 ${target?(target/60000).toFixed(1):'—'} 分钟 · ${id}`;
+    document.getElementById('ppt-page-count').textContent=`第 ${idx+1} / ${total} 页`;
+    document.getElementById('ppt-page-percent').textContent=`${Math.round(((idx+1)/total)*100)}%`;
+    document.getElementById('ppt-first').disabled=idx===0;document.getElementById('ppt-prev').disabled=idx===0;document.getElementById('ppt-next').disabled=idx===total-1;
+    document.getElementById('ppt-last').textContent=idx===total-1?'重新开始':'尾页';
+    if(renderedNoteId!==id){renderedNoteId=id;editor.value=loadNoteValue(id,idx,n);editor.scrollTop=0;document.getElementById('ppt-saved').textContent='已保存';}
+    if(presenterOverviewOn)buildPresenterOverview();requestAnimationFrame(fitPresenterFrames);renderTimer();updateSyncStatus();
+  }
+  function saveNote(){
+    const saved=document.getElementById('ppt-saved');saved.textContent='保存中…';saved.classList.remove('ppt-saved');clearTimeout(saveTimer);
+    saveTimer=setTimeout(()=>{localStorage.setItem(noteStorageKey(renderedNoteId),document.getElementById('ppt-note-editor').value);saved.textContent='已保存';saved.classList.add('ppt-saved');},300);
+  }
+  function setNoteSize(value,persist=true){noteSize=Math.max(14,Math.min(26,value));document.documentElement.style.setProperty('--ppt-note-size',`${noteSize}px`);if(persist)localStorage.setItem('guizang-ppt-note-size',String(noteSize));}
+  function currentElapsed(){return elapsed+(timerRunning?Date.now()-timerStartedAt:0);}
+  function currentSlideElapsed(i=idx){return slideElapsed[i]+(timerRunning&&timedSlideIndex===i?Date.now()-slideTimerStartedAt:0);}
+  function commitRunningTime(now=Date.now()){
+    if(!timerRunning)return;elapsed+=now-timerStartedAt;slideElapsed[timedSlideIndex]+=now-slideTimerStartedAt;timerStartedAt=now;slideTimerStartedAt=now;
+  }
+  function rollSlideTimer(nextIndex){if(timerRunning)commitRunningTime();timedSlideIndex=nextIndex;slideTimerStartedAt=Date.now();}
+  function renderTimer(){
+    const totalUsed=currentElapsed(),pageUsed=currentSlideElapsed(),target=plannedMsAt(idx),clock=document.getElementById('ppt-clock');
+    if(clock)clock.textContent=durationText(totalUsed);
+    const slideClock=document.getElementById('ppt-slide-clock'),slidePlan=document.getElementById('ppt-slide-plan'),statusBox=document.getElementById('ppt-slide-status-box'),statusLabel=document.getElementById('ppt-slide-status-label'),statusValue=document.getElementById('ppt-slide-status'),statusHint=document.getElementById('ppt-slide-status-hint');
+    if(slideClock)slideClock.textContent=durationText(pageUsed);if(slidePlan)slidePlan.textContent=target?`计划 ${durationText(target)}`:'计划 —';
+    if(statusBox&&statusLabel&&statusValue&&statusHint){
+      const over=Boolean(target&&pageUsed>target),remaining=Boolean(target&&!over);statusBox.classList.toggle('is-over',over);statusBox.classList.toggle('is-remaining',remaining);
+      statusLabel.textContent=over?'超时':(remaining?'剩余':'计划');statusValue.textContent=target?durationText(Math.abs(target-pageUsed)):'—';statusHint.textContent=over?'已超出本页计划':(remaining?'距本页计划':'未设置');
+    }
+    const totalPlan=totalPlannedMs(),plan=document.getElementById('ppt-plan');
+    if(plan)plan.textContent=totalPlan?`计划 ${Number(totalPlan/60000).toFixed(1)} 分钟 · 预计 ${clockTime(Date.now()+Math.max(0,totalPlan-totalUsed))}`:'计划 —';
+    const section=sectionInfo(idx),sectionEl=document.getElementById('ppt-section');
+    if(sectionEl){sectionEl.hidden=!section;sectionEl.textContent=section?`${section.name} · ${section.position}/${section.count}${section.planned?` · 剩余 ${durationText(Math.max(0,section.planned-section.used))}`:''}`:'';}
+    const timerButton=document.getElementById('ppt-timer-toggle');if(timerButton)timerButton.textContent=timerRunning?'暂停计时':(totalUsed?'继续计时':'开始计时');
+    const rehearsalButton=document.getElementById('ppt-rehearsal');if(rehearsalButton){rehearsalButton.textContent=rehearsalActive?'结束排练':'排练';rehearsalButton.classList.toggle('ppt-rehearsal-on',rehearsalActive);}
+    renderAutoState();
+  }
+  function toggleTimer(){const now=Date.now();if(timerRunning){commitRunningTime(now);timerRunning=false;}else{timerStartedAt=now;slideTimerStartedAt=now;timedSlideIndex=idx;timerRunning=true;}renderTimer();}
+  function resetTimer(){
+    elapsed=0;slideElapsed=Array(total).fill(0);timedSlideIndex=idx;
+    if(timerRunning){timerStartedAt=Date.now();slideTimerStartedAt=timerStartedAt;}else{timerStartedAt=0;slideTimerStartedAt=0;}
+    renderTimer();
+  }
+  function rehearsalHistory(){try{return JSON.parse(localStorage.getItem(storageKey('rehearsals'))||'[]');}catch(e){return[];}}
+  function toggleRehearsal(){
+    if(rehearsalActive){finishRehearsal(true);return;}
+    rehearsalActive=true;if(timerRunning){commitRunningTime();timerRunning=false;}resetTimer();toggleTimer();renderTimer();
+  }
+  function finishRehearsal(showSummary){
+    if(!rehearsalActive)return;if(timerRunning){commitRunningTime();timerRunning=false;}
+    const result={endedAt:Date.now(),totalMs:elapsed,slides:slideElapsed.map((ms,i)=>({index:i,id:slideId(i),title:noteAt(i).title||slideId(i),ms,targetMs:plannedMsAt(i)}))};
+    const history=rehearsalHistory();history.unshift(result);try{localStorage.setItem(storageKey('rehearsals'),JSON.stringify(history.slice(0,5)));}catch(e){}
+    rehearsalActive=false;renderTimer();if(showSummary)openRehearsalSummary(result,history.slice(0,5));
+  }
+  function openRehearsalSummary(result,history){
+    const rows=result.slides.filter(item=>item.ms>0).map(item=>`<tr><td>${item.index+1}</td><td>${escapeHTML(item.title)}</td><td>${durationText(item.ms)}</td><td>${item.targetMs?signedDuration(item.ms-item.targetMs):'—'}</td></tr>`).join('');
+    const recent=history.map(item=>`<div class="ppt-dialog-row"><span>${new Date(item.endedAt).toLocaleString()}</span><strong>${durationText(item.totalMs)}</strong></div>`).join('');
+    openDialog('排练记录',`<div class="ppt-dialog-section"><div class="ppt-dialog-row"><span>本次总时长</span><strong>${durationText(result.totalMs)}</strong></div><table class="ppt-summary"><thead><tr><th>#</th><th>页面</th><th>实际</th><th>与计划相比</th></tr></thead><tbody>${rows||'<tr><td colspan="4">没有记录到页面时间</td></tr>'}</tbody></table></div><div class="ppt-dialog-section"><h3>最近排练</h3>${recent}</div>`);
+  }
+
+  function autoDurationMs(i=idx){const explicit=Number(noteAt(i).autoAdvanceSeconds);const seconds=Number.isFinite(explicit)&&explicit>0?explicit:autoGlobalSeconds;return seconds>0?seconds*1000:null;}
+  function armAutoAdvance(){autoDeadline=0;autoRemainingMs=autoDurationMs()||0;}
+  function autoBlockedReason(){
+    if(presenterOverviewOn||overviewOn)return'宫格选页中';if(annotationTool!=='none')return'标注中';if(screenMode!=='normal')return'观众屏已暂停';if(document.hidden)return'窗口不可见';
+    const dialog=document.getElementById('ppt-dialog');if(dialog&&!dialog.hidden)return'设置中';
+    if(audienceOpenedAt&&syncState()!=='synced')return'等待观众屏同步';return'';
+  }
+  function updateAutoAdvance(){
+    if(!autoEnabled)return;
+    const duration=autoDurationMs();if(!duration||idx===total-1)return;
+    const blocked=autoBlockedReason(),now=Date.now();
+    if(blocked){if(autoDeadline){autoRemainingMs=Math.max(0,autoDeadline-now);autoDeadline=0;}return;}
+    if(!autoDeadline)autoDeadline=now+(autoRemainingMs||duration);
+    autoRemainingMs=Math.max(0,autoDeadline-now);
+    if(now>=autoDeadline){autoDeadline=0;autoRemainingMs=0;go(idx+1,{force:true});}
+  }
+  function renderAutoState(){
+    const button=document.getElementById('ppt-auto-toggle');if(!button)return;
+    const duration=autoDurationMs(),blocked=autoEnabled?autoBlockedReason():'';
+    button.classList.toggle('is-on',autoEnabled&&!blocked);button.classList.toggle('is-paused',autoEnabled&&Boolean(blocked));
+    if(!autoEnabled)button.textContent='自动翻页 · 关闭';
+    else if(!duration)button.textContent='自动翻页 · 等待时长';
+    else if(idx===total-1)button.textContent='自动翻页 · 已结束';
+    else if(blocked)button.textContent=`自动翻页 · ${blocked}`;
+    else button.textContent=`自动翻页 · ${durationText(autoRemainingMs||duration)}`;
+  }
+  function toggleAutoAdvance(){
+    if(!autoEnabled&&!autoDurationMs()){openSettings();return;}
+    autoEnabled=!autoEnabled;localStorage.setItem(storageKey('auto-enabled'),autoEnabled?'1':'0');armAutoAdvance();renderAutoState();
+  }
+
+  function openDialog(title,html){
+    const dialog=document.getElementById('ppt-dialog');if(!dialog)return;
+    document.getElementById('ppt-dialog-title').textContent=title;document.getElementById('ppt-dialog-body').innerHTML=html;dialog.hidden=false;renderAutoState();
+  }
+  function closeDialog(){const dialog=document.getElementById('ppt-dialog');if(dialog)dialog.hidden=true;renderAutoState();}
+  function applyLayout(value,persist=true){
+    layoutMode=['balanced','slides','notes'].includes(value)?value:'balanced';
+    document.getElementById('ppt-presenter')?.setAttribute('data-layout',layoutMode);
+    if(persist)localStorage.setItem(storageKey('layout'),layoutMode);requestAnimationFrame(fitPresenterFrames);
+  }
+  function applyAudienceScreen(value){
+    const cover=document.getElementById('ppt-audience-cover');if(!cover)return;
+    cover.classList.remove('is-ended');cover.textContent='';
+    if(value==='black'||value==='white'){cover.style.display='block';cover.style.background=value;}else cover.style.display='none';
+  }
+  function showAudienceEnded(){
+    const cover=document.getElementById('ppt-audience-cover');if(cover){cover.style.display='';cover.style.background='';cover.textContent='演示已结束';cover.classList.add('is-ended');}
+    setTimeout(()=>{try{window.close();}catch(e){}},120);
+  }
+  function setScreenMode(value){
+    const next=['normal','black','white','frozen'].includes(value)?value:'normal',wasFrozen=audienceFrozen;
+    screenMode=next;audienceFrozen=next==='frozen';emit({type:'screen',mode:next});
+    if(wasFrozen&&!audienceFrozen)sendGoto(true);updateSyncStatus();armAutoAdvance();renderAutoState();
+  }
+  function openSettings(){
+    openDialog('演示设置',`<div class="ppt-settings-card"><label class="ppt-switch-row" for="ppt-auto-enabled-setting"><span><strong>自动翻页</strong><br><span class="ppt-muted">需要时手动开启，默认关闭</span></span><input id="ppt-auto-enabled-setting" type="checkbox" ${autoEnabled?'checked':''}><span class="ppt-switch" aria-hidden="true"></span></label><div class="ppt-field"><label for="ppt-auto-seconds-setting">全局间隔</label><div class="ppt-stepper"><button id="ppt-auto-minus" type="button" aria-label="减少一秒">−</button><input id="ppt-auto-seconds-setting" type="number" min="1" step="1" value="${autoGlobalSeconds||''}" placeholder="—"><span class="ppt-stepper-unit">秒</span><button id="ppt-auto-plus" type="button" aria-label="增加一秒">+</button></div></div><button id="ppt-settings-save" class="ppt-ui-btn ppt-settings-save" type="button">保存自动翻页</button><p class="ppt-settings-copy">单页 autoAdvanceSeconds 优先于全局间隔；minutes 只是讲述计划。</p></div><div class="ppt-settings-card"><h3>演讲者布局</h3><p class="ppt-settings-copy">根据屏幕宽度调整页面与备注的比例</p><div class="ppt-segmented"><button class="ppt-ui-btn" data-layout-choice="balanced" type="button">均衡</button><button class="ppt-ui-btn" data-layout-choice="slides" type="button">页面优先</button><button class="ppt-ui-btn" data-layout-choice="notes" type="button">备注优先</button></div></div><div class="ppt-settings-card"><h3>观众屏</h3><p class="ppt-settings-copy">临时遮挡或冻结观众屏</p><div class="ppt-segmented screen"><button class="ppt-ui-btn" data-screen-choice="normal" type="button">正常</button><button class="ppt-ui-btn" data-screen-choice="black" type="button">黑屏 B</button><button class="ppt-ui-btn" data-screen-choice="white" type="button">白屏 W</button><button class="ppt-ui-btn" data-screen-choice="frozen" type="button">冻结 F</button></div></div><div class="ppt-dialog-section"><button id="ppt-open-shortcuts" class="ppt-ui-btn" type="button">查看快捷键</button></div>`);
+    document.querySelectorAll('[data-layout-choice]').forEach(button=>{button.classList.toggle('ppt-primary',button.dataset.layoutChoice===layoutMode);button.onclick=()=>{applyLayout(button.dataset.layoutChoice);openSettings();};});
+    document.querySelectorAll('[data-screen-choice]').forEach(button=>{button.classList.toggle('ppt-primary',button.dataset.screenChoice===screenMode);button.onclick=()=>{setScreenMode(button.dataset.screenChoice);openSettings();};});
+    const secondsInput=document.getElementById('ppt-auto-seconds-setting'),stepSeconds=delta=>{const current=Math.max(0,Number(secondsInput.value||0));secondsInput.value=String(Math.max(1,current+delta));};
+    document.getElementById('ppt-auto-minus').onclick=()=>stepSeconds(-1);document.getElementById('ppt-auto-plus').onclick=()=>stepSeconds(1);
+    document.getElementById('ppt-settings-save').onclick=()=>{autoEnabled=document.getElementById('ppt-auto-enabled-setting').checked;autoGlobalSeconds=Math.max(0,Number(secondsInput.value||0));localStorage.setItem(storageKey('auto-enabled'),autoEnabled?'1':'0');localStorage.setItem(storageKey('auto-seconds'),String(autoGlobalSeconds));armAutoAdvance();closeDialog();};
+    document.getElementById('ppt-open-shortcuts').onclick=openShortcuts;
+  }
+  function openShortcuts(){
+    const items=[['← / →','上一页 / 下一页'],['Home / End','首页 / 尾页'],['Esc','宫格选页；标注工具激活时先退出工具'],['L','激光笔'],['C','圈选'],['X','清除标记'],['B / W','观众屏黑屏 / 白屏'],['F','冻结 / 恢复观众屏'],['A','开启 / 关闭自动翻页'],['R','开始 / 结束排练'],['?','快捷键说明']];
+    openDialog('快捷键',`<div class="ppt-shortcuts">${items.map(([key,label])=>`<kbd>${key}</kbd><span>${label}</span>`).join('')}</div>`);
+  }
+  function preflightChecks(){
+    const images=[...document.images],videos=[...document.querySelectorAll('video')],frame=document.getElementById('ppt-current-frame'),rect=frame?.getBoundingClientRect();
+    return[
+      {label:'观众屏连接',ok:['synced','frozen'].includes(syncState()),detail:`当前状态：${document.getElementById('ppt-sync')?.textContent||'未连接'}`},
+      {label:'弹窗权限',ok:!popupBlocked,detail:popupBlocked?'浏览器阻止了观众窗口':'未检测到弹窗拦截'},
+      {label:'全屏状态',ok:Boolean(document.fullscreenElement),warn:true,detail:document.fullscreenElement?'已进入全屏':'尚未全屏，可在演讲前进入'},
+      {label:'字体加载',ok:!document.fonts||document.fonts.status==='loaded',detail:document.fonts?`状态：${document.fonts.status}`:'浏览器不提供字体状态'},
+      {label:'图片资源',ok:images.every(image=>image.complete&&image.naturalWidth>0),detail:`${images.filter(image=>image.complete&&image.naturalWidth>0).length} / ${images.length} 已加载`},
+      {label:'视频资源',ok:videos.every(video=>video.readyState>=2),detail:videos.length?`${videos.filter(video=>video.readyState>=2).length} / ${videos.length} 可播放`:'没有视频'},
+      {label:'当前页 16:9',ok:Boolean(rect&&Math.abs(rect.width/rect.height-16/9)<.003),detail:rect?`${Math.round(rect.width)} × ${Math.round(rect.height)}`:'尚未渲染'}
+    ];
+  }
+  function openPreflight(){
+    const checks=preflightChecks(),html=checks.map(item=>`<div class="ppt-dialog-row"><div class="ppt-check ${item.ok?'is-ok':(item.warn?'is-warn':'')}"><span class="ppt-check-dot"></span><span><strong>${item.label}</strong><br><span class="ppt-muted">${item.detail}</span></span></div><strong>${item.ok?'正常':(item.warn?'建议':'异常')}</strong></div>`).join('');
+    openDialog('演前检查',`<div class="ppt-dialog-section">${html}</div><div class="ppt-dialog-section"><button id="ppt-preflight-refresh" class="ppt-ui-btn" type="button">重新检查</button> <button id="ppt-enter-fullscreen" class="ppt-ui-btn" type="button">进入全屏</button></div><p class="ppt-muted">这里只能检查浏览器和观众页面的软件状态，不能确认 HDMI、转接器或投影仪线缆是否物理连接。</p>`);
+    document.getElementById('ppt-preflight-refresh').onclick=openPreflight;
+    document.getElementById('ppt-enter-fullscreen').onclick=async()=>{try{await document.documentElement.requestFullscreen();}catch(e){}openPreflight();};
+  }
+
+  function initTransport(){
+    if(transportReady)return;transportReady=true;
+    if('BroadcastChannel'in window){try{channel=new BroadcastChannel(channelName());channel.onmessage=e=>receive(e.data);}catch(e){}}
+    addEventListener('message',e=>receive(e.data));
+    addEventListener('storage',e=>{if(e.key===syncKey()&&e.newValue){try{receive(JSON.parse(e.newValue));}catch(err){}}});
+  }
+  function emit(payload,{persist=true}={}){
+    const message={__guizangPptSync:1,session,role:mode,...payload,at:Date.now(),nonce:Math.random().toString(36).slice(2)};
+    try{channel?.postMessage(message);}catch(e){}
+    if(persist)try{localStorage.setItem(syncKey(),JSON.stringify(message));}catch(e){}
+    try{if(mode==='presenter'&&audienceWindow&&!audienceWindow.closed)audienceWindow.postMessage(message,'*');}catch(e){}
+    try{if(mode==='audience'&&window.opener&&!window.opener.closed)window.opener.postMessage(message,'*');}catch(e){}
+  }
+  function receive(message){
+    if(!message||message.__guizangPptSync!==1||message.session!==session||message.role===mode)return;
+    if(message.nonce){if(seenNonceSet.has(message.nonce))return;seenNonceSet.add(message.nonce);seenNonces.push(message.nonce);if(seenNonces.length>256)seenNonceSet.delete(seenNonces.shift());}
+    if(mode==='presenter'){
+      if(message.type==='ready'){popupBlocked=false;sendGoto(true);}
+      if(message.type==='ack'){lastAckAt=Date.now();lastAckIndex=Number(message.index);lastAckSeq=Number(message.seq);updateSyncStatus();}
+      return;
+    }
+    if(mode!=='audience')return;
+    if(message.type==='bye'){showAudienceEnded();return;}
+    if(message.type==='screen'){applyAudienceScreen(message.mode);return;}
+    if(message.type==='laser'&&Number(message.index)===idx){audienceLaser=message.point||null;audienceLaserHideAt=Date.now()+650;renderInks();return;}
+    if(message.type==='circle'&&Number(message.index)===idx&&message.circle){audienceCircles.push(message.circle);renderInks();return;}
+    if(message.type==='clear'&&Number(message.index)===idx){audienceCircles=[];renderInks();return;}
+    if(message.type==='goto'||message.type==='ping'){
+      if(message.type==='goto'){audienceCircles=Array.isArray(message.circles)?message.circles:[];applyAudienceScreen(message.screenMode);go(Number(message.index),{force:true});}
+      emit({type:'ack',index:idx,seq:Number(message.seq)});
+    }
+  }
+  function receivePreview(message){
+    if(!message||message.__guizangPptSync!==1||message.session!==session||message.role!=='presenter'||message.type!=='preview-goto')return;
+    go(Number(message.index),{force:true});
+  }
+  function sendGoto(force=false){
+    if(mode!=='presenter'||audienceFrozen)return;if(force||lastAckIndex!==idx)seq++;
+    emit({type:'goto',index:idx,seq,screenMode,circles});updateSyncStatus();
+  }
+  function syncState(){
+    if(popupBlocked)return'blocked';if(audienceWindow&&audienceWindow.closed)return'disconnected';if(audienceFrozen)return'frozen';
+    if(!lastAckAt)return audienceOpenedAt&&Date.now()-audienceOpenedAt<2600?'connecting':'disconnected';
+    if(Date.now()-lastAckAt>2600)return'disconnected';if(lastAckIndex!==idx||lastAckSeq<seq)return'unsynced';return'synced';
+  }
+  function updateSyncStatus(){
+    const el=document.getElementById('ppt-sync');if(!el)return;const state=syncState();
+    const labels={blocked:'弹窗被拦截',disconnected:'未连接',connecting:'连接中',unsynced:'未同步',frozen:'已冻结',synced:`已同步 · 第 ${idx+1} 页`};
+    el.dataset.state=state;el.textContent=`观众屏 · ${labels[state]}`;
+  }
+  function reopenAudience(){
+    initTransport();popupBlocked=false;audienceOpenedAt=Date.now();lastAckAt=0;lastAckIndex=-1;lastAckSeq=-1;
+    if(audienceFrozen){audienceFrozen=false;screenMode='normal';}
+    audienceWindow=window.open(frameUrl('audience',idx),`guizang-ppt-audience-${session}`,'popup=yes,width=1440,height=900');
+    if(!audienceWindow)popupBlocked=true;updateSyncStatus();
+  }
+  function enterPresenter(openAudience=true){
+    if(mode==='presenter')return;if(overviewOn)toggleOverview();lowPowerBeforePresenter=window.__lowPowerMode;mode='presenter';initTransport();mountShell();
+    document.body.classList.remove('ppt-audience','ppt-preview');document.body.classList.add('ppt-presenter');document.title=`演讲者视图 · ${originalTitle}`;
+    window.__setLowPowerMode?.(true,{persist:false});updateShell();armAutoAdvance();if(openAudience)reopenAudience();
+  }
+  function exitPresenter(){
+    if(rehearsalActive)finishRehearsal(false);else if(timerRunning){commitRunningTime();timerRunning=false;}togglePresenterOverview(false);emit({type:'bye'});audienceWindow=null;audienceOpenedAt=0;lastAckAt=0;lastAckIndex=-1;lastAckSeq=-1;mode='deck';document.body.classList.remove('ppt-presenter');document.title=originalTitle;window.__setLowPowerMode?.(lowPowerBeforePresenter,{persist:false});
+  }
+  function initAudience(){
+    mode='audience';document.body.classList.add('ppt-audience');document.title=`观众屏 · ${originalTitle}`;
+    document.body.insertAdjacentHTML('beforeend','<canvas id="ppt-audience-ink" aria-hidden="true"></canvas><div id="ppt-audience-cover" aria-hidden="true"></div>');
+    const resize=()=>{sizeInk(document.getElementById('ppt-audience-ink'),innerWidth,innerHeight);renderInks();};addEventListener('resize',resize);resize();
+    initTransport();emit({type:'ready',index:idx});
+  }
+  function initPreview(){mode='preview';document.body.classList.add('ppt-preview');window.__setLowPowerMode?.(true,{persist:false});addEventListener('message',e=>{if(e.source===parent)receivePreview(e.data);});}
+  function onSlideChange(nextIndex){
+    if(mode!=='presenter')return;rollSlideTimer(nextIndex);circles=[];draftCircle=null;laserPoint=null;annotationPointerDown=false;armAutoAdvance();updateShell();sendGoto();
+  }
+  function handleKey(e){
+    const editable=e.target?.matches?.('input,textarea,[contenteditable="true"]');
+    if(editable){if(e.key==='Escape')e.target.blur();return true;}
+    if(mode==='audience'||mode==='preview'){e.preventDefault();return true;}
+    if(mode==='deck'&&e.key?.toLowerCase()==='p'&&!e.metaKey&&!e.ctrlKey&&!e.altKey){e.preventDefault();enterPresenter(true);return true;}
+    if(mode!=='presenter')return false;
+    const key=e.key?.toLowerCase();
+    const dialog=document.getElementById('ppt-dialog');
+    if(!dialog?.hidden){if(e.key==='Escape'){e.preventDefault();closeDialog();}return true;}
+    if(e.key==='?'||key==='/'){e.preventDefault();openShortcuts();return true;}
+    if(e.key==='Escape'){e.preventDefault();if(annotationTool!=='none')setAnnotationTool('none');else togglePresenterOverview();return true;}
+    if(presenterOverviewOn)return true;
+    if(key==='l'){e.preventDefault();setAnnotationTool('laser');return true;}
+    if(key==='c'){e.preventDefault();setAnnotationTool('circle');return true;}
+    if(key==='x'){e.preventDefault();clearAnnotations(true);return true;}
+    if(key==='b'){e.preventDefault();setScreenMode(screenMode==='black'?'normal':'black');return true;}
+    if(key==='w'){e.preventDefault();setScreenMode(screenMode==='white'?'normal':'white');return true;}
+    if(key==='f'){e.preventDefault();setScreenMode(audienceFrozen?'normal':'frozen');return true;}
+    if(key==='a'){e.preventDefault();toggleAutoAdvance();return true;}
+    if(key==='r'){e.preventDefault();toggleRehearsal();return true;}
+    if(['ArrowRight','PageDown',' ','ArrowDown'].includes(e.key)){e.preventDefault();go(idx+1,{force:true});return true;}
+    if(['ArrowLeft','PageUp','ArrowUp'].includes(e.key)){e.preventDefault();go(idx-1,{force:true});return true;}
+    if(e.key==='Home'){e.preventDefault();go(0,{force:true});return true;}
+    if(e.key==='End'){e.preventDefault();go(total-1,{force:true});return true;}
+    return false;
+  }
+  function initMode(){
+    document.getElementById('ppt-low-power-btn')?.addEventListener('click',()=>window.__setLowPowerMode(!window.__lowPowerMode));
+    document.getElementById('ppt-overview-btn')?.addEventListener('click',toggleOverview);
+    document.getElementById('ppt-presenter-btn')?.addEventListener('click',()=>enterPresenter(true));
+    if(requestedMode==='audience')initAudience();else if(requestedMode==='preview')initPreview();else if(requestedMode==='presenter')enterPresenter(false);
+  }
+  setInterval(()=>{
+    renderTimer();renderInks();updateAutoAdvance();
+    if(mode==='presenter'&&Date.now()-lastPingAt>900){lastPingAt=Date.now();if(audienceWindow?.closed)updateSyncStatus();emit({type:'ping',index:idx,seq});updateSyncStatus();}
+  },250);
+  return{initMode,onSlideChange,handleKey,slideLabel,enterPresenter,reopenAudience,toggleOverview:togglePresenterOverview,debugState:()=>({mode,idx,session,syncState:syncState(),timerRunning,rehearsalActive,presenterOverviewOn,autoEnabled,autoGlobalSeconds,autoRemainingMs,screenMode,annotationTool,circles:[...circles],audienceCircles:[...audienceCircles],layoutMode})};
+})();
+/* =============== /演讲者模式 / 观众屏同步 =============== */
+
+addEventListener('keydown',e=>{
+  if(window.__pptPresenter?.handleKey(e))return;
+  if(e.key==='Escape'){e.preventDefault();toggleOverview();return;}
+  if(e.key && e.key.toLowerCase()==='b' && !e.metaKey && !e.ctrlKey && !e.altKey){
+    e.preventDefault();
+    window.__setLowPowerMode(!window.__lowPowerMode);
+    return;
+  }
+  if(overviewOn)return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '||e.key==='ArrowDown'){
+    if(window.__pipeAdvance && window.__pipeAdvance()) return;
+    go(idx+1);
+    return;
+  }
+  if(e.key==='ArrowLeft'||e.key==='PageUp'||e.key==='ArrowUp')go(idx-1);
+  if(e.key==='Home')go(0);
+  if(e.key==='End')go(total-1);
+});
+
+let wheelTO=null,wheelAcc=0;
+addEventListener('wheel',e=>{
+  wheelAcc+=e.deltaY+e.deltaX;
+  if(Math.abs(wheelAcc)>50){
+    if(wheelAcc>0 && window.__pipeAdvance && window.__pipeAdvance()){
+      wheelAcc=0;
+    }else{
+      go(idx+(wheelAcc>0?1:-1));wheelAcc=0;
+    }
+  }
+  clearTimeout(wheelTO);wheelTO=setTimeout(()=>wheelAcc=0,150);
+},{passive:true});
+
+let tx=0,ty=0;
+addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+addEventListener('touchend',e=>{
+  const dx=(e.changedTouches[0].clientX-tx);
+  const dy=(e.changedTouches[0].clientY-ty);
+  if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){
+    if(dx<0 && window.__pipeAdvance && window.__pipeAdvance()) return;
+    go(idx+(dx<0?1:-1));
+  }
+},{passive:true});
+
+/* ?slide=N 直达（1-based），与 Swiss 模板行为一致 */
+const initialSlideParam = new URLSearchParams(location.search).get('slide');
+const initialSlide = initialSlideParam ? Number(initialSlideParam) - 1 : 0;
+go(Number.isFinite(initialSlide) ? initialSlide : 0);
+window.__pptPresenter?.initMode();
+</script>
+<script src="./assets/lucide.min.js"></script>
+<script>window.lucide?.createIcons?.();</script>
+
+<!-- ============ Motion One 动效引擎（本地优先,CDN 兜底） ============
+     加载策略:先 ./assets/motion.min.js(本地,离线可用),失败 fallback 到 jsDelivr CDN
+     加载完成后挂 window.__playSlide / window.__pipeAdvance,
+     导航脚本会在翻页中段调用 __playSlide(idx),键盘/滚轮/触屏会在翻页前调用 __pipeAdvance()
+     双双失败时会兜底把所有 [data-anim] 设为可见,不让动效破坏阅读
+-->
+<script type="module">
+let motion;
+try {
+  motion = await import('./assets/motion.min.js');
+} catch(e1) {
+  try {
+    motion = await import('./assets/motion.min.js');
+  } catch(e2) {
+    console.warn('[motion] local + CDN both failed, disabling animations', e1, e2);
+    document.querySelectorAll('[data-anim]').forEach(el=>{el.style.opacity='1';el.style.transform='none'});
+    document.querySelectorAll('[data-animate="pipeline"] [data-anim]').forEach(el=>el.style.opacity='1');
+  }
+}
+
+if(motion){
+  const { animate, stagger } = motion;
+  document.body.classList.add('motion-ready');
+  const EASE = [.22, 1, .36, 1];
+  const slides = [...document.querySelectorAll('.slide')];
+  let pipeStep = -1;
+  let lastIdx = -1;
+
+  function resetAnims(slide){
+    slide.querySelectorAll('[data-anim]').forEach(el=>{
+      el.style.opacity='';
+      el.style.transform='';
+    });
+  }
+
+  function revealStatic(slide){
+    resetAnims(slide);
+    document.getAnimations?.().forEach(a=>a.cancel());
+    slide.querySelectorAll('[data-anim]').forEach(el=>{
+      el.style.opacity='1';
+      el.style.transform='none';
+    });
+  }
+
+  function playSlide(i){
+    const slide = slides[i];
+    if(!slide) return;
+    lastIdx = i;
+    const recipe = slide.dataset.animate || (slide.classList.contains('hero') ? 'hero' : 'cascade');
+
+    if(window.__lowPowerMode){
+      revealStatic(slide);
+      return;
+    }
+
+    if(recipe === 'pipeline'){
+      pipeStep = -1;
+      slide.querySelectorAll('[data-anim]').forEach(el=>{
+        el.style.opacity='0.15';
+        el.style.transform='none';
+      });
+      return;
+    }
+
+    resetAnims(slide);
+    const all = [...slide.querySelectorAll('[data-anim]')];
+    if(!all.length) return;
+
+    if(recipe === 'directional'){
+      const lefts  = all.filter(el=>el.dataset.anim==='left');
+      const divs   = all.filter(el=>el.dataset.anim==='divider');
+      const rights = all.filter(el=>el.dataset.anim==='right');
+      const others = all.filter(el=>!['left','right','divider'].includes(el.dataset.anim));
+      if(others.length) animate(others, {opacity:[0,1], y:[12,0]}, {duration:.6, delay:stagger(.1, {start:.15}), easing:EASE});
+      if(lefts.length)  animate(lefts,  {opacity:[0,1], x:[-24,0]}, {duration:.8, delay:.35, easing:EASE});
+      if(divs.length)   animate(divs,   {opacity:[0,.25]},          {duration:.5, delay:.9});
+      if(rights.length) animate(rights, {opacity:[0,1], x:[24,0]},  {duration:.8, delay:1.0, easing:EASE});
+      return;
+    }
+
+    if(recipe === 'quote'){
+      const lines = all.filter(el=>el.dataset.anim==='line');
+      const others = all.filter(el=>el.dataset.anim!=='line');
+      if(others.length) animate(others, {opacity:[0,1], y:[8,0]},    {duration:.6, delay:stagger(.12, {start:.2}), easing:EASE});
+      if(lines.length)  animate(lines,  {opacity:[.35,1], y:[10,0]}, {duration:.8, delay:stagger(.55, {start:.5}), easing:EASE});
+      return;
+    }
+
+    if(recipe === 'hero'){
+      animate(all, {opacity:[0,1], y:[14,0]}, {duration:.9, delay:stagger(.16, {start:.2}), easing:EASE});
+      return;
+    }
+
+    // default: cascade
+    animate(all, {opacity:[0,1], y:[16,0]}, {duration:.75, delay:stagger(.1, {start:.15}), easing:EASE});
+  }
+
+  function pipeAdvance(){
+    if(window.__lowPowerMode) return false;
+    const slide = slides[lastIdx];
+    if(!slide || slide.dataset.animate !== 'pipeline') return false;
+    const steps  = [...slide.querySelectorAll('[data-anim="step"]')];
+    const arrows = [...slide.querySelectorAll('[data-anim="arrow"]')];
+    if(pipeStep >= steps.length - 1) return false;
+    pipeStep++;
+    animate(steps[pipeStep], {opacity:[0.15,1], y:[8,0]}, {duration:.5, easing:EASE});
+    if(pipeStep > 0 && arrows[pipeStep-1]){
+      animate(arrows[pipeStep-1], {opacity:[0.15,.7]}, {duration:.3, delay:.15});
+    }
+    return true;
+  }
+
+  window.__playSlide = playSlide;
+  window.__pipeAdvance = pipeAdvance;
+
+  // 首屏:go() 已跑过(同步),没来得及触发动效 → 这里补一下(尊重 ?slide=N)
+  playSlide(window.__currentSlideIndex || 0);
+}
+</script>
+<script>
+(() => {
+  const query = new URLSearchParams(location.search);
+  const tvPath = /\/(?:tv|safe)\.html$/i.test(location.pathname);
+  const safePath = /\/safe\.html$/i.test(location.pathname);
+  if (query.get('tv') !== '1' && !tvPath) return;
+  document.body.classList.add('ppt-tv');
+  if (query.get('safe') === '1' || safePath) {
+    document.body.classList.add('ppt-safe');
+    window.__setLowPowerMode?.(true, { persist: false });
+  }
+  const tip = document.getElementById('ppt-tv-enter');
+  const feedback = document.getElementById('ppt-tv-feedback');
+  let attempting = false;
+  let ready = false;
+  let pointerStart = null;
+  let wasFullscreen = false;
+  const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  const update = () => {
+    const isFullscreen = Boolean(fullscreenElement());
+    document.body.classList.toggle('ppt-tv-fullscreen', isFullscreen);
+    if (wasFullscreen && !isFullscreen) {
+      ready = false;
+      document.body.classList.remove('ppt-tv-ready');
+      if (tip) tip.textContent = '轻触屏幕，再次进入全屏演示';
+    }
+    wasFullscreen = isFullscreen;
+  };
+  const showGuide = (message, duration = 2800) => {
+    if (!tip) return;
+    tip.textContent = message;
+    document.body.classList.add('ppt-tv-show-guide');
+    clearTimeout(showGuide.timer);
+    showGuide.timer = setTimeout(() => document.body.classList.remove('ppt-tv-show-guide'), duration);
+  };
+  const markReady = () => {
+    ready = true;
+    document.body.classList.add('ppt-tv-ready');
+  };
+  const flash = (direction) => {
+    if (!feedback) return;
+    feedback.textContent = direction === 'left' ? '‹' : '›';
+    feedback.className = direction === 'left' ? 'is-left' : 'is-right';
+    feedback.animate([{ opacity: 0, transform: 'translateY(-50%) scale(.82)' }, { opacity: .9, transform: 'translateY(-50%) scale(1)' }, { opacity: 0, transform: 'translateY(-50%) scale(1.08)' }], { duration: 420, easing: 'ease-out' });
+    setTimeout(() => { feedback.className = ''; }, 430);
+  };
+  const enter = async (event) => {
+    if (fullscreenElement() || attempting || ready) return;
+    if (event) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+    attempting = true;
+    try {
+      const root = document.documentElement;
+      const request = root.requestFullscreen || root.webkitRequestFullscreen || root.msRequestFullscreen;
+      if (request) {
+        if (root.requestFullscreen) await root.requestFullscreen({ navigationUI: 'hide' });
+        else await request.call(root);
+        markReady();
+        try { await screen.orientation?.lock?.('landscape'); } catch (error) {}
+        showGuide('轻触左半屏上一页 · 轻触右半屏下一页 · 也可左右滑动');
+      } else if (event) {
+        markReady();
+        showGuide('电视浏览器不支持网页全屏；请隐藏浏览器工具栏。左右轻触仍可翻页', 4200);
+      }
+    } catch (error) {
+      if (event) {
+        markReady();
+        showGuide('请使用电视浏览器的“全屏／隐藏工具栏”。左右轻触仍可翻页', 4200);
+      }
+    } finally {
+      attempting = false;
+      update();
+    }
+  };
+  ['fullscreenchange','webkitfullscreenchange','MSFullscreenChange'].forEach((name) => document.addEventListener(name, update));
+  addEventListener('pointerdown', (event) => { pointerStart = { x: event.clientX, y: event.clientY, at: performance.now() }; }, { capture: true, passive: true });
+  addEventListener('pointerup', (event) => {
+    if (!ready) { enter(event); return; }
+    const start = pointerStart || { x: event.clientX, y: event.clientY, at: performance.now() };
+    const moved = Math.hypot(event.clientX - start.x, event.clientY - start.y);
+    const elapsed = performance.now() - start.at;
+    pointerStart = null;
+    if (moved > 22 || elapsed > 700) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const direction = event.clientX < innerWidth / 2 ? 'left' : 'right';
+    flash(direction);
+    go(direction === 'left' ? idx - 1 : idx + 1);
+  }, { capture: true });
+  addEventListener('keydown', (event) => {
+    if (!ready && ['Enter',' ','ArrowLeft','ArrowRight','PageUp','PageDown'].includes(event.key)) enter(event);
+  }, { capture: true });
+  if (!('PointerEvent' in window)) {
+    addEventListener('click', (event) => {
+      if (!ready) { enter(event); return; }
+      event.preventDefault();
+      const direction = event.clientX < innerWidth / 2 ? 'left' : 'right';
+      flash(direction);
+      go(direction === 'left' ? idx - 1 : idx + 1);
+    }, { capture: true });
+  }
+  addEventListener('load', () => { enter(); update(); }, { once: true });
+})();
+</script>
+</body>
+</html>
