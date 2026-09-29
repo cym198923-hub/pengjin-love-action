@@ -209,6 +209,28 @@
   body.light-bg.low-power #hint{color:var(--ink)}
   body.ppt-tv #hint,body.ppt-tv #nav{display:none!important}
   body.ppt-tv{overscroll-behavior:none;background:#080b0a;touch-action:none;-webkit-user-select:none;user-select:none}
+  /* TV 3–5m readability guard: important auxiliary copy must remain legible. */
+  body.ppt-tv .chrome,body.ppt-tv .foot{font-size:max(14px,.82vw)}
+  body.ppt-tv .foot .title{font-size:max(15px,.9vw)}
+  body.ppt-tv .kicker{font-size:max(16px,.9vw)}
+  body.ppt-tv .meta-row{font-size:max(14px,.82vw)}
+  body.ppt-tv .body-zh{font-size:max(18px,1.15vw)}
+  body.ppt-tv .tag{font-size:max(14px,.74vw)}
+  body.ppt-tv .encounter-caption{font-size:max(13px,.72vw)}
+  body.ppt-tv .encounter-caption strong{font-size:max(18px,1.1vw)}
+  body.ppt-tv .thinker-name{font-size:max(14px,.78vw)}
+  body.ppt-tv .mirror-pane .mirror-index{font-size:max(13px,.7vw)}
+  body.ppt-tv .mirror-pane p{font-size:max(17px,1vw)}
+  body.ppt-tv .mirror-pane .mirror-question{font-size:max(20px,1.18vw)}
+  body.ppt-tv .service-continuum p{font-size:max(17px,.95vw)}
+  body.ppt-tv .service-photo figcaption small{font-size:max(12px,.64vw)}
+  body.ppt-tv .support-node b{font-size:max(12px,.64vw)}
+  body.ppt-tv .support-node span{font-size:max(19px,1.15vw)}
+  body.ppt-tv .rowline .v{font-size:max(18px,1.1vw)}
+  body.ppt-tv .orbit-node small{font-size:max(13px,.75vw)}
+  body.ppt-tv .week-board p{font-size:max(17px,.95vw)}
+  body.ppt-tv .evidence-ladder small{font-size:max(13px,.72vw)}
+  body.ppt-tv .step-desc{font-size:max(17px,1.05vw)!important}
   #ppt-tv-enter{position:fixed;left:50%;bottom:4.6vh;z-index:80;display:none;transform:translateX(-50%);padding:12px 20px;border:1px solid rgba(244,241,232,.34);background:rgba(7,10,9,.82);color:#f4f1e8;font-family:var(--sans-zh);font-size:15px;letter-spacing:.08em;backdrop-filter:blur(12px);box-shadow:0 8px 30px rgba(0,0,0,.26);white-space:nowrap}
   body.ppt-tv:not(.ppt-tv-ready) #ppt-tv-enter,body.ppt-tv.ppt-tv-show-guide #ppt-tv-enter{display:block}
   body.ppt-tv.ppt-tv-fullscreen{cursor:none}
@@ -704,8 +726,8 @@
     </div>
     <div class="cover-manifesto" data-anim>
       <div class="cover-count">01</div>
-      <strong><span>心里有爱，</span><span>手上要有行动。</span></strong>
-      <p>这不是一场关于感动的分享，而是一场关于如何把关心变成专业、服务和结果的讨论。</p>
+      <strong><span>心</span><span>行</span></strong>
+      <p>40分钟，只谈一件事：如何做到。</p>
     </div>
   </div>
   <div class="foot"><div class="title">让爱落地 · 经销商动员分享</div><div>OPENING</div></div>
@@ -744,7 +766,7 @@
 <section class="slide dark" data-theme="dark" data-slide-id="inner-outer">
   <div class="chrome"><div>内外同修 · Inner / Outer</div><div>04 / 26</div></div>
   <div class="frame" style="padding-top:5vh">
-    <div class="kicker" data-anim>人，永远在第一位</div>
+    <div class="kicker" data-anim>向内看清自己，向外看见别人</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:5vh;min-height:52vh">
       <div style="display:flex;flex-direction:column;justify-content:space-between;padding:1vh 4vw 2vh 0;border-right:1px solid rgba(var(--paper-rgb),.3)" data-anim>
         <div><div class="meta-row"><span>INWARD</span><span>01</span></div><h2 class="h-xl" style="font-size:5.5vw;margin-top:3vh">向内修心</h2></div>
@@ -801,13 +823,13 @@
       <p class="lead" style="font-size:1.8vw" data-anim>为什么结果还没有发生？</p>
     </div>
     <div class="stair-flow" data-anim="right">
-      <div><span class="stair-meta">01 · DIRECTION</span><span class="stair-word">方向</span><span class="body-zh">走对了吗</span></div>
-      <div><span class="stair-meta">02 · PROFESSIONAL</span><span class="stair-word">专业</span><span class="body-zh">练够了吗</span></div>
-      <div><span class="stair-meta">03 · CUSTOMER</span><span class="stair-word">理解</span><span class="body-zh">真正发生了吗</span></div>
-      <div><span class="stair-meta">04 · SYSTEM</span><span class="stair-word">系统</span><span class="body-zh">可以重复吗</span></div>
+      <div><span class="stair-meta">01 · REACH</span><span class="stair-word">找不到人</span><span class="body-zh">触达没有发生</span></div>
+      <div><span class="stair-meta">02 · EXPRESSION</span><span class="stair-word">讲不清楚</span><span class="body-zh">对方没有听懂</span></div>
+      <div><span class="stair-meta">03 · LISTEN</span><span class="stair-word">没听见需求</span><span class="body-zh">只顾着自己讲</span></div>
+      <div><span class="stair-meta">04 · REPEAT</span><span class="stair-word">做过一次</span><span class="body-zh">却复制不了</span></div>
     </div>
   </div>
-  <div class="foot"><div class="title">努力需要方向、专业、理解与系统</div><div>ACT II</div></div>
+  <div class="foot"><div class="title">努力要落到具体卡点上</div><div>ACT II</div></div>
 </section>
 
 <section class="slide light hero" data-theme="light" data-slide-id="old-script" data-animate="directional">
@@ -846,6 +868,7 @@
       </div>
       <figure class="encounter-visual" data-anim="right">
         <img class="encounter-scene" src="images/09-real-encounter.webp" alt="彭进佩戴红色手环并记录真实学习内容">
+        <img class="bracelet-cutout" src="./images/09-bracelet-cutout-v2.png" alt="同一真实场景中的手环细节">
         <figcaption class="encounter-caption"><strong>真实接触，真实记录</strong>REAL MOMENT · NO EFFECT CLAIM</figcaption>
       </figure>
     </div>
@@ -883,7 +906,7 @@
     <h1 class="display-zh" style="font-size:6.8vw" data-anim>仰望星空<br>脚踏实地<br>躬身入局</h1>
     <p class="lead" style="max-width:55vw" data-anim>心愿要有现实的重量：学习、核验、分享、服务。</p>
   </div>
-  <div class="foot"><div class="title">仰望星空 · 脚踏实地 · 躬身入局</div><div>STORY · 03</div></div>
+  <div class="foot"><div class="title">从愿心，走到行动</div><div>STORY · 03</div></div>
 </section>
 
 <section class="slide dark hero" data-theme="dark" data-slide-id="market-shows-problems" data-animate="quote">
@@ -896,20 +919,17 @@
   <div class="foot"><div class="title">不回避问题，也不把问题神秘化</div><div>ACT III</div></div>
 </section>
 
-<section class="slide light" data-theme="light" data-slide-id="three-market-mirrors" data-animate="directional">
+<section class="slide light" data-theme="light" data-slide-id="three-market-mirrors">
   <div class="chrome"><div>诊断 · Three Mirrors</div><div>13 / 26</div></div>
-  <div class="frame mirror-diagnostic">
-    <div class="mirror-diagnostic-head">
-      <div data-anim="left"><div class="kicker">诊断不是归罪</div><h2 class="h-xl">三面市场之镜</h2></div>
-      <p data-anim="right">市场没有惩罚我们。它只是把触达不足、信任断点和行动阻力照了出来。</p>
-    </div>
-    <div class="mirror-verdicts" data-anim>
-      <article class="mirror-verdict" data-anim="left"><i>01</i><h3>触达</h3><p>客户还没有机会真正认识我们</p><b>问题藏在入口里</b></article>
-      <article class="mirror-verdict" data-anim><i>02</i><h3>信任</h3><p>事实还没有被专业地讲清楚</p><b>问题藏在表达里</b></article>
-      <article class="mirror-verdict" data-anim="right"><i>03</i><h3>行动</h3><p>伙伴还看不清可以开始的第一步</p><b>问题藏在方法里</b></article>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:2.8vh">
+    <div><div class="kicker" data-anim>从判断进入诊断</div><h2 class="h-xl" style="font-size:5vw" data-anim>三面市场之镜</h2></div>
+    <div class="mirror-wall">
+      <article class="mirror-pane" data-anim><div class="mirror-index">MIRROR 01 · REACH</div><h3>触达</h3><p>客户还没有机会真正认识我们。</p><div class="mirror-question">我们真的走进了<br>客户的生活吗？</div></article>
+      <article class="mirror-pane" data-anim><div class="mirror-index">MIRROR 02 · TRUST</div><h3>信任</h3><p>体验发生了，专业承接却没有跟上。</p><div class="mirror-question">我们真的把事实<br>讲清楚了吗？</div></article>
+      <article class="mirror-pane" data-anim><div class="mirror-index">MIRROR 03 · ACTION</div><h3>行动</h3><p>伙伴明白了方向，却不知道从哪里开始。</p><div class="mirror-question">我们把第一步<br>拆得足够小了吗？</div></article>
     </div>
   </div>
-  <div class="foot"><div class="title">看见问题，是改变的开始</div><div>DIAGNOSIS</div></div>
+  <div class="foot"><div class="title">看见断点，才知道从哪里改</div><div>DIAGNOSIS</div></div>
 </section>
 
 <section class="slide dark" data-theme="dark" data-slide-id="no-traffic-not-no-demand">
@@ -964,7 +984,7 @@
       <div class="boundary-mark" data-anim>≠</div>
       <div class="boundary-side" data-anim><div class="meta-row">DO NOT DISMISS</div><div><div class="h2-zh">也不能随意解释为</div><div class="display-zh" style="font-size:4.5vw;margin-top:2vh">已经无效</div></div></div>
     </div>
-    <p class="lead" style="max-width:66vw;margin:auto" data-anim>回到正式说明、正确使用、真实记录和持续服务。</p>
+    <p class="lead" style="max-width:66vw;margin:auto" data-anim>先不急着下结论，才有空间回到事实。</p>
   </div>
   <div class="foot"><div class="title">个体体验存在差异，不替客户下结论</div><div>TRUST BOUNDARY</div></div>
 </section>
@@ -988,17 +1008,17 @@
   <div class="chrome"><div>服务 · Stay Present</div><div>19 / 26</div></div>
   <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:2.4vh">
     <div class="kicker" data-anim>陪伴，比一句承诺更有力量</div>
-    <h2 class="h-xl" style="font-size:min(4.25vw,7.3vh)" data-anim>真正的服务，是成交以后还在</h2>
-    <div class="service-declaration">
-      <div class="service-verdict" data-anim="left"><small>THE SALE IS NOT THE END</small><strong>成交之后，<br>人才真正需要你。</strong><p>服务不是一句“有问题找我”，而是让客户知道每一步都有人负责。</p></div>
-      <div class="service-promises">
-        <article class="service-promise" data-anim="right"><i>01</i><h3>使用前 · 讲清楚</h3><p>事实、用法与表达边界</p></article>
-        <article class="service-promise" data-anim="right"><i>02</i><h3>使用中 · 有记录</h3><p>依据正式指引回访与陪伴</p></article>
-        <article class="service-promise" data-anim="right"><i>03</i><h3>遇问题 · 有回应</h3><p>不编答案，及时核实</p></article>
+    <h2 class="h-xl" style="font-size:min(4.25vw,7.3vh)" data-anim>成交之后，人才真正需要你</h2>
+    <div class="service-evidence">
+      <figure class="service-photo" data-anim="left"><img src="./images/19-service-portrait-v3.webp" alt="佩戴手环并认真记录信息的真实工作现场"><figcaption><small>REAL ACTION · RECORD &amp; VERIFY</small>记录、核验、回应。</figcaption></figure>
+      <div class="service-continuum">
+        <article data-anim><i data-lucide="book-open-check"></i><div><h3>使用前 · 讲清楚</h3><p>事实、用法与表达边界</p></div><b>01</b></article>
+        <article data-anim><i data-lucide="notebook-pen"></i><div><h3>使用中 · 有记录</h3><p>依据正式指引回访与陪伴</p></div><b>02</b></article>
+        <article data-anim><i data-lucide="message-circle-reply"></i><div><h3>遇问题 · 有回应</h3><p>不编答案，及时核实</p></div><b>03</b></article>
       </div>
     </div>
   </div>
-  <div class="foot"><div class="title">使用前讲清楚 · 使用中有人陪 · 遇到问题有回应</div><div>SERVICE</div></div>
+  <div class="foot"><div class="title">让客户知道：每一步都有人负责</div><div>SERVICE</div></div>
 </section>
 
 <section class="slide hero dark" data-theme="dark" data-slide-id="first-step-clear">
@@ -1009,7 +1029,6 @@
     <h1 class="display-zh" style="font-size:7vw" data-anim>不是不想做</h1>
     <div class="rule" style="max-width:16vw;margin:1vh auto" data-anim></div>
     <h1 class="display-zh" style="font-size:6vw;opacity:.65" data-anim>是第一步还不够清楚</h1>
-    <p class="lead" style="max-width:62vw;margin:auto" data-anim>团队需要的不只是鼓励，而是一套陪着伙伴做会的系统。</p>
   </div>
   <div class="foot"><div class="title">目标太大、步骤太模糊，行动就很难发生</div><div>METHOD · 04</div></div>
 </section>
@@ -1078,29 +1097,21 @@
   <div class="foot"><div class="title">真正的战役，从今天的积累与训练开始</div><div>ACT V</div></div>
 </section>
 
-<section class="slide hero light" data-theme="light" data-slide-id="team-support" data-animate="directional">
+<section class="slide hero light" data-theme="light" data-slide-id="team-support">
   <div class="chrome"><div>承接 · Team Support</div><div>25 / 26</div></div>
-  <div class="frame support-proof">
-    <div class="support-proof-head">
-      <div data-anim="left"><div class="kicker">要求伙伴行动，也要给伙伴一个接得住的系统</div><h2 class="h-xl">团队给伙伴什么承接</h2></div>
-      <p data-anim="right">全力推进，不是把压力层层下传，而是把伙伴需要的方法、边界和回应准备好。</p>
-    </div>
-    <div class="support-scene" data-anim>
-      <div class="support-verdict" data-anim="left">
-        <small>TEAM'S RESPONSIBILITY</small>
-        <strong>别让伙伴<br><em>赤手空拳</em><br>上场。</strong>
-        <p>要求一个人向前走，团队就先把他会遇到的难题接过来。</p>
-      </div>
-      <div class="support-answers">
-        <div class="support-answer" data-anim="right"><i>01</i><b>拿什么给别人看？</b><span><strong>材料</strong>审核通过，拿来就能用</span></div>
-        <div class="support-answer" data-anim="right"><i>02</i><b>怎么开口才不生硬？</b><span><strong>话术</strong>反复演练，说成自己的话</span></div>
-        <div class="support-answer" data-anim="right"><i>03</i><b>哪些话绝不能说？</b><span><strong>边界</strong>能说什么，不能承诺什么</span></div>
-        <div class="support-answer" data-anim="right"><i>04</i><b>遇到问题找谁？</b><span><strong>回应</strong>有人接住，不让伙伴独自猜</span></div>
-        <div class="support-answer" data-anim="right"><i>05</i><b>做完以后怎么变好？</b><span><strong>复盘</strong>把卡点带回来，下次做得更稳</span></div>
-      </div>
+  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:2.2vh">
+    <div><div class="kicker" data-anim>要求伙伴行动，也要给伙伴一个接得住的系统</div><h2 class="h-xl" style="font-size:4.9vw" data-anim>别让伙伴赤手空拳上场</h2></div>
+    <div class="support-system">
+      <svg class="support-links" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true"><line x1="50" y1="30" x2="17" y2="11"></line><line x1="50" y1="30" x2="17" y2="50"></line><line x1="50" y1="30" x2="82" y2="10"></line><line x1="50" y1="30" x2="91" y2="31"></line><line x1="50" y1="30" x2="77" y2="51"></line></svg>
+      <div class="support-core" data-anim><div><div class="meta-row">THE SUPPORT SYSTEM</div><h3>接住<br>行动</h3><p>团队先把工具准备好</p></div></div>
+      <div class="support-node sn1" data-anim><i data-lucide="files"></i><div><b>01 · MATERIAL</b><span>审核通过的介绍材料</span></div></div>
+      <div class="support-node sn2" data-anim><i data-lucide="mic-vocal"></i><div><b>02 · SCRIPT</b><span>可以反复演练的话术</span></div></div>
+      <div class="support-node sn3" data-anim><i data-lucide="shield-check"></i><div><b>03 · BOUNDARY</b><span>清楚明确的表达红线</span></div></div>
+      <div class="support-node sn4" data-anim><i data-lucide="messages-square"></i><div><b>04 · FEEDBACK</b><span>及时回应的问题入口</span></div></div>
+      <div class="support-node sn5" data-anim><i data-lucide="rotate-ccw"></i><div><b>05 · REVIEW</b><span>固定、具体的周复盘</span></div></div>
     </div>
   </div>
-  <div class="foot"><div class="title">全力推进，不是把压力层层下传，而是各自把责任接住</div><div>ACT V · CLOSE</div></div>
+  <div class="foot"><div class="title">真正的全力推进，是把责任接住</div><div>ACT V · CLOSE</div></div>
 </section>
 
 <section class="slide hero dark" data-theme="dark" data-slide-id="four-decisions">
