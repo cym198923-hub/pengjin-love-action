@@ -589,6 +589,15 @@
   .mirror-pane:before{content:"";position:absolute;inset:-25% auto -25% 42%;width:1px;background:rgba(var(--ink-rgb),.2);transform:rotate(19deg)}
   .mirror-pane:nth-child(1){transform:rotateY(7deg);transform-origin:right center}.mirror-pane:nth-child(2){min-height:49vh;background:var(--ink);color:var(--paper);transform:translateY(-1vh)}.mirror-pane:nth-child(3){transform:rotateY(-7deg);transform-origin:left center}
   .mirror-pane .mirror-index{font-family:var(--mono);font-size:max(10px,.7vw);letter-spacing:.2em;opacity:.58}.mirror-pane h3{font-family:var(--serif-zh);font-size:5vw;line-height:.9;margin:0}.mirror-pane p{font-family:var(--sans-zh);font-size:1.18vw;line-height:1.55;max-width:17vw;opacity:.76}.mirror-pane .mirror-question{font-family:var(--serif-zh);font-size:1.45vw;line-height:1.35;border-top:1px solid currentColor;padding-top:1.5vh}
+  .mirror-diagnostic{display:grid;grid-template-rows:auto minmax(0,1fr);gap:2.2vh;min-height:79vh;padding-top:2.2vh}
+  .mirror-diagnostic-head{display:grid;grid-template-columns:1fr minmax(25vw,36vw);align-items:end;gap:4vw}
+  .mirror-diagnostic-head h2{margin:0;font-size:4.45vw;line-height:.98}.mirror-diagnostic-head p{margin:0 0 .35vh;font-family:var(--sans-zh);font-size:1.22vw;line-height:1.6;color:rgba(var(--ink-rgb),.68)}
+  .mirror-event{position:relative;min-height:54vh;overflow:hidden;border:1px solid rgba(var(--ink-rgb),.28);background:url('./images/13-market-mirror-v2.png') center 54%/cover no-repeat;box-shadow:0 2.4vh 5vh rgba(var(--ink-rgb),.12)}
+  .mirror-event:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,9,8,.02) 25%,rgba(9,9,8,.28) 62%,rgba(9,9,8,.92) 100%)}
+  .mirror-event:after{content:"市场把问题显影出来";position:absolute;top:2.3vh;left:2vw;color:rgba(var(--paper-rgb),.78);font-family:var(--sans-zh);font-size:.82vw;letter-spacing:.14em}
+  .mirror-readings{position:absolute;z-index:2;left:2vw;right:2vw;bottom:2.5vh;display:grid;grid-template-columns:repeat(3,1fr);gap:2.2vw;color:var(--paper)}
+  .mirror-reading{display:grid;grid-template-columns:auto 1fr;align-items:end;gap:1.1vw;padding-top:1.4vh;border-top:1px solid rgba(var(--paper-rgb),.52)}
+  .mirror-reading strong{font-family:var(--serif-zh);font-size:3vw;line-height:.9;font-weight:700}.mirror-reading span{font-family:var(--sans-zh);font-size:1vw;line-height:1.45;color:rgba(var(--paper-rgb),.78)}
   .service-evidence{display:grid;grid-template-columns:.68fr 1.32fr;gap:3.8vw;min-height:44vh;align-items:center;padding:0 .7vw}
   .service-photo{position:relative;width:19vw;height:43vh;min-height:0;justify-self:center;overflow:hidden;background:#17241d;transform:perspective(1200px) rotateY(2.2deg);transform-origin:right center;box-shadow:-.8vw 1vh 0 rgba(34,61,48,.12),0 2.2vh 3.6vh rgba(9,20,16,.13)}.service-photo:before{content:"";position:absolute;inset:.55vw -.55vw -.55vw .55vw;border:1px solid rgba(34,61,48,.22);z-index:-1}.service-photo img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.82) contrast(1.02)}.service-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,17,13,.72),transparent 42%)}
   .service-photo figcaption{position:absolute;z-index:1;left:1.25vw;right:1.25vw;bottom:1.5vh;color:#f4f1e8;font-family:var(--serif-zh);font-size:1.25vw;line-height:1.35}.service-photo figcaption small{display:block;font-family:var(--mono);font-size:max(10px,.58vw);letter-spacing:.14em;margin-bottom:.55vh;opacity:.76}
@@ -882,14 +891,19 @@
   <div class="foot"><div class="title">不回避问题，也不把问题神秘化</div><div>ACT III</div></div>
 </section>
 
-<section class="slide light" data-theme="light" data-slide-id="three-market-mirrors">
+<section class="slide light" data-theme="light" data-slide-id="three-market-mirrors" data-animate="directional">
   <div class="chrome"><div>诊断 · Three Mirrors</div><div>13 / 26</div></div>
-  <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:2.8vh">
-    <div><div class="kicker" data-anim>不是市场惩罚我们，是市场把问题照出来</div><h2 class="h-xl" style="font-size:5vw" data-anim>三面市场之镜</h2></div>
-    <div class="mirror-wall">
-      <article class="mirror-pane" data-anim><div class="mirror-index">MIRROR 01 · REACH</div><h3>触达</h3><p>客户还没有机会真正认识我们。</p><div class="mirror-question">我们是否走进了<br>真实关系？</div></article>
-      <article class="mirror-pane" data-anim><div class="mirror-index">MIRROR 02 · TRUST</div><h3>信任</h3><p>体验之后，还缺少专业而持续的承接。</p><div class="mirror-question">我们是否把事实<br>讲清楚了？</div></article>
-      <article class="mirror-pane" data-anim><div class="mirror-index">MIRROR 03 · ACTION</div><h3>行动</h3><p>伙伴理解了方向，却还不知道第一步。</p><div class="mirror-question">我们是否把行动<br>拆小了？</div></article>
+  <div class="frame mirror-diagnostic">
+    <div class="mirror-diagnostic-head">
+      <div data-anim="left"><div class="kicker">诊断不是归罪</div><h2 class="h-xl">三面市场之镜</h2></div>
+      <p data-anim="right">市场没有惩罚我们。它只是把触达不足、信任断点和行动阻力照了出来。</p>
+    </div>
+    <div class="mirror-event" data-anim>
+      <div class="mirror-readings">
+        <div class="mirror-reading" data-anim="left"><strong>触达</strong><span>客户还没有机会<br>真正认识我们</span></div>
+        <div class="mirror-reading" data-anim><strong>信任</strong><span>事实还没有被<br>专业地讲清楚</span></div>
+        <div class="mirror-reading" data-anim="right"><strong>行动</strong><span>伙伴还看不清<br>可以开始的第一步</span></div>
+      </div>
     </div>
   </div>
   <div class="foot"><div class="title">看见问题，是改变的开始</div><div>DIAGNOSIS</div></div>
