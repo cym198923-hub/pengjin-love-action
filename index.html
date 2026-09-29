@@ -210,29 +210,35 @@
   body.ppt-tv #hint,body.ppt-tv #nav{display:none!important}
   body.ppt-tv{overscroll-behavior:none;background:#080b0a;touch-action:none;-webkit-user-select:none;user-select:none}
   /* TV 3–5m readability guard: important auxiliary copy must remain legible. */
-  body.ppt-tv .chrome,body.ppt-tv .foot{font-size:max(14px,.82vw)}
-  body.ppt-tv .foot .title{font-size:max(15px,.9vw)}
-  body.ppt-tv .kicker{font-size:max(16px,.9vw)}
-  body.ppt-tv .meta-row{font-size:max(14px,.82vw)}
-  body.ppt-tv .body-zh{font-size:max(18px,1.15vw)}
-  body.ppt-tv .tag{font-size:max(14px,.74vw)}
-  body.ppt-tv .encounter-caption{font-size:max(13px,.72vw)}
+  body.ppt-tv .chrome,body.ppt-tv .foot{font-size:max(16px,.9vw)}
+  body.ppt-tv .foot .title{font-size:max(17px,1vw)}
+  body.ppt-tv .kicker{font-size:max(17px,1vw)}
+  body.ppt-tv .meta-row{font-size:max(16px,.92vw)}
+  body.ppt-tv .body-zh{font-size:max(20px,1.2vw)}
+  body.ppt-tv .tag{font-size:max(16px,.82vw)}
+  body.ppt-tv .encounter-caption{font-size:max(15px,.82vw)}
   body.ppt-tv .encounter-caption strong{font-size:max(18px,1.1vw)}
   body.ppt-tv .thinker-name{font-size:max(14px,.78vw)}
-  body.ppt-tv .mirror-pane .mirror-index{font-size:max(13px,.7vw)}
-  body.ppt-tv .mirror-pane p{font-size:max(17px,1vw)}
+  body.ppt-tv .mirror-pane .mirror-index{font-size:max(15px,.8vw)}
+  body.ppt-tv .mirror-pane p{font-size:max(19px,1.08vw)}
   body.ppt-tv .mirror-pane .mirror-question{font-size:max(20px,1.18vw)}
   body.ppt-tv .service-continuum p{font-size:max(17px,.95vw)}
-  body.ppt-tv .service-photo figcaption small{font-size:max(12px,.64vw)}
-  body.ppt-tv .support-node b{font-size:max(12px,.64vw)}
+  body.ppt-tv .service-photo figcaption small{font-size:max(14px,.72vw)}
+  body.ppt-tv .support-node b{font-size:max(14px,.72vw)}
   body.ppt-tv .support-node span{font-size:max(19px,1.15vw)}
   body.ppt-tv .rowline .v{font-size:max(18px,1.1vw)}
-  body.ppt-tv .orbit-node small{font-size:max(13px,.75vw)}
+  body.ppt-tv .orbit-node small{font-size:max(15px,.82vw)}
   body.ppt-tv .week-board p{font-size:max(17px,.95vw)}
-  body.ppt-tv .evidence-ladder small{font-size:max(13px,.72vw)}
+  body.ppt-tv .evidence-ladder small{font-size:max(15px,.82vw)}
   body.ppt-tv .step-desc{font-size:max(17px,1.05vw)!important}
-  #ppt-tv-enter{position:fixed;left:50%;bottom:4.6vh;z-index:80;display:none;transform:translateX(-50%);padding:12px 20px;border:1px solid rgba(244,241,232,.34);background:rgba(7,10,9,.82);color:#f4f1e8;font-family:var(--sans-zh);font-size:15px;letter-spacing:.08em;backdrop-filter:blur(12px);box-shadow:0 8px 30px rgba(0,0,0,.26);white-space:nowrap}
-  body.ppt-tv:not(.ppt-tv-ready) #ppt-tv-enter,body.ppt-tv.ppt-tv-show-guide #ppt-tv-enter{display:block}
+  body.ppt-tv .rowline .m,body.ppt-tv .stat .m,body.ppt-tv .plat .sub,
+  body.ppt-tv .callout .cite,body.ppt-tv .frame-cap,body.ppt-tv .img-cap,
+  body.ppt-tv .encounter-proof b{font-size:max(15px,.8vw)}
+  body.ppt-tv .encounter-lead{font-size:max(20px,1.3vw)}
+  #ppt-tv-enter{position:fixed;right:2.4vw;bottom:2.6vh;z-index:80;display:none;align-items:center;justify-content:center;min-height:54px;padding:13px 20px;border:1px solid rgba(244,241,232,.45);border-radius:999px;background:rgba(7,10,9,.92);color:#fff;font-family:var(--sans-zh);font-size:max(18px,1vw);font-weight:650;letter-spacing:.04em;box-shadow:0 8px 30px rgba(0,0,0,.38);white-space:nowrap;cursor:pointer;touch-action:manipulation}
+  body.ppt-tv #ppt-tv-enter{display:flex}
+  body.ppt-tv.ppt-tv-fullscreen #ppt-tv-enter{background:rgba(7,10,9,.72);font-size:max(16px,.88vw)}
+  body.ppt-tv.ppt-tv-show-guide #ppt-tv-enter{white-space:normal;max-width:min(88vw,720px);text-align:center;border-radius:16px}
   body.ppt-tv.ppt-tv-fullscreen{cursor:none}
   #ppt-tv-feedback{position:fixed;top:50%;z-index:85;display:none;transform:translateY(-50%);color:rgba(244,241,232,.84);font:300 min(13vw,18vh)/1 var(--serif-en);text-shadow:0 4px 28px rgba(0,0,0,.5);pointer-events:none}
   #ppt-tv-feedback.is-left{display:block;left:4vw}
@@ -240,6 +246,8 @@
   body.ppt-safe .bg{display:none!important}
   body.ppt-safe [data-anim],body.ppt-safe [data-animate]{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
   body.ppt-safe #ppt-tv-enter{backdrop-filter:none}
+  body.ppt-capture #ppt-tv-enter,body.ppt-capture #ppt-tv-feedback,body.ppt-capture #hint,body.ppt-capture #nav{display:none!important}
+  body.ppt-capture #deck{transition:none!important}
 
   /* ============ 演讲者模式 ============ */
   body.ppt-audience #hint,body.ppt-audience #nav,
@@ -601,8 +609,9 @@
   .encounter-proof>div{display:grid;grid-template-columns:2.4vw 4.4vw 1fr;gap:1vw;align-items:center;padding:1.45vh 0;border-bottom:1px solid rgba(244,241,232,.18)}
   .encounter-proof i{width:1.45vw;height:1.45vw;stroke-width:1.35;color:#b9c9b8}.encounter-proof b{font-family:var(--serif-en);font-size:1.7vw;font-weight:500;opacity:.45}.encounter-proof span{font-family:var(--sans-zh);font-size:1.12vw;letter-spacing:.04em}
   .encounter-visual{position:relative;min-height:67vh;overflow:hidden;border:1px solid rgba(244,241,232,.18);background:#0b1813}
-  .encounter-scene{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
-  .encounter-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,17,13,.5),transparent 42%),linear-gradient(0deg,rgba(7,17,13,.72),transparent 38%)}
+  .encounter-visual:before{content:"";position:absolute;inset:-3%;background:url("images/09-real-encounter.webp") center/cover no-repeat;filter:blur(13px) brightness(.5);transform:scale(1.04)}
+  .encounter-scene{position:absolute;z-index:1;inset:0;width:100%;height:100%;object-fit:contain;object-position:center}
+  .encounter-visual:after{content:"";position:absolute;z-index:2;inset:0;background:linear-gradient(0deg,rgba(7,17,13,.72),transparent 32%);pointer-events:none}
   .bracelet-cutout{position:absolute;z-index:2;right:-1.4vw;bottom:-2.5vh;width:23vw;max-height:41vh;object-fit:contain;filter:drop-shadow(0 2.2vh 2.2vh rgba(0,0,0,.32))}
   .encounter-caption{position:absolute;z-index:3;left:2vw;bottom:2.2vh;width:19vw;font-family:var(--mono);font-size:max(10px,.7vw);line-height:1.65;letter-spacing:.15em;color:#f4f1e8;text-transform:uppercase}
   .encounter-caption strong{display:block;font-family:var(--serif-zh);font-size:1.45vw;letter-spacing:.04em;text-transform:none;margin-bottom:.6vh}
@@ -868,7 +877,6 @@
       </div>
       <figure class="encounter-visual" data-anim="right">
         <img class="encounter-scene" src="images/09-real-encounter.webp" alt="彭进佩戴红色手环并记录真实学习内容">
-        <img class="bracelet-cutout" src="./images/09-bracelet-cutout-v2.png" alt="同一真实场景中的手环细节">
         <figcaption class="encounter-caption"><strong>真实接触，真实记录</strong>REAL MOMENT · NO EFFECT CLAIM</figcaption>
       </figure>
     </div>
@@ -1081,15 +1089,15 @@
   <div class="foot"><div class="title">公开使用前取得授权，并隐去不必要隐私</div><div>CASE STANDARD</div></div>
 </section>
 
-<section class="slide hero dark" data-theme="dark" data-slide-id="launch-three-stages" data-animate="pipeline">
+<section class="slide hero dark" data-theme="dark" data-slide-id="launch-three-stages">
   <div class="chrome"><div>第五幕 · 2.0共同战役</div><div>24 / 26</div></div>
   <div class="frame" style="display:grid;align-content:center;min-height:79vh;gap:4vh">
     <div><div class="kicker">2.0不是一次上新，是一次协同</div><h2 class="h-xl">三个阶段</h2></div>
     <div class="pipeline-section">
       <div class="pipeline" data-cols="3">
-        <div class="step" data-anim="step"><i data-lucide="calendar-check" class="stage-icon"></i><div class="step-nb">01</div><div class="step-title" style="font-size:1.75vw">上线前</div><div class="step-desc" style="font-size:1.2vw;line-height:1.55;opacity:.84">积累信任<br>客户清单 · 内容预热 · 表达演练</div></div>
-        <div class="step" data-anim="step"><i data-lucide="rocket" class="stage-icon"></i><div class="step-nb">02</div><div class="step-title" style="font-size:1.75vw">上线时</div><div class="step-desc" style="font-size:1.2vw;line-height:1.55;opacity:.84">集中行动<br>依据正式资料 · 小场多次 · 快速答疑</div></div>
-        <div class="step" data-anim="step"><i data-lucide="refresh-cw" class="stage-icon"></i><div class="step-nb">03</div><div class="step-title" style="font-size:1.75vw">上线后</div><div class="step-desc" style="font-size:1.2vw;line-height:1.55;opacity:.84">持续服务<br>固定节奏 · 每周复盘 · 针对陪跑</div></div>
+        <div class="step"><i data-lucide="calendar-check" class="stage-icon"></i><div class="step-nb">01</div><div class="step-title" style="font-size:1.75vw">上线前</div><div class="step-desc" style="font-size:1.2vw;line-height:1.55;opacity:.92">积累信任<br>客户清单 · 内容预热 · 表达演练</div></div>
+        <div class="step"><i data-lucide="rocket" class="stage-icon"></i><div class="step-nb">02</div><div class="step-title" style="font-size:1.75vw">上线时</div><div class="step-desc" style="font-size:1.2vw;line-height:1.55;opacity:.92">集中行动<br>依据正式资料 · 小场多次 · 快速答疑</div></div>
+        <div class="step"><i data-lucide="refresh-cw" class="stage-icon"></i><div class="step-nb">03</div><div class="step-title" style="font-size:1.75vw">上线后</div><div class="step-desc" style="font-size:1.2vw;line-height:1.55;opacity:.92">持续服务<br>固定节奏 · 每周复盘 · 针对陪跑</div></div>
       </div>
     </div>
     <div class="stage-callout" data-anim>具体升级点、日期与制度，只引用最终官方资料。</div>
@@ -2351,6 +2359,11 @@ if(motion){
 <script>
 (() => {
   const query = new URLSearchParams(location.search);
+  if (query.get('capture') === '1') {
+    document.body.classList.add('ppt-tv','ppt-safe','ppt-capture');
+    window.__setLowPowerMode?.(true, { persist: false });
+    return;
+  }
   const tvPath = /\/(?:tv|safe)\.html$/i.test(location.pathname);
   const defaultPresentationPath = /\/(?:index\.html)?$/i.test(location.pathname);
   const safePath = /\/safe\.html$/i.test(location.pathname);
@@ -2364,32 +2377,29 @@ if(motion){
   const tip = document.getElementById('ppt-tv-enter');
   const feedback = document.getElementById('ppt-tv-feedback');
   let attempting = false;
-  // 浏览器的原生全屏（F11/菜单）由设备处理；网页不再主动申请全屏，避免触控屏 Edge 闪退。
-  let ready = true;
-  document.body.classList.add('ppt-tv-ready');
+  let ready = false;
   let pointerStart = null;
-  let wasFullscreen = false;
+  let guideMessage = '';
+  let guideTimer = 0;
   const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  const showGuide = (message, duration = 5200) => {
+    if (!tip) return;
+    guideMessage = message;
+    tip.textContent = message;
+    document.body.classList.add('ppt-tv-show-guide');
+    clearTimeout(guideTimer);
+    guideTimer = setTimeout(() => {
+      guideMessage = '';
+      document.body.classList.remove('ppt-tv-show-guide');
+      update();
+    }, duration);
+  };
+  const markReady = () => { ready = true; document.body.classList.add('ppt-tv-ready'); };
   const update = () => {
     const isFullscreen = Boolean(fullscreenElement());
     document.body.classList.toggle('ppt-tv-fullscreen', isFullscreen);
-    if (wasFullscreen && !isFullscreen) {
-      ready = false;
-      document.body.classList.remove('ppt-tv-ready');
-      if (tip) tip.textContent = '轻触屏幕，再次进入全屏演示';
-    }
-    wasFullscreen = isFullscreen;
-  };
-  const showGuide = (message, duration = 2800) => {
-    if (!tip) return;
-    tip.textContent = message;
-    document.body.classList.add('ppt-tv-show-guide');
-    clearTimeout(showGuide.timer);
-    showGuide.timer = setTimeout(() => document.body.classList.remove('ppt-tv-show-guide'), duration);
-  };
-  const markReady = () => {
-    ready = true;
-    document.body.classList.add('ppt-tv-ready');
+    if (tip && !guideMessage) tip.textContent = isFullscreen ? '⛶ 已全屏 · 点击退出' : '⛶ 点击此处进入全屏演示';
+    if (isFullscreen) markReady();
   };
   const flash = (direction) => {
     if (!feedback) return;
@@ -2399,29 +2409,28 @@ if(motion){
     setTimeout(() => { feedback.className = ''; }, 430);
   };
   const enter = async (event) => {
-    if (fullscreenElement() || attempting || ready) return;
-    if (event) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    }
+    if (attempting) return;
+    if (event) { event.preventDefault(); event.stopPropagation(); }
     attempting = true;
     try {
       const root = document.documentElement;
       const request = root.requestFullscreen || root.webkitRequestFullscreen || root.msRequestFullscreen;
-      if (request) {
+      if (fullscreenElement()) {
+        const leave = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+        if (leave) await leave.call(document);
+        else showGuide('此浏览器不提供网页退出全屏，请使用电视浏览器返回键。');
+      } else if (request) {
         if (root.requestFullscreen) await root.requestFullscreen({ navigationUI: 'hide' });
         else await request.call(root);
         markReady();
-        if (matchMedia('(pointer:coarse)').matches) {
-          try { await screen.orientation?.lock?.('landscape'); } catch (error) {}
-        }
-        showGuide('轻触左半屏上一页 · 轻触右半屏下一页 · 也可左右滑动');
-      } else if (event) {
+        showGuide('左半屏上一页 · 右半屏下一页 · 左右滑动也可翻页');
+      } else {
         markReady();
-        showGuide('电视浏览器不支持网页全屏；请隐藏浏览器工具栏。左右轻触仍可翻页', 4200);
+        showGuide('当前电视浏览器不支持网页全屏。请从浏览器菜单选“全屏／隐藏工具栏”；翻页触控仍可用。');
       }
     } catch (error) {
-      if (event) showGuide('浏览器阻止了网页全屏，请按 F11；电视端请选择“全屏／隐藏工具栏”', 5200);
+      markReady();
+      showGuide('浏览器限制了网页全屏。请从电视浏览器菜单选“全屏／隐藏工具栏”；翻页触控仍可用。');
     } finally {
       attempting = false;
       update();
@@ -2431,7 +2440,7 @@ if(motion){
   tip?.addEventListener('click', enter);
   addEventListener('pointerdown', (event) => { pointerStart = { x: event.clientX, y: event.clientY, at: performance.now() }; }, { capture: true, passive: true });
   addEventListener('pointerup', (event) => {
-    if (!ready) return;
+    if (!ready || tip?.contains(event.target)) return;
     const start = pointerStart || { x: event.clientX, y: event.clientY, at: performance.now() };
     const moved = Math.hypot(event.clientX - start.x, event.clientY - start.y);
     const elapsed = performance.now() - start.at;
@@ -2456,6 +2465,7 @@ if(motion){
     }, { capture: true });
   }
   addEventListener('load', update, { once: true });
+  update();
 })();
 </script>
 </body>
