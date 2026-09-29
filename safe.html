@@ -686,7 +686,7 @@
   <button id="ppt-overview-btn" type="button"><span class="ppt-key">ESC</span>总览</button><span class="ppt-sep">·</span>
   <button id="ppt-presenter-btn" type="button"><span class="ppt-key">P</span>演讲模式</button>
 </div>
-<div id="ppt-tv-enter" role="status" aria-live="polite">按电视遥控器“确定”或点击屏幕，进入全屏演示</div>
+<button id="ppt-tv-enter" type="button" autofocus>进入全屏演示</button>
 <div id="ppt-tv-feedback" aria-hidden="true">›</div>
 
 <div id="deck">
@@ -2397,26 +2397,26 @@ if(motion){
         if (root.requestFullscreen) await root.requestFullscreen({ navigationUI: 'hide' });
         else await request.call(root);
         markReady();
-        try { await screen.orientation?.lock?.('landscape'); } catch (error) {}
+        if (matchMedia('(pointer:coarse)').matches) {
+          try { await screen.orientation?.lock?.('landscape'); } catch (error) {}
+        }
         showGuide('轻触左半屏上一页 · 轻触右半屏下一页 · 也可左右滑动');
       } else if (event) {
         markReady();
         showGuide('电视浏览器不支持网页全屏；请隐藏浏览器工具栏。左右轻触仍可翻页', 4200);
       }
     } catch (error) {
-      if (event) {
-        markReady();
-        showGuide('请使用电视浏览器的“全屏／隐藏工具栏”。左右轻触仍可翻页', 4200);
-      }
+      if (event) showGuide('浏览器阻止了网页全屏，请按 F11；电视端请选择“全屏／隐藏工具栏”', 5200);
     } finally {
       attempting = false;
       update();
     }
   };
   ['fullscreenchange','webkitfullscreenchange','MSFullscreenChange'].forEach((name) => document.addEventListener(name, update));
+  tip?.addEventListener('click', enter);
   addEventListener('pointerdown', (event) => { pointerStart = { x: event.clientX, y: event.clientY, at: performance.now() }; }, { capture: true, passive: true });
   addEventListener('pointerup', (event) => {
-    if (!ready) { enter(event); return; }
+    if (!ready) return;
     const start = pointerStart || { x: event.clientX, y: event.clientY, at: performance.now() };
     const moved = Math.hypot(event.clientX - start.x, event.clientY - start.y);
     const elapsed = performance.now() - start.at;
@@ -2429,18 +2429,18 @@ if(motion){
     go(direction === 'left' ? idx - 1 : idx + 1);
   }, { capture: true });
   addEventListener('keydown', (event) => {
-    if (!ready && ['Enter',' ','ArrowLeft','ArrowRight','PageUp','PageDown'].includes(event.key)) enter(event);
+    if (!ready && ['Enter',' '].includes(event.key)) enter(event);
   }, { capture: true });
   if (!('PointerEvent' in window)) {
     addEventListener('click', (event) => {
-      if (!ready) { enter(event); return; }
+      if (!ready) return;
       event.preventDefault();
       const direction = event.clientX < innerWidth / 2 ? 'left' : 'right';
       flash(direction);
       go(direction === 'left' ? idx - 1 : idx + 1);
     }, { capture: true });
   }
-  addEventListener('load', () => { enter(); update(); }, { once: true });
+  addEventListener('load', update, { once: true });
 })();
 </script>
 </body>
