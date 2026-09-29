@@ -609,13 +609,15 @@
   .support-links{position:absolute;inset:0;width:100%;height:100%;color:var(--ink);opacity:.25}.support-links line{stroke:currentColor;stroke-width:.22;stroke-dasharray:1.2 1.2}
   .support-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:17vw;height:17vw;max-width:28vh;max-height:28vh;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;text-align:center;padding:2vw;z-index:2}.support-core h3{font-family:var(--serif-zh);font-size:3.4vw;line-height:1;margin:0}.support-core p{font-family:var(--sans-zh);font-size:1vw;line-height:1.5;margin:1.2vh 0 0;opacity:.7}
   .support-node{position:absolute;width:19vw;padding:1.6vh 1.3vw;border:1px solid rgba(var(--ink-rgb),.25);background:rgba(var(--paper-rgb),.94);display:grid;grid-template-columns:2.4vw 1fr;gap:1vw;align-items:center;z-index:2}.support-node i{width:1.8vw;height:1.8vw;stroke-width:1.25}.support-node b{display:block;font-family:var(--mono);font-size:max(10px,.64vw);letter-spacing:.14em;opacity:.52;margin-bottom:.4vh}.support-node span{font-family:var(--serif-zh);font-size:1.5vw;font-weight:600;line-height:1.18}.support-node.sn1{left:3%;top:6%}.support-node.sn2{left:3%;bottom:7%}.support-node.sn3{right:3%;top:4%}.support-node.sn4{right:0;top:42%}.support-node.sn5{right:12%;bottom:5%}
-  .support-proof{display:grid;grid-template-rows:auto minmax(0,1fr);gap:2.2vh;min-height:79vh;padding-top:2.2vh}
+  .support-proof{display:grid;grid-template-rows:auto minmax(0,1fr);gap:3vh;min-height:79vh;padding-top:2.2vh}
   .support-proof-head{display:grid;grid-template-columns:1fr minmax(27vw,38vw);align-items:end;gap:4vw}.support-proof-head h2{margin:0;font-size:4.45vw;line-height:.98}.support-proof-head p{margin:0 0 .35vh;font-family:var(--sans-zh);font-size:1.22vw;line-height:1.6;color:rgba(var(--ink-rgb),.68)}
-  .support-evidence{position:relative;min-height:54vh;overflow:hidden;border:1px solid rgba(var(--ink-rgb),.24);background:#ded4c5 url('./images/25-team-support-v2.webp') center 50%/cover no-repeat;box-shadow:0 2.4vh 5vh rgba(var(--ink-rgb),.1)}
-  .support-evidence:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,9,0) 36%,rgba(10,10,9,.18) 60%,rgba(10,10,9,.94) 100%)}
-  .support-evidence:after{content:"把方法摆上桌，伙伴才接得住";position:absolute;z-index:2;left:2vw;top:2.2vh;max-width:27vw;color:var(--ink);font-family:var(--serif-zh);font-size:2vw;font-weight:650;line-height:1.2}
-  .support-rail{position:absolute;z-index:3;left:2vw;right:2vw;bottom:2.35vh;display:grid;grid-template-columns:repeat(5,1fr);gap:1.25vw;color:var(--paper)}
-  .support-proof-item{padding-top:1.15vh;border-top:1px solid rgba(var(--paper-rgb),.5)}.support-proof-item b{display:block;font-family:var(--serif-zh);font-size:1.65vw;line-height:1.05}.support-proof-item span{display:block;margin-top:.65vh;font-family:var(--sans-zh);font-size:.84vw;line-height:1.35;color:rgba(var(--paper-rgb),.72)}
+  .support-scene{display:grid;grid-template-columns:.83fr 1.17fr;min-height:52vh;border-top:1px solid rgba(var(--ink-rgb),.76);border-bottom:1px solid rgba(var(--ink-rgb),.76)}
+  .support-verdict{position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:3.2vh 3vw 3vh 0;border-right:1px solid rgba(var(--ink-rgb),.22)}
+  .support-verdict small{font-family:var(--mono);font-size:max(10px,.66vw);letter-spacing:.18em;color:rgba(var(--ink-rgb),.48)}
+  .support-verdict strong{display:block;max-width:30vw;font-family:var(--serif-zh);font-size:5.2vw;line-height:1.03;font-weight:700;letter-spacing:-.05em}.support-verdict strong em{position:relative;font-style:normal;color:var(--accent)}.support-verdict strong em:after{content:"";position:absolute;left:-.15em;right:-.1em;bottom:.06em;height:.09em;background:currentColor;transform:rotate(-1.6deg);opacity:.72}
+  .support-verdict p{max-width:26vw;margin:0;font-family:var(--serif-zh);font-size:1.35vw;line-height:1.55;color:rgba(var(--ink-rgb),.72)}
+  .support-answers{display:grid;grid-template-rows:repeat(5,1fr);padding-left:3vw}
+  .support-answer{display:grid;grid-template-columns:3.2vw 1fr auto;align-items:center;gap:1.2vw;border-bottom:1px solid rgba(var(--ink-rgb),.18)}.support-answer:last-child{border-bottom:0}.support-answer i{font-family:var(--serif-en);font-size:1.1vw;font-style:normal;color:rgba(var(--ink-rgb),.34)}.support-answer b{font-family:var(--serif-zh);font-size:1.58vw;line-height:1.2}.support-answer span{font-family:var(--sans-zh);font-size:1.02vw;color:rgba(var(--ink-rgb),.62);text-align:right}.support-answer span strong{display:block;margin-bottom:.25vh;font-family:var(--serif-zh);font-size:1.32vw;color:var(--ink);font-weight:650}
   .script-copy{position:relative;isolation:isolate}.script-loop-art{position:absolute;z-index:-1;right:-1vw;bottom:-4vh;width:18vw;height:18vw;border:1px solid rgba(var(--ink-rgb),.14);border-radius:50%}.script-loop-art:before{content:"";position:absolute;inset:2.2vw;border:1px dashed rgba(var(--ink-rgb),.2);border-radius:50%}.script-loop-art:after{content:"REPEAT";position:absolute;right:-1.8vw;top:44%;font-family:var(--mono);font-size:max(10px,.64vw);letter-spacing:.18em;transform:rotate(90deg);opacity:.36}.script-loop-arrow{position:absolute;right:1.25vw;top:1.45vw;width:0;height:0;border-left:.65vw solid transparent;border-right:.65vw solid transparent;border-bottom:1.05vw solid rgba(var(--ink-rgb),.32);transform:rotate(43deg)}
   .mountain-lines{position:absolute;right:1vw;bottom:8vh;width:54vw;height:61vh;opacity:.38;z-index:1}.mountain-lines path{fill:none;stroke:currentColor;stroke-width:.6}.mountain-lines .ridge{stroke-width:1.15;opacity:.7}.mountain-lines circle{fill:currentColor;opacity:.7}.mountain-lines text{font-family:var(--mono);font-size:2.1px;letter-spacing:.16em;fill:currentColor}
   .goal-step{position:relative;overflow:hidden}.goal-step .goal-icon{width:2.3vw;height:2.3vw;stroke-width:1.2;position:absolute;right:1.3vw;top:1.6vh;opacity:.48}.goal-step:nth-child(3) .goal-icon{opacity:.76}
@@ -1089,13 +1091,18 @@
       <div data-anim="left"><div class="kicker">要求伙伴行动，也要给伙伴一个接得住的系统</div><h2 class="h-xl">团队给伙伴什么承接</h2></div>
       <p data-anim="right">全力推进，不是把压力层层下传，而是把伙伴需要的方法、边界和回应准备好。</p>
     </div>
-    <div class="support-evidence" data-anim>
-      <div class="support-rail">
-        <div class="support-proof-item" data-anim="left"><b>材料</b><span>审核通过，可以直接使用</span></div>
-        <div class="support-proof-item" data-anim><b>话术</b><span>反复演练，直到说得自然</span></div>
-        <div class="support-proof-item" data-anim><b>边界</b><span>什么能说，什么不能承诺</span></div>
-        <div class="support-proof-item" data-anim><b>回应</b><span>问题有人接，不让伙伴独自猜</span></div>
-        <div class="support-proof-item" data-anim="right"><b>复盘</b><span>固定节奏，把卡点带回来</span></div>
+    <div class="support-scene" data-anim>
+      <div class="support-verdict" data-anim="left">
+        <small>TEAM'S RESPONSIBILITY</small>
+        <strong>别让伙伴<br><em>赤手空拳</em><br>上场。</strong>
+        <p>要求一个人向前走，团队就先把他会遇到的难题接过来。</p>
+      </div>
+      <div class="support-answers">
+        <div class="support-answer" data-anim="right"><i>01</i><b>拿什么给别人看？</b><span><strong>材料</strong>审核通过，拿来就能用</span></div>
+        <div class="support-answer" data-anim="right"><i>02</i><b>怎么开口才不生硬？</b><span><strong>话术</strong>反复演练，说成自己的话</span></div>
+        <div class="support-answer" data-anim="right"><i>03</i><b>哪些话绝不能说？</b><span><strong>边界</strong>能说什么，不能承诺什么</span></div>
+        <div class="support-answer" data-anim="right"><i>04</i><b>遇到问题找谁？</b><span><strong>回应</strong>有人接住，不让伙伴独自猜</span></div>
+        <div class="support-answer" data-anim="right"><i>05</i><b>做完以后怎么变好？</b><span><strong>复盘</strong>把卡点带回来，下次做得更稳</span></div>
       </div>
     </div>
   </div>
